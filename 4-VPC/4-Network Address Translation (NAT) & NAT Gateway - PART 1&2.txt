@@ -1,0 +1,41 @@
+==============================================================
+4-Network Address Translation (NAT) & NAT Gateway - PART 1 & 2
+==============================================================
+
+1. Overview
+-----------
+- **Purpose**: NAT (Network Address Translation) enables private instances (with private IPv4 addresses) to initiate outbound connections to the public Internet while remaining unreachable for inbound connections.
+- **Key Concept**: Instead of assigning a public IP directly to an instance, a NAT gateway translates private IPs to a public IP for outgoing traffic.
+
+2. How NAT Gateway Works
+-------------------------
+- **Translation Process**:
+  - **Outbound**: When a private instance sends a packet, its source IP (private) is replaced by the NAT gateway’s public IP. The NAT gateway records the translation details (source/destination IP and port) in its translation table.
+  - **Inbound**: When a response returns to the NAT gateway’s public IP, the gateway uses its translation table to forward the packet to the original private IP.
+- **Static NAT vs. Masquerading**:
+  - **Internet Gateway**: Performs one-to-one (static) NAT for instances with their own public IPs.
+  - **NAT Gateway**: Implements IP masquerading – many private IP addresses share a single public IP.
+
+3. Deployment Requirements & Architecture
+-------------------------------------------
+- **Placement**: 
+  - Must be deployed in a **public subnet** (with a route to an Internet Gateway).
+  - Private subnets (where instances reside) have route tables directing outbound traffic to the NAT gateway.
+- **High Availability**:
+  - A NAT gateway is **AZ-specific**. For resiliency, deploy one NAT gateway per Availability Zone used by your private subnets.
+- **Public IP Assignment**:
+  - NAT gateways are assigned an Elastic IP (static public IPv4 address) for outbound connectivity.
+
+4. Cost and Performance Considerations
+----------------------------------------
+- **Pricing Model**:
+  - **Hourly Charge**: Fixed hourly fee (e.g., around $0.04/hour, subject to regional pricing).
+  - **Data Processing Charge**: Billed per gigabyte of data processed.
+- **Performance**:
+  - NAT gateways are managed, highly scalable, and designed to handle high bandwidth (up to 45 Gbps).
+  - They automatically scale within an AZ, unlike NAT instances which are limited by instance capacity.
+
+5. IPv4 vs. IPv6 Context
+------------------------
+- **IPv4**: NAT gateways are used to enable outbound access for instances with private IPv4 addresses.
+- **IPv6**: Not required; IPv6 addresses in AWS are publicly routable by default, so no NAT translation is needed.

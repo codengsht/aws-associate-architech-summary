@@ -1,0 +1,55 @@
+========================================
+4-VPC Subnets
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Subnets are the building blocks within a VPC where AWS resources are launched.
+- **Role in Network Design**: They provide structure, isolation, and high availability by being tied to individual Availability Zones (AZs).
+
+2. What is a Subnet?
+--------------------
+- **Definition**: A subnet is a range of IP addresses within a VPC, created in a specific AZ.
+- **Key Property**: 
+  - A subnet is confined to one AZ and cannot span multiple AZs.
+  - An AZ can contain multiple subnets.
+
+3. IP Address Allocation and Reserved Addresses
+-------------------------------------------------
+- **IPv4 Subnet CIDR**:
+  - The subnet’s CIDR must be a subset of the VPC’s CIDR and cannot overlap with other subnets.
+- **Reserved IP Addresses in Every Subnet** (Total 5):
+  - **Network Address**: First IP of the subnet.
+  - **Network +1**: Reserved for the VPC router.
+  - **Network +2**: Reserved for DNS resolution.
+  - **Network +3**: Reserved for future use.
+  - **Broadcast Address**: Last IP address in the subnet (even though AWS doesn’t support broadcast, it is reserved).
+- **Example**: In a subnet with 16 total IPs, only 11 IPs are usable.
+
+4. Additional Subnet Features
+-----------------------------
+- **IPv6 Support**:
+  - Subnets can also be assigned an IPv6 CIDR (a /64 block is a subset of the VPC’s /56 if enabled).
+- **Public vs. Private Subnets**:
+  - By default, subnets are private. Public subnets require configuration (e.g., auto-assign public IPv4 addresses, Internet Gateway).
+- **DHCP Option Sets**:
+  - A VPC has a DHCP option set that defines DNS servers and other network configuration settings, which automatically flow to subnets.
+
+5. Subnets and Availability Zones
+-----------------------------------
+- **Availability Zone Assignment**:
+  - Each subnet is created in one specific AZ.
+  - For high availability, distribute resources across subnets in different AZs.
+- **Design Example**:
+  - A multi-tier VPC might include subnets for web, application, and database tiers in three AZs (resulting in 9 subnets) plus additional subnets reserved for future use.
+
+6. Practical Considerations for the Exam and Real-World Design
+--------------------------------------------------------------
+- **Non-overlapping IP Ranges**: 
+  - Ensure that each subnet’s IP range is unique within the VPC.
+- **Subnet Sizing**:
+  - Consider future growth; smaller subnets (e.g., /28 or /27) provide few usable IPs.
+  - Plan based on the required number of resources and expected expansion.
+- **Manual Creation vs. Automation**:
+  - Manually creating subnets helps build an understanding of IP range assignments.
+  - CloudFormation templates can later automate the process once you’re familiar with the structure.

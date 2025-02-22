@@ -1,0 +1,62 @@
+========================================
+4-VPC Sizing and Structure - PART 1 & 2
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Learn to design an IP addressing plan and VPC structure that meets business needs and future growth, avoiding conflicts with external networks.
+- **Context**: This is a high-level design process used by solutions architects for planning AWS networks, beyond mere technical configuration.
+
+2. Key Planning Considerations
+------------------------------
+- **Pre-Planning is Critical**:
+  - Decide on the overall IP range (CIDR) for your VPC before deployment.
+  - A good plan avoids overlapping IP ranges with existing networks (e.g., on-premises, partner, or other cloud environments).
+- **Avoid Common IP Ranges**:
+  - Many default networks use common ranges like 10.0.x.x.
+  - Choose a less common range (e.g., starting at 10.16.x.x) to avoid conflicts.
+- **Future Growth**:
+  - Plan for expansion by anticipating additional regions, accounts, and increased network requirements.
+  - Build in buffer ranges to accommodate growth over time.
+
+3. Structuring the VPC
+-----------------------
+- **Overall VPC Size**:
+  - VPCs can range from /28 (16 addresses) to /16 (over 65,000 addresses).
+  - For scalable production environments, a /16 VPC is often chosen.
+- **Dividing the VPC**:
+  - **Availability Zones (AZs)**: Typically design for three AZs as a minimum, plus an extra “spare” AZ for future resiliency.
+  - **Tiers or Layers**: Common tiers include Web, Application, Database, plus a spare for future needs.
+  - **Example**: With four tiers across four AZs, you need 16 subnets (one per tier in each AZ).
+
+4. Subnet Sizing and Allocation
+-------------------------------
+- **Subnet Allocation**:
+  - Subnets are carved out of the VPC CIDR block.
+  - The size of each subnet is determined by the VPC’s CIDR and the number of required subnets.
+- **Example Calculation**:
+  - A /16 VPC divided into 16 subnets results in each subnet being a /20.
+  - A /20 subnet provides approximately 491 usable IP addresses.
+- **Methodology**:
+  - Determine the number of subnets needed (based on AZs and application tiers).
+  - Ensure each subnet's range does not overlap and has sufficient capacity for current and future resource needs.
+
+5. Practical Example: Animals For Life Organization
+-----------------------------------------------------
+- **Business Scenario**:
+  - Global organization with operations in multiple regions (e.g., US, Europe, Australia) and several AWS accounts.
+  - Must avoid IP ranges used by existing networks (e.g., known ranges from partners or vendors like Google Cloud).
+- **IP Planning**:
+  - Reserve a range starting at 10.16.x.x, avoiding common defaults.
+  - Pre-allocate enough distinct CIDR blocks for each region and AWS account.
+  - For example, if planning for 5 regions and 4 AWS accounts, plan for up to 40 distinct IP ranges to support multiple VPCs per region/account.
+- **Documentation**:
+  - Create a detailed IP plan (e.g., a PDF or spreadsheet) to document reserved ranges, allocations per region/account, and subnet breakdowns.
+  - This plan will be your reference during deployment and for future expansion.
+
+6. Summary and Best Practices
+------------------------------
+- **Holistic Network Design**: Combine business requirements, current network usage, and future growth projections.
+- **Avoid Overlaps**: Ensure the chosen CIDR blocks do not conflict with other networks your business interacts with.
+- **Plan Subnet Structure**: Design subnets based on availability zones and application tiers (e.g., 16 subnets in a /16 VPC for 4 AZs and 4 tiers).
+- **Document and Review**: Maintain a clear IP addressing document for troubleshooting and scalability planning.

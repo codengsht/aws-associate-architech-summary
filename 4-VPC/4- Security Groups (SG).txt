@@ -1,0 +1,47 @@
+========================================
+4- Security Groups (SG)
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Security groups act as virtual firewalls for AWS resources (attached to network interfaces) to control inbound and outbound traffic.
+- **Nature**: They are stateful—once an inbound rule allows a connection, the corresponding response traffic is automatically allowed.
+
+2. Key Characteristics
+-----------------------
+- **Stateful Operation**:
+  - No need to explicitly allow response traffic.
+  - Rules are applied based on connection state; if a request is permitted, its response is implicitly allowed.
+- **Implicit Deny**:
+  - Security groups only allow traffic that is explicitly permitted.
+  - There is no option for an explicit deny rule; all traffic not allowed is automatically denied.
+- **Attachment**:
+  - Security groups are not directly attached to instances but to their primary network interfaces (ENIs).
+
+3. Rule Configuration
+-----------------------
+- **Inbound Rules**: Specify allowed incoming traffic (e.g., TCP port 443 from any source for a web server).
+- **Outbound Rules**: Specify allowed outgoing traffic.
+- **Logical References**:
+  - Security groups can reference other security groups.
+  - This allows rules to dynamically apply to any resource associated with the referenced security group (e.g., allowing traffic from all instances in a “web” security group to instances in an “app” security group).
+  - Self-referencing is also supported to allow intra-group communication, which is especially useful in auto scaling groups or clustered applications.
+
+4. Comparison with Network ACLs (NACLs)
+----------------------------------------
+- **Security Groups**:
+  - **Stateful**: Automatically track connection state.
+  - **Rules**: Only support explicit allow rules (all other traffic is implicitly denied).
+  - **Granularity**: Can reference AWS logical resources (other security groups) for flexible access control.
+- **NACLs**:
+  - **Stateless**: Require separate rules for request and response.
+  - **Rules**: Support both explicit allow and explicit deny.
+  - **Usage**: Often used in conjunction with security groups to block specific IP addresses or ranges.
+
+5. Practical Considerations
+---------------------------
+- **Scaling & Management**:
+  - Logical referencing simplifies management as new instances inherit the security group’s rules automatically.
+  - Useful for multi-tier applications where different layers (web, app, database) require distinct but interrelated access controls.
+- **Limitations**:
+  - Cannot block specific traffic via explicit deny; for that, NACLs must be used.
