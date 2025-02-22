@@ -1,0 +1,47 @@
+========================================
+4-VPC Routing, Internet Gateway & Bastion Hosts
+========================================
+
+1. VPC Router & Route Tables
+-----------------------------
+- **VPC Router**: A highly available router present in every VPC that automatically handles traffic between subnets.
+  - Each subnet gets a router interface (using reserved IPs, e.g., network+1 for the VPC router).
+- **Route Tables**:
+  - Define how traffic leaves a subnet.
+  - Every VPC has a main route table; custom route tables can be associated with specific subnets.
+  - Local routes (covering the entire VPC CIDR for IPv4/IPv6) are automatically present and cannot be modified.
+  - Routes are selected based on the most specific (highest prefix) match.
+
+2. Internet Gateway (IGW)
+--------------------------
+- **Function**: Enables communication between the VPC and the public Internet.
+  - Must be attached to the VPC; a VPC can have at most one IGW.
+  - It is regionally resilient and functions across all Availability Zones in the VPC.
+- **Traffic Flow with Public IPs**:
+  - Instances launch with private IPv4 addresses only.
+  - When a public IPv4 address is allocated, the IGW maintains a mapping between the instance’s private IP and its public IP.
+  - Outbound packets leaving an instance have their source IP translated by the IGW to the public IP, and vice versa for inbound responses.
+- **IPv6 Behavior**:
+  - With IPv6, the instance’s address is public and configured on the OS; no NAT is performed.
+
+3. Bastion Hosts (Jump Boxes)
+------------------------------
+- **Purpose**: Serve as secure entry points for managing resources in private subnets.
+  - Typically deployed in a public subnet.
+  - Users connect to the bastion host (via SSH/RDP) and then access private instances.
+- **Security Consideration**:
+  - Often restricted by source IP or other authentication measures.
+  - Though widely used, bastion hosts are now supplemented by more secure access methods in modern architectures.
+
+4. Key Points for the Exam and Real-World Design
+--------------------------------------------------
+- **Routing Fundamentals**:
+  - Route tables control how traffic is forwarded based on destination IP ranges.
+  - The most specific route (higher prefix value) is chosen.
+- **IGW Characteristics**:
+  - One-to-one relationship with a VPC.
+  - Facilitates NAT for IPv4 while IPv6 addresses remain unchanged.
+- **Subnet Association**:
+  - A subnet’s route table determines whether it is “public” (if it has a default route pointing to an IGW) or “private.”
+- **Bastion Host Role**:
+  - Acts as a single point of entry into private networks; an essential component for secure management in many AWS architectures.

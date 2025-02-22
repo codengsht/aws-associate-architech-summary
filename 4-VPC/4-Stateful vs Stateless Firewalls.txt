@@ -1,0 +1,43 @@
+========================================
+4-Stateful vs Stateless Firewalls
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Understand the key differences between stateless and stateful firewalls, especially in the context of TCP/IP traffic in AWS.
+- **Relevance**: Critical for designing secure VPC architectures and configuring firewall rules effectively.
+
+2. TCP/IP Refresher
+-------------------
+- **TCP/IP Basics**:
+  - **IP Packets**: Each packet has a source and destination IP.
+  - **TCP Layer**: Adds error correction and ports (e.g., HTTP on port 80, HTTPS on port 443).
+- **Connection Components**:
+  - **Request**: Client initiates connection from an ephemeral port (usually 1024–65535) to a server’s well-known port.
+  - **Response**: Server responds back to the client’s ephemeral port.
+- **Directionality**:
+  - Perspective matters—what is outbound for the client is inbound for the server and vice versa.
+
+3. Stateless Firewalls
+----------------------
+- **Key Characteristics**:
+  - Do **not** track the state of a connection.
+  - Treat each packet (request and response) as separate, independent flows.
+- **Implications for Rule Configuration**:
+  - **Separate Rules Needed**: Must explicitly allow both the outbound request and the corresponding inbound response.
+  - **Ephemeral Port Range**: Since the firewall doesn’t track state, it often must allow the entire ephemeral port range for responses.
+  - **Example**: A client request to TCP port 443 (HTTPS) is outbound; the server’s response coming from port 443 to a random ephemeral port is seen as a separate, inbound connection.
+  
+4. Stateful Firewalls
+---------------------
+- **Key Characteristics**:
+  - **Track Connection State**: Automatically associate response packets with their corresponding requests.
+  - **Simplified Rule Management**: Only the initial request rule is required; the firewall permits the matching response automatically.
+  - **Narrower Port Ranges**: No need to open the full ephemeral port range since the firewall knows which port the response is using.
+
+5. Practical Considerations for AWS
+-------------------------------------
+- **Rule Design**:
+  - With **stateless firewalls**, carefully design both outbound and inbound rules, ensuring that the full range of ephemeral ports is permitted for responses.
+  - With **stateful firewalls**, focus primarily on allowing the outbound request since the response is handled automatically.
+- **Exam Tip**: Remember that in stateless firewalls, each connection requires two distinct rules (one for request, one for response), whereas stateful firewalls simplify this process by linking responses to allowed requests.

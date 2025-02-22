@@ -1,0 +1,59 @@
+========================================
+4-Network Access Control Lists (NACLs)
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Network ACLs (NACLs) act as stateless firewalls for subnets within a VPC, filtering traffic that enters or leaves a subnet.
+- **Key Role**: They provide an additional layer of security by explicitly allowing or denying traffic based solely on IP addresses, port ranges, and protocols.
+
+2. How NACLs Work
+-----------------
+- **Association**:
+  - Each subnet in a VPC is associated with a network ACL.
+  - A single NACL can be applied to multiple subnets; however, each subnet can have only one NACL at a time.
+- **Traffic Filtering**:
+  - **Inbound Rules**: Filter traffic entering the subnet.
+  - **Outbound Rules**: Filter traffic leaving the subnet.
+- **Stateless Nature**:
+  - NACLs do not maintain connection state.
+  - Each connection requires separate rules for both the request and the response.
+  - For example, if a client initiates a request (outbound) from an instance, there must be a corresponding inbound rule for the response traffic.
+
+3. Rule Processing and Order
+------------------------------
+- **Rule Evaluation**:
+  - NACL rules are evaluated in order based on ascending rule numbers.
+  - The first rule that matches the traffic is applied.
+- **Default Behavior**:
+  - If no rule matches, an implicit deny (represented by a wildcard “*”) is applied.
+- **Explicit Allow and Deny**:
+  - Rules can explicitly allow or deny traffic.
+  - Deny rules take precedence if encountered in the evaluation order.
+
+*Example Table: Simplified NACL Rule Structure*
+
+| Rule Number | Direction | Protocol | Port Range   | Source/Destination  | Action        |
+|-------------|-----------|----------|--------------|---------------------|---------------|
+| 100         | Inbound   | TCP      | 443          | 0.0.0.0/0           | Allow         |
+| 120         | Outbound  | TCP      | 1024-65535  | 0.0.0.0/0           | Allow         |
+| *           | Both      | Any      | Any          | Any                 | Implicit Deny |
+
+4. Practical Considerations
+----------------------------
+- **Subnet Scope**:
+  - NACLs affect traffic crossing subnet boundaries.
+  - Traffic between instances within the same subnet is not filtered by NACLs.
+- **Complexity in Multi-Tier Architectures**:
+  - In multi-tier setups (e.g., web and application subnets), separate NACL rules are required for each subnet involved in cross-subnet traffic.
+  - For each connection crossing boundaries, rules must be configured on both the source and destination subnets.
+- **Complementary to Security Groups**:
+  - While security groups are stateful (automatically handling responses), NACLs are stateless and can explicitly deny traffic.
+  - They are often used together: security groups to allow desired traffic and NACLs to block unwanted IPs or ranges.
+
+5. Key Exam Points
+------------------
+- **Stateless Nature**: Understand that NACLs treat request and response as separate flows.
+- **Rule Order**: Rules are processed in ascending order; the first match determines the action.
+- **Subnet Specificity**: A subnet has exactly one NACL; however, a single NACL can cover multiple subnets.
+- **Explicit Deny**: NACLs support both explicit allow and explicit deny rules, unlike security groups which only allow.

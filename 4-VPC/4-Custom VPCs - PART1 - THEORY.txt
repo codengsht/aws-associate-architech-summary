@@ -1,0 +1,51 @@
+========================================
+4-Custom VPCs - PART1 - THEORY
+========================================
+
+1. Overview
+-----------
+- **Purpose**: This lesson focuses on designing a well-structured and scalable AWS VPC as part of a broader IP addressing plan.
+- **Goal**: Learn how to plan IP ranges, subdivide them into VPCs and subnets, and structure networks to support multiple tiers and availability zones for future growth.
+
+2. Key Planning Considerations
+------------------------------
+- **IP Address Planning**:
+  - Decide on the overall CIDR block for your VPC(s) early in the design.
+  - Avoid using common or overlapping ranges (e.g., avoid defaults like 10.0.0.0/8 if possible) to prevent conflicts with on-premises, partner, or other cloud networks.
+  - Incorporate buffer ranges to accommodate future expansion.
+- **Business Requirements**:
+  - Understand how many networks (or IP ranges) are needed based on regions and AWS accounts.
+  - For example, planning for multiple regions (e.g., three in the US, one in Europe, one in Australia) and several AWS accounts can lead to needing dozens of non-overlapping IP ranges.
+
+3. VPC Structure and Sizing
+---------------------------
+- **VPC Shell**:
+  - VPCs are regionally isolated and serve as network boundaries that limit the blast radius in case of security or operational issues.
+  - They can be customized extensively compared to the AWS default VPC.
+- **Subnet Division**:
+  - Break the VPC’s CIDR block into smaller subnets, typically by tiers (e.g., web, application, database, and a spare for future use) and by availability zones.
+  - In the example scenario, using three active availability zones (A, B, C) and four tiers results in a design with 12 subnets.
+- **Tenancy Options**:
+  - Choose between default tenancy (shared hardware with per-resource options) and dedicated tenancy (all resources on dedicated hardware, at a cost premium).
+  - The recommendation is to use default tenancy unless dedicated hardware is specifically required.
+
+4. Additional VPC Features
+--------------------------
+- **IP Versions**:
+  - VPCs support IPv4 (mandatory) and optionally IPv6 (via a /56 CIDR).
+  - IPv6 addresses in AWS are publicly routable by default, so connectivity must be explicitly managed.
+- **DNS Integration**:
+  - AWS VPCs come with built-in DNS services provided by Route 53.
+  - Key settings include “enable DNS hostnames” (for public DNS names on instances with public IPs) and “enable DNS support” (for overall DNS resolution within the VPC).
+
+5. Practical Application: Animals For Life Example
+----------------------------------------------------
+- **Scenario Context**:
+  - The design is based on the "Animals For Life" organization, which is planning global operations.
+  - The IP plan must avoid certain ranges (e.g., those used by Google Cloud) and reserve sufficient IP space for each region and account.
+- **Documented Plan**:
+  - An accompanying PDF (e.g., “Animals for Life IP Plan”) outlines reserved ranges, allocations per region/account, and the subnet breakdown.
+- **Implementation Steps**:
+  - Begin by creating the VPC shell with the chosen CIDR.
+  - Subdivide the VPC into subnets based on availability zones and tiers.
+  - Future lessons will cover adding gateways, bastion hosts (with a discussion on security best practices), and network ACLs.
