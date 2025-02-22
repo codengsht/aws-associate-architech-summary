@@ -1,0 +1,68 @@
+========================================
+3-AWS Permissions Evaluation
+========================================
+
+1. Overview
+-----------
+- AWS policy evaluation determines the final effective permissions when an identity attempts to access a resource.
+- This process is critical for designing, troubleshooting, and securing multi-layered AWS architectures.
+- It applies within a single account as well as across multiple accounts.
+
+2. Core Components in Evaluation (in order)
+---------------------------------------------
+- **Explicit Deny**: 
+  - If any policy explicitly denies the action, access is immediately denied.
+- **Service Control Policies (SCPs)**:
+  - Apply at the organizational level (within AWS Organizations) and affect member accounts.
+  - Only the SCPs attached to the identity's account are evaluated.
+- **Resource Policies**:
+  - Attached to the resource (e.g., S3 bucket policies) and must allow the action.
+- **Permissions Boundaries**:
+  - Define the maximum permissions an identity can have; if the boundary does not allow the action, access is denied.
+- **Session Policies**:
+  - Applied when assuming a role; these can further restrict the permissions granted by the role.
+- **Identity Policies**:
+  - Policies directly attached to the IAM identity (user, group, or role) that grant permissions.
+- **Final Evaluation**:
+  - If any applicable identity policy explicitly allows the action, and no deny exists in earlier steps, the request is allowed.
+  - In the absence of an explicit allow, access is implicitly denied.
+
+3. Evaluation Process for Single Account Access
+-------------------------------------------------
+Step-by-Step:
+1. **Aggregate all policies** applicable to the identity and resource.
+2. **Check for Explicit Deny**: 
+   - If found, immediately deny the request.
+3. **Evaluate SCPs**:
+   - Must allow the action; if not, the action is implicitly denied.
+4. **Evaluate Resource Policies**:
+   - Look for an explicit allow; if present, grant access.
+5. **Evaluate Permissions Boundaries**:
+   - Must permit the action; otherwise, implicit deny.
+6. **Evaluate Session Policies** (if using a role):
+   - Must not restrict the intended action.
+7. **Evaluate Identity Policies**:
+   - An explicit allow here permits the action if no denies are present.
+
+4. Multi-Account (Cross-Account) Access
+----------------------------------------
+- **Scenario**:
+  - Account A: Contains the identity with its attached policies.
+  - Account B: Contains the resource with its resource policy.
+- **Requirements**:
+  - Account A must allow the action via its identity policies (and pass SCP, boundary, etc.).
+  - Account B’s resource policy must explicitly allow access from Account A.
+- **Outcome**:
+  - Access is granted only if both Account A (source) and Account B (destination) allow the action.
+  - If either account denies or fails to allow the action, access is denied.
+
+5. Summary Table: Single vs. Multi-Account Evaluation
+
+| Evaluation Stage             | Single Account                      | Multi-Account (Cross-Account)                         |
+|------------------------------|-------------------------------------|-------------------------------------------------------|
+| Explicit Deny                | Highest priority, stops evaluation  | Same – any explicit deny in any account denies access |
+| Service Control Policies     | Evaluated from the identity’s account | Only SCPs from Account A (identity’s account) are relevant  |
+| Resource Policies            | Must allow the action               | Account B’s resource policy must explicitly allow access  |
+| Permissions Boundaries       | Limit identity permissions          | Same applies; must allow action in Account A           |
+| Session Policies             | Applied when assuming roles         | Same as in single account                              |
+| Identity Policies            | Must contain an explicit allow      | Account A’s identity policies must allow action         |

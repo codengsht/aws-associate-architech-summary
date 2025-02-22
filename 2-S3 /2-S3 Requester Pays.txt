@@ -1,0 +1,41 @@
+========================================
+2-S3 Requester Pays
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 Requester Pays shifts the data transfer cost responsibility from the bucket owner to the requester.
+- **Scenario**: Two buckets—one normal (owned by Julie) and one with Requester Pays enabled (owned by Mike)—illustrate the cost difference when serving popular datasets.
+
+2. How It Works
+---------------
+- **Standard Bucket (Julie’s)**:
+  - Data uploads are free.
+  - Data retrieval costs (data transfer charges) are borne by the bucket owner.
+  - Can be used with unauthenticated access methods like static website hosting and BitTorrent.
+- **Requester Pays Bucket (Mike’s)**:
+  - Bucket setting is configured to shift download costs to the requester.
+  - Only authenticated requests are allowed; unauthenticated access (e.g., via static website hosting or BitTorrent) is not supported.
+  - Requesters must include the header `x-amz-request-payer` to confirm they agree to pay for data transfer charges.
+  - This approach can greatly reduce costs for the bucket owner when data is accessed by many users.
+
+3. Key Considerations
+---------------------
+- **Authentication Requirement**: 
+  - Requesters must be authenticated users.
+  - The `x-amz-request-payer` header must be included in requests.
+- **Cost Allocation**:
+  - In Requester Pays buckets, each download incurs a cost charged to the requester’s account.
+  - This is particularly beneficial for buckets hosting popular datasets, especially for smaller businesses.
+- **Limitations**:
+  - Requester Pays cannot be used with features that require unauthenticated access (e.g., static website hosting, BitTorrent).
+
+4. Comparison Table: Normal vs. Requester Pays Buckets
+
+| Aspect                    | Normal Bucket (Owner Pays)         | Requester Pays Bucket                              |
+|---------------------------|------------------------------------|---------------------------------------------------|
+| Data Upload Cost          | Free                               | Free                                              |
+| Data Download Cost        | Billed to bucket owner             | Billed to requester (must include header)         |
+| Authentication Requirement| Not mandatory for access methods   | Mandatory; only authenticated requests allowed    |
+| Supported Access Methods  | Supports unauthenticated methods   | Does not support static website hosting or BitTorrent |
+| Ideal Use Case            | Low-traffic or internal datasets   | Popular datasets with high download volumes       |

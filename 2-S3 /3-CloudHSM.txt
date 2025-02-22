@@ -1,0 +1,58 @@
+========================================
+3-CloudHSM
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Cloud HSM is a dedicated, single-tenant hardware security module hosted in AWS.
+- **Functionality**: It creates, stores, and manages cryptographic keys and performs cryptographic operations.
+- **Key Use Cases**: Suitable for high-security environments, client-side encryption, offloading SSL/TLS processing, and integration with non-AWS products (e.g., Oracle TDE, custom certificate authorities).
+
+2. Key Differences: Cloud HSM vs. AWS KMS
+------------------------------------------
+- **Architecture & Isolation**:
+  - **Cloud HSM**: 
+    - Provides a dedicated hardware appliance.
+    - Physically partitioned from AWS operations; only the customer controls key access.
+    - Deployed in an AWS-managed Cloud HSM VPC and connected to your VPC via elastic network interfaces.
+    - Requires a cluster (with at least one HSM per Availability Zone) for high availability.
+  - **AWS KMS**:
+    - A multi-tenant service where keys are managed by AWS.
+    - Uses HSMs under the hood but is abstracted and integrated with AWS services.
+- **Compliance Levels**:
+  - **Cloud HSM**: FIPS 140-2 Level 3 compliant.
+  - **AWS KMS**: Generally FIPS 140-2 Level 2 (with some components at Level 3).
+- **Integration & APIs**:
+  - **Cloud HSM**: 
+    - Accessed via industry-standard APIs (e.g., PKCS #11, JCE, and Crypto NG).
+    - Not natively integrated with AWS services (e.g., cannot be used directly with S3 Server-Side Encryption).
+  - **AWS KMS**: 
+    - Fully integrated with AWS services using AWS standard APIs.
+    - Managed via IAM permissions and AWS APIs.
+- **Control & Maintenance**:
+  - **Cloud HSM**: 
+    - Customer-managed keys with exclusive access; AWS performs maintenance but cannot access key material.
+    - No built-in integration with AWS for key management; must use custom key store features if integration is needed.
+  - **AWS KMS**: 
+    - AWS-managed keys with some customer control through policies.
+    - Easier integration with other AWS services.
+
+3. Deployment Architecture
+--------------------------
+- **Cloud HSM Cluster**:
+  - Deployed in an AWS-managed VPC.
+  - Injected into your customer-managed VPC via Elastic Network Interfaces.
+  - Requires installation of the Cloud HSM client on EC2 instances for access.
+  - Keys and configuration are automatically replicated among HSMs in the cluster.
+
+4. Use Cases & Considerations
+-----------------------------
+- **When to Use Cloud HSM**:
+  - When compliance demands FIPS 140-2 Level 3.
+  - For industry-standard API support in non-AWS integrations.
+  - To offload cryptographic operations (e.g., SSL/TLS acceleration) from general-purpose compute.
+  - When you need full control over the HSM environment and keys.
+- **When to Use AWS KMS**:
+  - When deep integration with AWS services is required.
+  - When ease of management and multi-tenancy is acceptable.
+  - For most AWS native encryption tasks, unless higher security isolation is mandated.

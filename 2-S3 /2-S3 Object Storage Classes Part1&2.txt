@@ -1,0 +1,77 @@
+========================================
+2-S3 Object Storage Classes Part1&2
+========================================
+
+1. Overview
+-----------
+- **Purpose**: Understand the different S3 storage classes, their costs, technical features, and trade-offs.
+- **Exam Relevance**: Important for both associate and professional levels to select the correct storage class based on usage, durability, latency, and cost considerations.
+
+2. S3 Standard
+--------------
+- **Replication**: Data is stored across at least three Availability Zones.
+- **Durability**: 11 nines; extremely durable (e.g., losing 1 object in 10 million takes thousands of years).
+- **Access**: Millisecond latency with immediate availability; supports public access via S3 permissions or static website hosting.
+- **Cost Model**: Charged per GB-month for storage, per request, and per GB of data transferred out. No minimum duration or size restrictions.
+- **Use Case**: Default for critical, frequently accessed, and irreplaceable data.
+
+3. S3 Standard-Infrequent Access (Standard-IA)
+------------------------------------------------
+- **Replication & Durability**: Similar to S3 Standard (data in at least three AZs; 11 nines durability).
+- **Cost Benefits**: Lower storage cost (about half the price) compared to S3 Standard.
+- **Additional Charges**: Retrieval fees per GB retrieved.
+- **Minimums**: Minimum storage duration of 30 days and a minimum charge for objects of 128 KB.
+- **Use Case**: Best for long-lived but infrequently accessed data (avoid using for small, frequently updated, or temporary files).
+
+4. S3 One Zone-Infrequent Access (One Zone-IA)
+------------------------------------------------
+- **Replication**: Data is stored in a single Availability Zone.
+- **Cost**: Lower cost than Standard-IA due to reduced redundancy.
+- **Risk**: Increased risk of data loss if the single Availability Zone fails, though data remains durable within that zone.
+- **Use Case**: Suitable for non-critical, reproducible data, or secondary backup copies.
+
+5. Glacier Storage Classes
+---------------------------
+- **Glacier Instant Retrieval**:
+  - **Performance**: Provides instant access like Standard-IA but with lower storage costs.
+  - **Minimum Duration**: 90-day minimum.
+  - **Retrieval Cost**: Higher retrieval fees.
+  - **Use Case**: For data that must be accessed instantly but very infrequently (e.g., quarterly).
+
+- **Glacier Flexible Retrieval (formerly Glacier)**:
+  - **Performance**: Data is not immediately available; requires a retrieval job.
+  - **Retrieval Options**: 
+    - Expedited: Data available within ~5 minutes.
+    - Standard: Data available in 3-5 hours.
+    - Bulk: Data available in 5-12 hours.
+  - **Minimum Duration & Size**: 90-day minimum; objects have a 40 KB minimum billable size.
+  - **Use Case**: For archival data where occasional access is acceptable within minutes to hours.
+
+- **Glacier Deep Archive**:
+  - **Performance**: Data is in a “frozen” state.
+  - **Retrieval Times**: Standard retrieval takes 12 hours; bulk can take up to 48 hours.
+  - **Cost**: Lowest storage cost.
+  - **Minimums**: Same as Glacier Flexible Retrieval (40 KB, 90-day minimum).
+  - **Use Case**: For long-term archival data with very infrequent access where retrieval latency is acceptable (e.g., legal records, long-term backups).
+
+6. Intelligent-Tiering
+------------------------
+- **Mechanism**: Automatically moves objects between tiers based on changing access patterns.
+- **Tiers**: Includes frequent access, infrequent access, archive instant access, archive access, and deep archive tiers.
+- **Operation**: 
+  - Objects start in the frequent access tier and are automatically transitioned based on access history.
+  - When objects are frequently accessed again, they are moved back without incurring retrieval charges.
+- **Cost Consideration**: Incurs a small monitoring/automation fee per 1,000 objects, in addition to standard storage and retrieval fees.
+- **Use Case**: Ideal for long-lived data with unpredictable access patterns.
+
+7. Comparison Table: S3 Storage Classes
+
+| Storage Class                 | Redundancy                | Access Latency       | Minimum Duration    | Additional Costs                    | Typical Use Case                                         |
+|-------------------------------|---------------------------|----------------------|---------------------|-------------------------------------|----------------------------------------------------------|
+| S3 Standard                   | 3+ AZs                   | Milliseconds         | None                | Per GB storage, request, and data transfer out | Critical, frequently accessed, irreplaceable data       |
+| S3 Standard-Infrequent Access | 3+ AZs                   | Milliseconds         | 30 days             | Retrieval fee + per GB storage      | Long-lived data accessed infrequently; not for small/temporary files |
+| S3 One Zone-IA                | 1 AZ                     | Milliseconds         | 30 days             | Retrieval fee + per GB storage      | Non-critical, reproducible data; backups or replicas      |
+| Glacier Instant Retrieval     | 3+ AZs (similar to IA)   | Instant              | 90 days             | Higher retrieval fees               | Data needing instant access occasionally (e.g., quarterly)|
+| Glacier Flexible Retrieval    | 3+ AZs                   | Minutes to hours     | 90 days             | Retrieval fees per job              | Archival data with acceptable multi-hour retrieval times |
+| Glacier Deep Archive          | 3+ AZs                   | 12-48 hours          | 90 days             | Lowest storage cost; retrieval fees | Long-term archival with very infrequent access             |
+| Intelligent-Tiering           | Varies by tier           | Varies by tier       | Varies by tier      | Management fee per 1,000 objects    | Data with unpredictable access patterns                  |

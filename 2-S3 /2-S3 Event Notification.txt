@@ -1,0 +1,59 @@
+========================================
+2-S3 Event Notification
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 Event Notifications enable you to trigger actions automatically when certain events occur in an S3 bucket.
+- **Use Cases**: Automate workflows, process images, handle deletions, monitor object restores, and track replication events.
+
+2. How S3 Event Notifications Work
+-----------------------------------
+- **Configuration**: 
+  - Set up event notification rules on an S3 bucket.
+  - Rules specify which events (e.g., object creation, deletion, restore, or replication) trigger notifications.
+  - Rules can be scoped by object prefixes or tags.
+- **Event Flow**:
+  - When an event occurs in the bucket, S3 generates an event notification.
+  - The event is delivered to configured destinations such as SNS topics, SQS queues, or Lambda functions.
+  - S3 uses its own internal "S3 principal" to send the event, so destination services must allow S3 (via resource policies).
+
+3. Supported Event Types
+------------------------
+- **Object Creation Events**:
+  - Triggered when objects are added (e.g., via PUT, POST, COPY, or completion of multipart uploads).
+  - *Use Case*: Process or transform new images.
+- **Object Deletion Events**:
+  - Triggered when objects or delete markers are removed.
+  - *Use Case*: Monitor unauthorized deletions or maintain audit logs.
+- **Object Restore Events**:
+  - Triggered when restore operations from Glacier or Glacier Deep Archive begin or complete.
+  - *Use Case*: Notify users or systems about data availability.
+- **Replication Events**:
+  - Triggered for events related to replication status (e.g., when replication exceeds a 15-minute threshold or fails).
+  - *Use Case*: Monitor and troubleshoot replication processes.
+
+*Comparison Table: Key S3 Event Types*
+
+| Event Type           | Description                                              | Typical Use Case                                 |
+|----------------------|----------------------------------------------------------|--------------------------------------------------|
+| Object Creation      | Triggered on object uploads (PUT, POST, COPY, multipart completion) | Process new files (e.g., image transformation)   |
+| Object Deletion      | Triggered on deletions or delete marker creation         | Audit and security monitoring                     |
+| Object Restore       | Triggered when objects in Glacier are restored            | Notify users or systems when archived data becomes available |
+| Replication          | Triggered on replication events (e.g., delays, failures)  | Monitor replication status and handle errors       |
+
+4. Architecture & Configuration
+---------------------------------
+- **Event Notification Setup**:
+  - Defined on the source S3 bucket.
+  - Specifies event filters, destinations, and (if needed) additional actions.
+- **Destinations**:
+  - **SNS Topics**: Publish messages for fan-out to multiple subscribers.
+  - **SQS Queues**: Queue events for processing by consumers.
+  - **Lambda Functions**: Trigger serverless processing workflows.
+- **Resource Policies**:
+  - Necessary on destination services (e.g., Lambda, SQS) to allow S3 to send notifications.
+  - Policies must grant the S3 service principal permission to invoke actions on these resources.
+- **EventBridge Alternative**:
+  - AWS EventBridge offers broader event handling and integration.
+  - EventBridge may be preferred for more complex, scalable, or cross-service event management.

@@ -1,0 +1,67 @@
+========================================
+2-S3 Replication
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 replication automatically copies objects from a source bucket to a destination bucket.
+- **Types**:
+  - **Cross Region Replication (CRR)**: Replicates objects to buckets in different AWS regions.
+  - **Same Region Replication (SRR)**: Replicates objects within the same AWS region.
+- **Key Benefit**: Enhances data resilience, reduces latency, aids in compliance (e.g., data sovereignty), and supports backup and disaster recovery.
+
+2. Replication Architecture & Configuration
+---------------------------------------------
+- **Replication Configuration**:
+  - Set up on the **source bucket**.
+  - Specifies the destination bucket and an IAM role for replication.
+  - **IAM Role**: Must have a trust policy that allows S3 to assume the role; the role’s permissions grant read access to the source and write access to the destination.
+- **Same Account vs. Different Account**:
+  - *Same Account*: Both buckets are owned by the same AWS account, so the IAM role automatically has required trust.
+  - *Different Accounts*: The destination bucket (in a separate account) must have a bucket policy that explicitly grants the source account's IAM role permission to write objects.
+
+3. Replication Options and Features
+-------------------------------------
+- **Object Filtering**:
+  - You can replicate all objects by default or filter by prefixes and tags.
+- **Destination Storage Class Override**:
+  - Default: The destination retains the same storage class as the source.
+  - Option: Override to a different (often lower-cost) storage class for secondary copies.
+- **Object Ownership**:
+  - Default: Objects in the destination bucket are owned by the source account.
+  - Option: Override so that objects are owned by the destination account (important for cross-account replication).
+- **Replication Time Control (RTC)**:
+  - Provides a guaranteed 15-minute replication SLA along with additional monitoring.
+  - Use RTC when strict synchronization between source and destination is required.
+
+4. Key Considerations & Limitations
+-------------------------------------
+- **Non-Retroactivity**: Replication only applies to objects created after replication is enabled (unless specifically configured for existing objects).
+- **Versioning Requirement**: Both source and destination buckets must have versioning enabled.
+- **One-Way Process**: Replication is unidirectional by default (from source to destination). (Bidirectional replication is available but requires additional configuration.)
+- **Encryption Support**:
+  - Supports unencrypted objects and objects encrypted with SSE-S3 and SSE-KMS.
+  - Special configuration is needed for replicating objects encrypted with customer-managed keys.
+- **Ownership & Permissions**:
+  - Only objects owned by the source account are replicated.
+  - If cross-account, ensure the destination bucket policy permits access to the replication IAM role.
+- **System Events & Lifecycle Actions**:
+  - Replication does not copy system events or lifecycle management actions (such as transitions and expirations).
+- **Glacier Limitations**: Objects stored using Glacier or Glacier Deep Archive classes are not replicated.
+
+5. Use Cases
+------------
+- **Cross Region Replication (CRR)**:
+  - Global resilience and disaster recovery.
+  - Reducing latency by replicating data closer to end users.
+- **Same Region Replication (SRR)**:
+  - Log aggregation from multiple buckets.
+  - Synchronization between production and test or departmental accounts.
+  - Data isolation for compliance or audit purposes.
+
+6. Comparison Table: Replication in Same vs. Different AWS Accounts
+
+| Replication Type          | Bucket Ownership                 | Required Bucket Policy on Destination                  | Typical Use Case                                        |
+|---------------------------|----------------------------------|--------------------------------------------------------|---------------------------------------------------------|
+| Same Account Replication  | Both buckets owned by same account | Not required; role automatically trusted within account | Internal backup, data sync within a single organization |
+| Cross Account Replication | Buckets owned by different accounts | Required; destination bucket must grant write access to source account's IAM role | Data isolation, compliance, and sharing between departments or external partners |

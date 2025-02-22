@@ -1,0 +1,63 @@
+========================================
+2-S3 Security (Resource Policies & ACLs)
+========================================
+
+1. Overview
+-----------
+- **Default Privacy**: S3 buckets are private by default. Only the account root user initially has access.
+- **Access Control Methods**:
+  - **Bucket Policies (Resource Policies)**: Attached to the bucket, control who can access the bucket from any account.
+  - **Identity Policies**: Attached to IAM users/roles to define what those identities can access.
+  - **ACLs (Access Control Lists)**: Legacy, less flexible method; now generally discouraged.
+  - **Block Public Access Settings**: A safety mechanism to override any policies or ACLs that might allow public (anonymous) access.
+
+2. Bucket Policies (Resource Policies)
+----------------------------------------
+- **Purpose**: Grant or deny access from the resource perspective.
+- **Key Characteristics**:
+  - Can grant access to identities in the same account, different accounts, or even anonymous users.
+  - Include a **Principal** element to specify which identities (or "*" for all) are affected.
+- **Common Uses**:
+  - Allow cross-account access.
+  - Enable anonymous (public) read access if needed.
+- **Examples**:
+  - Allowing all principals to perform S3:GetObject.
+  - Denying access from specific IP ranges.
+  - Requiring MFA for accessing a particular prefix (e.g., a “Boris” folder).
+
+3. Access Control Lists (ACLs)
+-------------------------------
+- **Overview**:
+  - ACLs are a legacy mechanism for controlling access at both bucket and object levels.
+  - Offer a limited set of permissions (e.g., READ, WRITE, READ_ACP, WRITE_ACP, FULL_CONTROL).
+- **Limitations**:
+  - Inflexible (no conditions like IP filtering or MFA requirements).
+  - AWS recommends using bucket policies and identity policies instead.
+- **Usage**:
+  - Only use ACLs when no alternative exists.
+
+4. Block Public Access Settings
+---------------------------------
+- **Purpose**: Serve as an additional safety net to prevent accidental public exposure.
+- **Functionality**:
+  - Overrides bucket policies and ACLs for public (anonymous) access.
+  - Can be configured to block:
+    - All public access.
+    - New public access via ACLs, while allowing existing ones.
+    - Both existing and new public access from bucket policies and ACLs.
+- **Application**:
+  - Applied at bucket creation and adjustable later.
+  - Critical to prevent misconfigurations that lead to data leaks.
+
+5. Key Considerations and Exam Tips
+-------------------------------------
+- **Resource vs. Identity Policies**:
+  - **Resource (Bucket) Policies**: Control access from the bucket’s perspective and allow cross-account/anonymous access.
+  - **Identity Policies**: Control what an IAM user/role can do; only apply within your own account.
+- **When to Use Each**:
+  - Use **bucket policies** when you need to grant access to resources across different accounts or to anonymous users.
+  - Use **identity policies** for managing permissions for identities in your account.
+  - Avoid **ACLs** unless absolutely necessary.
+- **Block Public Access**:
+  - Understand that these settings are a final override to prevent any public (unauthenticated) access.
+  - They can block both new and existing public access depending on configuration.

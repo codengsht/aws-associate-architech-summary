@@ -1,0 +1,68 @@
+Summarize the key points of the lecture, focusing on the main topics discussed, essential details, and any conclusions drawn. Organize the summary in a structured format with headings for each major section. Ensure clarity and conciseness while retaining important information. 
+
+
+Additional to summary ceate tables where it’s seams appropriate e.g. comparison, display the differenced etc.
+For the table follow this structure:
+If create a table formatted with pipes (|) and dashes (-), adjust the alignment of the table as follows:
+	1.	Identify the Columns:
+Parse the header row to determine how many columns the table contains.
+	2.	Determine Column Widths:
+For each column, scan all cells (including the header and the data rows) and determine the maximum width needed for that column based on the longest text in that column.
+	3.	Reconstruct the Table:
+Rebuild the table by ensuring that each cell in every row (header and data rows) is padded with spaces so that it matches the determined width for that column.
+	•	The header row should be aligned to match the content width of its cells.
+	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as determined.
+
+
+  Generate an output file in (.txt)  and give me a download link.
+
+
+
+I will provide the lecture from audio recording transcript. Some words might not be captured accurately, be aware of that.
+
+I want you to:
+
+Summarize the key points of the lecture, focusing on the main topics discussed, essential details, and any conclusions drawn. Organize the summary in a structured format with headings for each major section. Ensure clarity and conciseness while retaining important information. 
+
+
+Additional to summary, ceate tables where deemed appropriate if there is a comparison or etc.. 
+For the table follow this structure:
+If create a table formatted with pipes (|) and dashes (-), adjust the alignment of the table as follows:
+	1.	Identify the Columns:
+Parse the header row to determine how many columns the table contains.
+	2.	Determine Column Widths:
+For each column, scan all cells (including the header and the data rows) and determine the maximum width needed for that column based on the longest text in that column.
+	3.	Reconstruct the Table:
+Rebuild the table by ensuring that each cell in every row (header and data rows) is padded with spaces so that it matches the determined width for that column.
+	•	The header row should be aligned to match the content width of its cells.
+	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as determined.
+
+
+Generate an output file for every summary, in (.txt) format. Please provide the download link.
+
+
+
+
+
+
+I will provide the lecture from audio recording transcript. Some words might not be captured accurately, be aware of that.
+
+I want you to:
+
+Summarize the key points of the lecture, focusing on the main topics discussed, essential details, and any conclusions drawn. Organize the summary in a structured format with headings for each major section. Ensure clarity and conciseness while retaining important information. 
+
+
+Additional to summary, ceate tables where deemed appropriate if there is a comparison or etc.. 
+For the table follow this structure:
+If create a table formatted with pipes (|) and dashes (-), adjust the alignment of the table as follows:
+	1.	Identify the Columns:
+Parse the header row to determine how many columns the table contains.
+	2.	Determine Column Widths:
+For each column, scan all cells (including the header and the data rows) and determine the maximum width needed for that column based on the longest text in that column.
+	3.	Reconstruct the Table:
+Rebuild the table by ensuring that each cell in every row (header and data rows) is padded with spaces so that it matches the determined width for that column.
+	•	The header row should be aligned to match the content width of its cells.
+	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as Gedetermined.
+
+
+Generate the summary in txt format and display the summary in code snippet so I can easily copy to my desktop. 

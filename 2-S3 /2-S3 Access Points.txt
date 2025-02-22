@@ -1,0 +1,40 @@
+========================================
+2-S3 Access Points
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 Access Points simplify managing access to large, complex S3 buckets—especially when multiple teams or use cases are involved.
+- **Benefit**: Instead of one monolithic bucket policy, you can create multiple access points each with its own policy and endpoint.
+
+2. How They Work
+---------------
+- **Multiple Views**:
+  - Each access point acts as a dedicated "view" on a single S3 bucket.
+  - They have unique DNS names and can restrict access (e.g., to specific VPCs or over the Internet).
+- **Policy Control**:
+  - Each access point has its own resource policy (similar to a bucket policy) that defines permitted actions, object prefixes, or tags.
+  - However, any permissions granted on an access point must also be allowed in the bucket policy.
+- **Creation**:
+  - Access points can be created via the AWS console or the API (using the `create-access-point` command).
+
+3. Use Case Example
+-------------------
+- **Scenario**: A bucket stores sensitive health information for an organization.
+  - **Users**: Admin staff, field workers, and vet staff.
+  - **Solution**: Create separate access points:
+    - One for admin staff.
+    - One for field workers.
+    - One for vet staff.
+    - An additional access point restricted to a VPC for internal data analysis.
+- **Advantage**: Simplifies permission management by delegating access controls to individual access point policies instead of a complex single bucket policy.
+
+4. Key Considerations
+---------------------
+- **Permissions Delegation**: 
+  - The bucket policy must allow the actions defined in the access point policies.
+  - This ensures that cross-account or VPC-restricted access works as intended.
+- **Endpoint Customization**:
+  - Each access point provides a unique endpoint that can be shared with specific user groups.
+- **Security and Scalability**:
+  - Access points help enforce least privilege by isolating access per team or function, making large-scale bucket management easier.

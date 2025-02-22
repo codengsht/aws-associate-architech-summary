@@ -1,0 +1,57 @@
+========================================
+2-S3 Object Lock
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 Object Lock is used to prevent objects from being overwritten or deleted for a specified retention period.
+- **Use Cases**: Critical for compliance (e.g., legal, financial, or medical records) and for preventing accidental deletions.
+- **Prerequisite**: Requires versioning to be enabled on the S3 bucket. Object lock settings apply to individual object versions.
+
+2. Key Components of Object Lock
+----------------------------------
+- **Object Retention**: Locks an object version for a specified period.
+  - **Retention Modes**:
+    - **Compliance Mode**:
+      - Once set, the retention period cannot be shortened or modified by anyone—not even the root user.
+      - Intended for strict regulatory requirements.
+    - **Governance Mode**:
+      - Retention settings can be overridden if the requester has the `s3:BypassGovernanceRetention` permission and provides the proper header.
+      - Useful for preventing accidental deletions while allowing flexibility when needed.
+- **Legal Hold**:
+  - A binary (on/off) state applied to an object version.
+  - When enabled, the object version cannot be deleted or overwritten regardless of retention settings.
+  - Can be removed (turned off) to allow normal operations.
+
+3. How Object Lock Works
+-------------------------
+- **Retention Period**:
+  - Defined either on individual object versions or set as a bucket default.
+  - The object remains immutable for the duration of the retention period.
+  - In **Compliance Mode**, the period is strictly enforced and cannot be reduced.
+  - In **Governance Mode**, authorized users can override the lock using special permissions.
+- **Legal Hold**:
+  - Independently locks the object version.
+  - Does not have a duration—it remains in effect until manually removed.
+  - Can be used in combination with retention settings.
+
+4. Interaction of Features
+---------------------------
+- **Combination Usage**:
+  - An object version may have a retention period (in either compliance or governance mode) and/or a legal hold.
+  - Legal hold and retention can overlap, making the object even more secure against deletion or modification.
+- **Permissions and Overrides**:
+  - In governance mode, users with the appropriate permission (`s3:BypassGovernanceRetention`) can modify or delete the object before the retention period expires.
+  - In compliance mode, no user (even with override permissions) can shorten or cancel the retention period.
+
+5. Exam Key Points
+------------------
+- **Retention vs. Legal Hold**:
+  - **Retention**: Sets a period during which an object version is locked.
+  - **Legal Hold**: A binary on/off setting that prevents deletion irrespective of time.
+- **Mode Differences**:
+  - **Compliance Mode**: Immutable for the retention period.
+  - **Governance Mode**: Can be overridden with proper permissions.
+- **Combined Effects**:
+  - Both features can be used together for layered protection.
+  - Understand the implications of each mode for meeting compliance and operational requirements.

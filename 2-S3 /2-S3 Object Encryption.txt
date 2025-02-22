@@ -1,0 +1,86 @@
+========================================
+2-S3 Object Encryption
+========================================
+
+1. Overview
+-----------
+- **Focus**: This lesson discusses S3 encryption, with an emphasis on Server-Side Encryption (SSE) while also touching on Client-Side Encryption.
+- **Key Concept**: Encryption is applied at the **object level**, not the bucket level. Although "bucket default encryption" exists, each object can have its own encryption settings.
+
+2. Encryption Architectures
+----------------------------
+- **Encryption at Rest**: Ensures that data stored on disk is encrypted so that even if physical disks are compromised, the data remains protected.
+- **Encryption in Transit**: Data is encrypted via HTTPS during transfer to/from S3. This lesson focuses on encryption at rest.
+- **Two Main Approaches**:
+  - **Client-Side Encryption**: 
+    - The client encrypts data before uploading it.
+    - The plaintext data is never seen by AWS.
+    - You control both the encryption/decryption process and key management.
+  - **Server-Side Encryption (SSE)**:
+    - S3 handles the encryption/decryption processes once data reaches AWS.
+    - Encryption occurs after the secure transfer (via HTTPS).
+    - There are three variants of SSE.
+
+3. Client-Side Encryption vs. Server-Side Encryption
+------------------------------------------------------
+- **Client-Side Encryption**:
+  - **Control**: Full control over both encryption processes and key management.
+  - **Responsibility**: The client must manage keys and maintain a mapping between keys and objects.
+  - **Resource Use**: Uses client resources (e.g., CPU) for encryption and decryption.
+  - **Data Exposure**: AWS only sees the encrypted (ciphertext) version.
+  
+- **Server-Side Encryption (SSE)**:
+  - **Control**: AWS manages the encryption/decryption processes.
+  - **Key Management Options**: Varies based on the SSE method chosen.
+  - **Default Behavior**: AWS now mandates encryption at rest for S3 objects.
+  - **Trust**: You must trust AWS to correctly discard or manage keys based on the chosen SSE option.
+
+*Comparison Table: Client-Side vs. Server-Side Encryption*
+
+| Aspect             | Client-Side Encryption                                       | Server-Side Encryption (SSE)                                   |
+|--------------------|--------------------------------------------------------------|----------------------------------------------------------------|
+| Who Encrypts Data  | The client/application                                       | AWS S3                                                         |
+| Key Management     | Managed by the client                                        | Managed by AWS (varies by SSE type)                            |
+| Resource Usage     | Uses client CPU and resources for encryption/decryption      | Offloads encryption workload to AWS servers                    |
+| Data Exposure      | AWS only sees encrypted data                                 | Data arrives in plaintext over HTTPS then encrypted by S3      |
+| Control Level      | Full control over keys and process                           | Limited control; depends on the chosen SSE method                |
+
+4. Server-Side Encryption (SSE) Methods
+----------------------------------------
+There are three SSE methods, each differing in key management and control:
+
+- **SSE-C (Server-Side Encryption with Customer-Provided Keys)**:
+  - **Key Management**: Customer supplies and manages the encryption key.
+  - **Process**: S3 handles the encryption/decryption using the provided key.
+  - **Key Handling**: The key is not stored by S3; only a one-way hash is kept to verify correct key use.
+  - **Use Case**: When strict control over keys is required and regulatory needs demand that AWS never manages your keys.
+
+- **SSE-S3 (Server-Side Encryption with S3-Managed Keys)**:
+  - **Key Management**: AWS automatically generates, manages, and rotates a unique key for each object.
+  - **Process**: S3 handles both the encryption operations and key management internally.
+  - **Control**: Minimal control; you cannot influence key rotation or manage keys.
+  - **Limitations**: Does not support role separation—S3 administrators may have access to the data.
+
+- **SSE-KMS (Server-Side Encryption with AWS Key Management Service)**:
+  - **Key Management**: Leverages AWS KMS for key generation and management.
+  - **Process**: S3 requests a data encryption key from KMS to encrypt the object. The plaintext key is used temporarily and discarded.
+  - **Control & Auditing**: Offers fine-grained control, customizable key policies, and detailed logging via CloudTrail.
+  - **Role Separation**: Allows separation of duties (e.g., S3 admins can manage objects without decrypting data) by controlling KMS key permissions.
+
+*Comparison Table: SSE Methods*
+
+| SSE Method | Key Management                       | Encryption Process           | Role Separation                   | Control Over Keys               |
+|------------|--------------------------------------|------------------------------|-----------------------------------|---------------------------------|
+| SSE-C      | Customer provides and manages keys   | S3 performs encryption/decryption using provided key | Limited role separation; depends on key provision | High control (customer-managed) |
+| SSE-S3     | Fully managed by AWS (automated key per object) | S3 handles encryption and key rotation internally | No role separation; S3 admins can access data       | Minimal control for customer    |
+| SSE-KMS    | Managed via AWS KMS (customer can choose custom KMS keys) | S3 integrates with KMS to generate and use data encryption keys | Enables role separation via KMS permissions            | High control with auditing      |
+
+5. Conclusion and Recommendations
+-----------------------------------
+- **Client-Side Encryption**:
+  - Use when you require complete control over the encryption process and key management, ensuring that AWS never has access to plaintext data.
+- **Server-Side Encryption (SSE)**:
+  - **SSE-S3**: Default option suitable for most use cases, but with limited control over keys and role separation.
+  - **SSE-C**: Choose if you must manage your own keys while offloading the encryption workload to S3.
+  - **SSE-KMS**: Ideal for environments needing fine-grained key management, regulatory compliance, and clear role separation between administrators and data access.
+- **Exam Tip**: Remember that SSE-S3 uses AES-256 encryption, a common point highlighted in AWS certification exams.

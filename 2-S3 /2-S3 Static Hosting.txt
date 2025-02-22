@@ -1,0 +1,43 @@
+========================================
+2-S3 Static Hosting
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 Static Website Hosting allows S3 buckets to serve content directly via HTTP, making them accessible to web browsers without using AWS APIs.
+- **Default Behavior**: By default, S3 is accessed via APIs; static website hosting enables standard web access using HTML pages.
+
+2. How It Works
+---------------
+- **Configuration**:
+  - Enable static website hosting on an S3 bucket.
+  - Specify an **index document** (e.g., index.html) and an **error document** (e.g., error.html).
+  - AWS automatically generates a static website endpoint based on the bucket name and region.
+- **Custom Domains**:
+  - To use a custom domain, the bucket name must exactly match the domain name.
+- **Content Requirements**:
+  - All served files should be HTML (or other web content) as static website hosting delivers HTML content.
+  
+3. Common Use Cases
+--------------------
+- **Simple Websites/Blogs**:
+  - Host static sites like personal blogs, documentation sites, or portfolios.
+- **Offloading Media**:
+  - Use static hosting to serve large media files (images, videos) separately, reducing load on primary compute services.
+- **Out-of-Band Pages**:
+  - Serve maintenance or status pages during downtime, ensuring availability even when the main server is offline.
+
+4. Pricing Model
+----------------
+- **Storage**: Billed per GB-month of storage.
+- **Data Transfer**: Free inbound data; outbound transfers incur charges per GB.
+- **Request Costs**: Each API operation (GET, PUT, LIST, etc.) is charged per 1,000 requests.
+- **Free Tier**: Includes 5 GB of storage, 20,000 GET requests, and 2,000 PUT requests monthly.
+
+5. Benefits and Considerations
+-------------------------------
+- **Cost Efficiency**: S3 offers very low storage and transfer costs, even for heavy usage.
+- **Scalability**: S3 can handle vast amounts of data and high traffic volumes with minimal charges.
+- **Use Case Suitability**:
+  - Ideal for serving static content that does not require server-side processing.
+  - Consider offloading static media and out-of-band pages to reduce the load (and cost) on your primary compute services.

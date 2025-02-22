@@ -1,0 +1,54 @@
+========================================
+2-S3 Bucket Keys
+========================================
+
+1. Overview
+-----------
+- **Topic**: Discussion of S3 Bucket Keys—a feature designed to reduce costs and improve scalability when using KMS encryption.
+- **Context**: Focused on the architecture and operational impact when encrypting objects in S3 with SSE-KMS.
+
+2. Default SSE-KMS Encryption Flow
+-----------------------------------
+- **Standard Process**:
+  - Every object uploaded to an S3 bucket with SSE-KMS requires a call to KMS.
+  - KMS generates a unique Data Encryption Key (DEK) per object.
+  - The object is encrypted with this DEK, and both the encrypted object and its corresponding DEK are stored in S3.
+- **Challenges**:
+  - **Cost**: Each KMS API call incurs a cost.
+  - **Throttling**: KMS limits the number of DEK generation calls (e.g., 50,000–100,000 calls per second per region), which can restrict scalability when dealing with high volumes (e.g., thousands of objects per second).
+
+3. S3 Bucket Keys Architecture
+-------------------------------
+- **Mechanism**:
+  - Instead of making a KMS call for each object, S3 uses a time-limited "bucket key."
+  - The KMS key generates a bucket key that is then used by S3 to encrypt DEKs for individual objects.
+- **Benefits**:
+  - **Reduced KMS Calls**: Offloads most encryption operations from KMS to S3.
+  - **Lower Costs**: Fewer KMS API calls reduce the overall cost.
+  - **Improved Scalability**: Limits on KMS calls are mitigated, allowing higher ingestion rates.
+
+4. Key Considerations and Nuances
+-----------------------------------
+- **Logging**:
+  - CloudTrail logs will show the bucket ARN instead of individual object ARNs.
+  - Fewer KMS-related CloudTrail events will be recorded.
+- **Replication**:
+  - S3 bucket keys work with both same-region and cross-region replication.
+  - For replicated objects, encryption settings are typically preserved.
+  - Note: If a plaintext object is replicated to a bucket with default encryption, S3 encrypts it at the destination, which may result in different ETags between source and destination.
+
+*Comparison Table: SSE-KMS with vs. without Bucket Keys*
+
+| Aspect                   | Standard SSE-KMS                        | SSE-KMS with Bucket Keys                          |
+|--------------------------|-----------------------------------------|---------------------------------------------------|
+| DEK Generation           | One KMS call per object                 | One KMS call per bucket key (used for multiple objects) |
+| Cost                     | Higher due to frequent KMS API calls    | Lower, due to reduced number of KMS calls         |
+| Scalability              | Limited by KMS throttling limits        | Improved; offloads work to S3                     |
+| CloudTrail Logging       | Logs show individual object ARNs        | Logs show bucket ARN; fewer KMS events            |
+| Replication Behavior     | Preserves individual object encryption settings | Works with same and cross-region replication; may affect ETags |
+
+5. Conclusion
+-------------
+- **Summary**: S3 bucket keys provide an effective solution for reducing costs and increasing scalability when using SSE-KMS by minimizing the number of direct calls to KMS.
+- **Impact**: This feature is especially beneficial in high-throughput scenarios, ensuring that KMS limits and costs do not impede performance.
+- **Next Steps**: Familiarize yourself with the detailed nuances (e.g., replication behaviors and logging changes) as these may be critical for AWS exams and practical deployments.

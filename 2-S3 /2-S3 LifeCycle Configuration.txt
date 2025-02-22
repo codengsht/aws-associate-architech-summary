@@ -1,0 +1,54 @@
+========================================
+2-S3 LifeCycle Configuration
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 lifecycle configuration allows you to automatically transition or expire objects in an S3 bucket.
+- **Benefits**: Optimizes cost and management for large buckets by automating storage class changes and object deletions.
+
+2. Lifecycle Configuration Basics
+-----------------------------------
+- **Rules**: A lifecycle configuration consists of rules that apply actions to objects based on specified criteria.
+  - **Scope**: Rules can target all objects in a bucket or a subset defined by prefixes or tags.
+- **Actions**: Two main types of actions can be applied:
+  - **Transition Actions**: Change the storage class of objects (e.g., moving from S3 Standard to S3 Standard-IA after 30 days).
+  - **Expiration Actions**: Permanently delete objects or object versions after a defined period.
+
+3. Transition Flow and Rules
+-----------------------------
+- **Conceptual Flow ("Waterfall" Model)**:
+  - Objects typically transition downward from higher-cost, high-performance classes to lower-cost archival classes as they age.
+  - **Allowed Transitions**:
+    - **S3 Standard** can transition to:
+      - Standard-IA, One Zone-IA, Intelligent-Tiering, and Glacier classes.
+    - **Standard-IA / One Zone-IA / Intelligent-Tiering** can transition to:
+      - Glacier Instant Retrieval, Glacier Flexible Retrieval, or Glacier Deep Archive.
+  - **Direction**: Transitions can only move downward (e.g., from Standard to IA or Glacier) and cannot be reversed within a single rule.
+
+4. Restrictions & Considerations
+----------------------------------
+- **Time-Based Minimums**:
+  - **30-Day Rule**: An object must reside in S3 Standard for at least 30 days before transitioning to Standard-IA or One Zone-IA.
+  - **Glacier Transition**: When using a single rule to move objects from S3 Standard through IA to Glacier classes, there is an additional 30-day requirement in the IA tier before transitioning to any Glacier tier.
+- **Object Size Considerations**:
+  - Small objects may incur equal or higher costs when transitioned due to minimum storage charge requirements (e.g., minimum 128 KB for IA classes).
+- **Non-Access Based**:
+  - Lifecycle rules operate solely on time criteria (not on access frequency). (Automatic transitions based on access are handled by Intelligent-Tiering.)
+
+5. Example Use Case
+-------------------
+- **Scenario**: An object (e.g., a photo) is initially stored in S3 Standard.
+  - **After 30 days**: Transition to Standard-IA or One Zone-IA.
+  - **After 90 days**: Transition to a Glacier storage class (following the required additional wait in IA if using a single rule).
+  - **Final Stage**: Optionally, expire (delete) the object if it is no longer needed.
+
+6. Lifecycle Transition Requirements Table
+
+| Transition Scenario                           | Minimum Duration Requirement | Comments                                                   |
+|-----------------------------------------------|------------------------------|------------------------------------------------------------|
+| S3 Standard → Standard-IA / One Zone-IA       | 30 days                      | Must remain in Standard for at least 30 days               |
+| Standard-IA / One Zone-IA → Glacier Classes     | Additional 30 days           | If using a single rule, must be in IA for 30 days before Glacier |
+| S3 Standard directly to other classes*       | Varies                       | Direct changes via CLI are allowed; lifecycle rules enforce timing constraints |
+
+*Note: When using lifecycle rules, objects must adhere to the timing requirements outlined above.

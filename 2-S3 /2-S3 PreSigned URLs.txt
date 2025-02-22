@@ -1,0 +1,47 @@
+========================================
+2-S3 PreSigned URLs
+========================================
+
+1. Overview
+-----------
+- **Purpose**: S3 presigned URLs provide temporary, secure access to objects in a private S3 bucket by embedding authentication details in the URL.
+- **Problem Addressed**: They offer a solution when external users or applications need access without being given direct AWS credentials or making the bucket public.
+
+2. How Presigned URLs Work
+---------------------------
+- **Private Bucket Context**: 
+  - S3 buckets are private by default, requiring proper AWS credentials (IAM users/roles) for access.
+  - Without credentials, access attempts would fail.
+- **Presigned URL Generation**:
+  - An IAM identity (commonly an IAM user with long-term credentials) requests a presigned URL by specifying:
+    - Bucket name
+    - Object key
+    - HTTP method (GET for download or PUT for upload)
+    - Expiration time
+  - S3 creates a URL that encodes the IAM identity’s access rights and an expiry timestamp.
+- **Usage**:
+  - The generated URL is shared with an external user or application.
+  - When the URL is used, S3 treats the request as if it were made by the IAM identity that generated it, applying the current permissions of that identity.
+
+3. Common Use Cases
+--------------------
+- **Short-term Access**: Granting temporary access for downloads or uploads without exposing AWS credentials.
+- **Media Delivery**: In a web application, presigned URLs can securely deliver media stored in S3 to end users.
+- **Avoiding Public Access**: Allows access control without having to make S3 buckets or objects public or distributing permanent credentials.
+
+4. Important Considerations & Exam Tips
+-----------------------------------------
+- **Permissions at Time of Use**: The presigned URL’s effectiveness depends on the current permissions of the identity that generated it. If the identity loses access or its credentials expire, the URL will no longer work.
+- **Generating URLs for Unavailable Objects**: It is possible to generate a presigned URL for an object even if you don't currently have access to it. However, the URL will not grant access if the underlying permissions aren’t met.
+- **Avoid Using Temporary Credentials**: 
+  - Generating presigned URLs with IAM roles (temporary credentials) is discouraged since these credentials may expire before the URL’s set expiration, rendering the URL unusable.
+  - It is best practice to use an IAM user with long-term credentials for presigned URL generation.
+
+5. Comparison: IAM User vs. IAM Role for Presigned URLs
+
+| Aspect                         | IAM User                                      | IAM Role (Temporary Credentials)                |
+|--------------------------------|-----------------------------------------------|-------------------------------------------------|
+| Credential Type                | Long-term credentials                         | Temporary credentials with limited lifetime     |
+| URL Validity (Post-Creation)   | Remains valid as long as the IAM user's permissions are intact | May expire if temporary credentials expire before the URL’s expiry |
+| Recommended Usage              | Preferred for generating presigned URLs       | Not recommended due to potential expiry issues  |
+| Typical Use Case               | Secure, long-term applications needing consistent URL validity | Situations with very short-term needs (rarely used) |
