@@ -1,5 +1,9 @@
 # Changelog 
 
+## 0.0.3
+- All the EC@ summaries are added.
+- o3-mini-high model used for summary
+
 ## 0.0.2
 - All the VPC summaries are added. 
 

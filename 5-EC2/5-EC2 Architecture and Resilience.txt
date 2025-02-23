@@ -1,0 +1,81 @@
+===========================================
+5-EC2 Architecture and Resilience
+===========================================
+
+1. Introduction
+---------------
+- This lesson dives into the detailed architecture of the EC2 (Easy 2) product.
+- EC2 is highlighted as a frequently used service with many exam questions focused on it.
+- The focus is on understanding how EC2 instances, hosts, and related resources are organized.
+
+2. EC2 Instance Architecture
+----------------------------
+- **EC2 Instances**: 
+  - Virtual machines that include an operating system and allocated resources (virtual CPU, memory, storage, etc.).
+  - May include additional hardware access (networking, GPUs).
+
+- **Resource Allocation**:
+  - Instances come with virtualized resources, which can be local (instance store) or remote (Elastic Block Store).
+
+3. EC2 Hosts: Shared vs. Dedicated
+-----------------------------------
+- **EC2 Hosts** are the physical servers managed by AWS on which instances run.
+- There are two types:
+  - **Shared Hosts**: 
+    - Hardware is shared across different AWS customers.
+    - Users pay based on instance usage, with complete isolation between customers.
+  - **Dedicated Hosts**: 
+    - The entire physical host is dedicated to one customer.
+    - Payment is for the entire host, with no resource sharing with other customers.
+
+-------------------------
+Comparison: Shared vs. Dedicated Hosts
+-------------------------
+| Aspect         | Shared Hosts                                              | Dedicated Hosts                                         |
+|----------------|-----------------------------------------------------------|---------------------------------------------------------|
+| Ownership      | Shared among multiple AWS customers                       | Exclusively assigned to a single customer              |
+| Payment Model  | Pay per instance usage based on allocated resources       | Pay for the entire host regardless of instance usage    |
+| Isolation      | Full isolation despite shared physical hardware         | No sharing; dedicated physical resources                |
+
+4. Availability Zone (AZ) Importance
+--------------------------------------
+- **AZ Confinement**:
+  - Every EC2 host, along with its networking and storage (EBS), is tied to a single availability zone.
+  - Subnets and EBS volumes are also confined to specific AZs.
+- **Impact on Resilience**:
+  - An AZ failure affects all hosts and instances within that zone.
+  - Designing for high availability involves deploying resources across multiple AZs.
+- **Instance Behavior**:
+  - Instances remain on the same host unless the host fails or is taken down for maintenance.
+  - When stopped and started (as opposed to restarted), an instance may relocate to a different host within the same AZ.
+
+5. Storage and Networking Details
+----------------------------------
+- **Local Storage (Instance Store)**:
+  - Temporary storage that exists on the EC2 host.
+  - Data is lost if the instance moves to another host.
+- **Remote Storage (EBS)**:
+  - Elastic Block Store volumes are available only within the same AZ as the host.
+  - EBS and network interfaces are AZ-specific; cross-AZ connections are not supported.
+- **Networking**:
+  - Each instance gets a primary elastic network interface linked to physical hardware.
+  - Multiple network interfaces can be attached to an instance within the same AZ.
+  - Networking is divided into storage networking and data networking.
+
+6. EC2 Use Cases & Benefits
+----------------------------
+- **Traditional OS & Application Compute**:
+  - Ideal for workloads requiring a full operating system (Linux, Windows) and persistent, long-running compute needs.
+- **Monolithic Application Stacks**:
+  - Suitable for applications with integrated components (databases, middleware, etc.) running on a traditional VM.
+- **Migration & Disaster Recovery**:
+  - Effective for migrating traditional workloads or setting up disaster recovery environments.
+- **Performance Considerations**:
+  - EC2 supports both burstable and steady state workloads.
+  - The AZ isolation offers a design advantage by limiting the failure domain.
+
+7. Conclusion
+-------------
+- The architecture of EC2 is fundamentally tied to the concept of availability zones.
+- Understanding the physical placement of EC2 hosts, the storage and networking constraints, and the differences between shared and dedicated hosts is critical for both exam preparation and effective architectural design.
+- The lesson reinforces that the strength of EC2 lies in its AZ resilience, making it a robust choice for a wide range of traditional computing workloads.

@@ -1,0 +1,58 @@
+==============================================
+5-EBS Volume Types - Provisioned IOPS
+==============================================
+
+1. Introduction
+---------------
+- This lesson focuses on AWS Provisioned IOPS SSD volumes, covering three types:
+  • IO1 and its successor IO2 (both in general release)
+  • IO2 Block Express (currently in preview)
+- These volumes are designed for extremely high performance with configurable IOPS independent of volume size, ensuring low latency and consistent performance.
+
+2. Overview of Provisioned IOPS SSD Volumes
+-------------------------------------------
+- **Purpose:**  
+  - Engineered for workloads requiring high IOPS and throughput with predictable, low latency.
+- **Key Benefit:**  
+  - IOPS can be provisioned separately from volume size, making them ideal for demanding applications that need extreme performance on relatively small volumes.
+
+3. Key Features and Performance Metrics
+-----------------------------------------
+- **IO1 and IO2 (General Release):**
+  - **Volume Size Range:** 4 GB to 16 TB.
+  - **Max IOPS per Volume:** Up to 64,000 IOPS.
+  - **Max Throughput:** Up to 1000 MB/s.
+  - **IOPS/GB Ratio:**
+    - IO1: Maximum of 50 IOPS per GB.
+    - IO2: Increased to 500 IOPS per GB.
+- **IO2 Block Express (Preview):**
+  - **Volume Size Range:** 4 GB to 64 TB.
+  - **Max IOPS per Volume:** Up to 256,000 IOPS.
+  - **Max Throughput:** Up to 4000 MB/s.
+  - **IOPS/GB Ratio:** Maximum of 1000 IOPS per GB.
+- **Cost Considerations:**  
+  - With these volume types, you pay for both the allocated storage size and the provisioned IOPS, which is ideal for scenarios demanding top-tier performance.
+
+4. Comparison Table
+-------------------
+| Volume Type       | Volume Size Range | Max IOPS per Volume | Max Throughput per Volume | Max IOPS per GB |
+|-------------------|-------------------|---------------------|---------------------------|-----------------|
+| IO1               | 4 GB – 16 TB      | 64,000              | 1000 MB/s                 | 50 IOPS/GB      |
+| IO2               | 4 GB – 16 TB      | 64,000              | 1000 MB/s                 | 500 IOPS/GB     |
+| IO2 Block Express | 4 GB – 64 TB      | 256,000             | 4000 MB/s                 | 1000 IOPS/GB    |
+
+5. Instance Performance Considerations
+----------------------------------------
+- **Per Instance Limits:**  
+  - Each EC2 instance has a maximum EBS performance cap influenced by the volume type, instance type, and instance size.
+  - For example, with IO1 volumes, a single instance can achieve up to approximately 2,760,000 IOPS and 7500 MB/s throughput—often requiring multiple volumes (around 4 at maximum performance) to saturate the instance’s bandwidth.
+- **Multiple Volumes:**  
+  - To reach the high per instance performance levels, you may need to aggregate several provisioned IOPS volumes, keeping in mind the instance’s own limitations.
+- **Comparison to GP2/GP3:**  
+  - Provisioned IOPS volumes offer significantly higher performance compared to general purpose volumes (GP2/GP3), which have lower per instance caps (e.g., around 2,660,000 IOPS and 7000 MB/s).
+
+6. Conclusion
+-------------
+- Provisioned IOPS SSD volumes (IO1, IO2, IO2 Block Express) are essential for workloads that require extreme, consistent performance and low latency.
+- They offer flexibility by allowing independent provisioning of IOPS relative to storage size.
+- Understanding the performance ratios, volume size ranges, and instance performance caps is critical for designing high-performance AWS environments and for exam success.

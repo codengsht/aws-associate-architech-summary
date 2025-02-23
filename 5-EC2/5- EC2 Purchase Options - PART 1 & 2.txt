@@ -1,0 +1,89 @@
+==============================================
+5- EC2 Purchase Options - PART 1 & 2
+==============================================
+
+1. Introduction
+---------------
+- EC2 purchase options (officially termed “purchase options”) determine how you pay for EC2 instances.
+- They impact cost, capacity reservation, and hardware isolation.
+- The primary options include On-Demand, Spot, Reserved Instances, Dedicated Hosts, and Dedicated Instances.
+
+2. On-Demand Instances
+----------------------
+- **Characteristics:**
+  - Default purchase option with no long-term commitment.
+  - Instances run on shared EC2 hosts.
+  - Billing is per second while the instance is running.
+- **Use Cases:**
+  - Ideal for short-term, unpredictable workloads or when starting an evaluation.
+  - Best when you cannot tolerate interruptions (though on-demand itself is not interrupted).
+- **Limitations:**
+  - No capacity reservation; in major failures or capacity shortages, on-demand has lower priority.
+
+3. Spot Instances
+-----------------
+- **Characteristics:**
+  - Leverages spare EC2 capacity offered at a significant discount (up to 90% off on-demand prices).
+  - Prices vary dynamically; you bid a maximum price.
+  - Instances are terminated if the spot price exceeds your bid.
+- **Use Cases:**
+  - Suitable for batch jobs, scientific computing, media processing, and other interruption-tolerant, parallelizable tasks.
+- **Limitations:**
+  - Not suitable for critical or long-term workloads due to potential interruptions.
+
+4. Reserved Instances
+---------------------
+- **Characteristics:**
+  - Long-term commitment (1 or 3 years) in exchange for a lower per-second cost.
+  - Reservations can be tied to a specific Availability Zone (reserving capacity) or to a region.
+  - Payment options include All Upfront, Partial Upfront, or No Upfront.
+- **Use Cases:**
+  - Ideal for core, steady-state workloads that run continuously.
+- **Considerations:**
+  - Commit to consistent usage; unused reservations still incur charges.
+  - Can provide partial discounts if instance sizes differ.
+
+5. Dedicated Hosts
+------------------
+- **Characteristics:**
+  - Entire physical EC2 host dedicated exclusively to your account.
+  - You pay for the host itself, not per instance.
+  - Provides complete control over hardware allocation.
+- **Use Cases:**
+  - Required for software licensing based on physical sockets or cores.
+  - Ideal when you need to ensure no other customers share your hardware.
+- **Considerations:**
+  - Capacity must be managed manually; any unused host capacity is wasted.
+
+6. Dedicated Instances
+-----------------------
+- **Characteristics:**
+  - Instances run on hardware dedicated to your account, but you do not manage the underlying host.
+  - Offers physical isolation without the complexity of managing host capacity.
+- **Use Cases:**
+  - Suitable for organizations with strict compliance or isolation requirements.
+- **Considerations:**
+  - Typically incur an additional fee compared to shared on-demand instances.
+
+7. Comparison Table: EC2 Purchase Options
+------------------------------------------
+| Purchase Option      | Cost & Commitment             | Capacity & Isolation                      | Ideal Use Cases                                  |
+|----------------------|-------------------------------|-------------------------------------------|--------------------------------------------------|
+| On-Demand            | Pay per second; no commitment | Shared hardware; no capacity reservation  | Short-term, unpredictable, or non-critical workloads |
+| Spot                 | Highly discounted; bid-based  | Shared capacity; subject to interruption  | Batch processing, parallel tasks, cost-sensitive, interruption-tolerant workloads |
+| Reserved Instances   | 1- or 3-year commitment; payment options (All/Partial/No Upfront) | Shared hardware; capacity reservation if AZ-specific | Long-term, steady-state workloads requiring cost predictability |
+| Dedicated Hosts      | Pay for entire host           | Full hardware isolation; capacity managed by you | Licensing requirements based on physical hardware; strict isolation needs |
+| Dedicated Instances  | Higher cost premium           | Physically isolated; no host management   | Workloads needing isolation without managing host capacity |
+
+8. Conclusion
+-------------
+- **Default Strategy:**  
+  - Begin with On-Demand as your baseline option.
+- **Cost-Sensitive and Interruption-Tolerant Workloads:**  
+  - Consider Spot Instances for substantial savings.
+- **Long-Term, Consistent Workloads:**  
+  - Reserved Instances offer predictable pricing and capacity.
+- **Strict Isolation Requirements:**  
+  - Choose Dedicated Hosts for full control or Dedicated Instances for physical isolation without host management.
+- **Exam Tip:**  
+  - Focus on understanding On-Demand, Reserved, and Spot purchase options, as they are most commonly featured on exams.

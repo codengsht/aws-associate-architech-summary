@@ -51,8 +51,7 @@ I want you to:
 
 Summarize the key points of the lecture, focusing on the main topics discussed, essential details, and any conclusions drawn. Organize the summary in a structured format with headings for each major section. Ensure clarity and conciseness while retaining important information. 
 
-
-Additional to summary, ceate tables where deemed appropriate if there is a comparison or etc.. 
+Additional to summary, create tables where deemed appropriate if there is a comparison or etc.. 
 For the table follow this structure:
 If create a table formatted with pipes (|) and dashes (-), adjust the alignment of the table as follows:
 	1.	Identify the Columns:
@@ -62,7 +61,6 @@ For each column, scan all cells (including the header and the data rows) and det
 	3.	Reconstruct the Table:
 Rebuild the table by ensuring that each cell in every row (header and data rows) is padded with spaces so that it matches the determined width for that column.
 	•	The header row should be aligned to match the content width of its cells.
-	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as Gedetermined.
-
+	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as determined.
 
 Generate the summary in txt format and display the summary in code snippet so I can easily copy to my desktop. 
