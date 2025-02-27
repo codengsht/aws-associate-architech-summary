@@ -1,5 +1,5 @@
 ==============================================
-Summary: Amazon Elastic Block Store (EBS) Basics
+5-Elastic Block Store (EBS) Service Architecture
 ==============================================
 
 1. Introduction
