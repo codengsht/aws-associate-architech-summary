@@ -4,60 +4,69 @@
 
 1. Introduction
 ---------------
-- EBS encryption secures data at rest on EBS volumes and snapshots by encrypting it before it is written to disk.
-- It enhances data security by mitigating risks associated with physical storage attacks.
+- EC2 instances come with robust networking features managed through Elastic Network Interfaces (ENIs).
+- Understanding ENIs, IP addressing, and DNS resolution is essential for designing secure and scalable architectures, as well as for exam success.
 
-2. How EBS Works Without Encryption
--------------------------------------
-- By default, EBS volumes store data in plaintext exactly as written by the operating system.
-- Data (e.g., files, images) is stored on one or more physical disks without any encryption applied.
+2. Elastic Network Interfaces (ENIs)
+--------------------------------------
+- **Primary ENI:**
+  - Every EC2 instance launches with a primary ENI.
+  - It includes a MAC address and a primary private IPv4 address.
+  - Security groups are applied directly to this interface.
+- **Secondary ENIs:**
+  - Optional additional interfaces that can be attached to an instance.
+  - Can reside in different subnets (within the same Availability Zone) to allow for distinct security group assignments or network segmentation.
+  - Can be detached and reattached to other instances if needed.
 
-3. How EBS Encryption Operates
-------------------------------
-- **Key Management Service (KMS):**
-  - EBS encryption uses AWS KMS to manage keys.
-  - A KMS key (either AWS-managed or customer-managed) is used to generate a unique data encryption key (DEK) for each volume created from scratch.
-- **Encryption Process:**
-  - When an encrypted volume is created, EBS calls KMS (using the GenerateDataKeyWithoutPlaintext API) to generate an encrypted DEK.
-  - The encrypted DEK is stored with the volume on the raw storage.
-  - At the time of use (e.g., when the instance mounts the volume), KMS decrypts the DEK, and the decrypted key is loaded into the memory of the EC2 host.
-  - Data is then encrypted/decrypted in transit between the EC2 host and the EBS volume using AES-256.
-- **Lifecycle of the DEK:**
-  - The decrypted DEK exists only in memory on the host during active use.
-  - When an instance is migrated (stopped, restarted, or moved to another host), the decrypted key is discarded; only the encrypted DEK remains on disk.
-- **Snapshots:**
-  - Snapshots taken of an encrypted volume are also encrypted using the same DEK.
-  - Any volume created from an encrypted snapshot remains encrypted.
+3. IP Addressing on ENIs
+------------------------
+- **Private IPv4 Address:**
+  - Assigned from the subnet’s CIDR block.
+  - Static for the instance’s lifetime.
+- **Public IPv4 Address:**
+  - Dynamically assigned if enabled; managed via the Internet Gateway.
+  - Not configured within the instance’s OS (the OS only sees the private IP).
+  - Changes when the instance is stopped/started or when migrated between hosts.
+- **Elastic IP Address (EIP):**
+  - A static public IPv4 address allocated to your AWS account.
+  - When associated with a private IP on an ENI, it replaces the dynamic public IP.
+  - If removed, a new dynamic public IP is assigned; the original IP cannot be recovered.
+- **IPv6 Addresses:**
+  - Can be attached to an ENI.
+  - All IPv6 addresses are publicly routable; there is no concept of private IPv6 addressing.
 
-4. Key Points for Security and Exam Scenarios
------------------------------------------------
-- **Default Encryption Settings:**
-  - AWS accounts can be configured to encrypt all new EBS volumes by default.
-  - You can choose a default AWS-managed KMS key or specify a customer-managed KMS key.
-- **Uniqueness of Data Encryption Keys:**
-  - A new, unique DEK is generated for every new EBS volume created from scratch.
-  - Volumes created from snapshots reuse the DEK from the source volume.
-- **Immutability of Encryption:**
-  - Once a volume or snapshot is encrypted, it cannot be converted to unencrypted; the only workaround is to copy data at the OS level.
-- **Transparency to the Operating System:**
-  - The encryption/decryption process is transparent to the operating system; it always sees data in plaintext.
-  - For additional encryption at the OS level (software disk encryption), separate configuration is required.
-- **Cost and Performance:**
-  - EBS encryption is provided at no additional cost and does not impact performance.
+4. DNS Resolution
+-----------------
+- **Private DNS:**
+  - Associated with the instance’s primary private IPv4 address.
+  - Typically formatted as “ip-&lt;private-ip-with-hyphens&gt;.ec2.internal”.
+  - Resolvable only within the VPC.
+- **Public DNS:**
+  - For external access, resolves to the public IPv4 address.
+  - Within the VPC, the same DNS name resolves to the primary private IPv4 address to keep traffic internal.
+  - This dual behavior simplifies instance discoverability in hybrid network designs.
 
-5. Comparison: Unencrypted vs. Encrypted EBS Volumes
-------------------------------------------------------
-| Attribute               | Unencrypted EBS Volume                         | Encrypted EBS Volume                         |
-|-------------------------|------------------------------------------------|----------------------------------------------|
-| Data at Rest            | Stored in plaintext on physical disks        | Encrypted using AES-256 before storage       |
-| Key Management          | No key management required                     | Managed via AWS KMS (AWS-managed or customer-managed) |
-| Snapshots               | Snapshots are unencrypted                      | Snapshots are encrypted with the same DEK    |
-| Data Persistence        | Vulnerable to physical storage attacks         | Protects against unauthorized physical access|
-| Performance Overhead    | No encryption overhead                         | No measurable performance loss               |
-| Cost                    | Standard EBS pricing                           | Same cost as unencrypted volumes             |
+5. Security Groups and Source/Destination Checks
+--------------------------------------------------
+- **Security Groups:**
+  - Applied directly to ENIs; they govern inbound and outbound traffic for all associated IP addresses.
+  - Using multiple ENIs allows you to apply different security groups for different types of traffic (e.g., management vs. data).
+- **Source/Destination Check:**
+  - Can be enabled or disabled per ENI.
+  - When enabled, only traffic with a source or destination matching the ENI’s assigned IPs is allowed.
+  - Must be disabled for instances acting as NAT or routers.
 
-6. Conclusion
+6. Exam Tips
+------------
+- **Memorize Key Details:**
+  - The metadata URL for instance metadata is fixed (http://169.254.169.254/latest/meta-data).
+  - The OS only configures the private IPv4 address; public IPv4 addresses are handled by the Internet Gateway.
+  - Public DNS names resolve to private IP addresses internally and to public IP addresses externally.
+- **Practical Considerations:**
+  - Use secondary ENIs for scenarios needing separate security groups or static MAC addresses (useful for legacy licensing).
+  - Understand that assigning an Elastic IP replaces the dynamic public IP; once removed, a new dynamic public IP is issued.
+
+7. Conclusion
 -------------
-- EBS encryption is essential for securing sensitive data at rest without additional cost or performance degradation.
-- It integrates seamlessly with AWS KMS, ensuring that each volume and its snapshots are uniquely secured.
-- Understanding the encryption architecture and key lifecycle is critical for both real-world security implementations and AWS exam success.
+- EC2 networking is centered around ENIs, which hold all critical network attributes.
+- Mastering these concepts ensures you can design flexible, secure architectures and excel in AWS certification exams.
