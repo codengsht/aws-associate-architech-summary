@@ -1,5 +1,10 @@
 # Changelog 
 
+## 0.0.4
+- EKS Lectures 
+- EC2 Advanced lectures
+- New prompt
+
 ## 0.0.3
 - All the EC2 summaries are added.
 - Added images

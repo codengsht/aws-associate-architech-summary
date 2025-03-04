@@ -1,0 +1,50 @@
+==============================================
+6-Elastic Container Registry (ECR)
+==============================================
+
+Overview:
+- This lecture provides a brief theoretical overview of the Elastic Container Registry (ECR).
+- The focus is on understanding the core architecture and features, with a promise of a practical demonstration later in the course.
+
+Definition and Purpose:
+- ECR is a managed container image registry service.
+- It hosts and manages container images used in container-based applications (e.g., ECS, EKS).
+- Acts as a repository system for container images, similar to source control systems like Git.
+
+Registry Structure and Organization:
+- Each AWS account is provisioned with:
+  - One public registry
+  - One private registry
+- Within each registry:
+  - Multiple repositories can be created.
+  - Each repository can store numerous container images.
+  - Container images are tagged, with tags needing to be unique within a repository.
+
+Security Architecture:
+- **Public Registry:**
+  - Anyone can pull images (read-only access).
+  - Pushing images (write access) requires proper permissions.
+- **Private Registry:**
+  - All operations (both read and write) require permissions.
+- Access control is managed via AWS IAM.
+
+Benefits and Features:
+- **Security Scanning:**
+  - Offers both basic and enhanced scanning (with enhanced scanning leveraging the Inspector product) to detect vulnerabilities in the OS and software packages within images.
+- **Monitoring and Logging:**
+  - Provides near real-time metrics via CloudWatch (e.g., authentication events, push/pull operations).
+  - Logs all API actions through CloudTrail.
+  - Generates events for integration with event-driven workflows via EventBridge.
+- **Replication:**
+  - Supports replication of container images across regions and accounts.
+
+Comparison of Registry Types:
+| Aspect       | Public Registry               | Private Registry                     |
+|--------------|-------------------------------|--------------------------------------|
+| Read Access  | Open (anyone can pull)        | Requires permissions                 |
+| Write Access | Requires permissions (push)   | Requires permissions for any action  |
+
+Conclusion:
+- The lecture covers the high-level theoretical aspects of ECR.
+- Emphasizes understanding the structure, security, and operational benefits of using ECR.
+- Indicates that a hands-on demo will follow later in the course to reinforce these concepts.

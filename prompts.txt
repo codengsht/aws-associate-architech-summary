@@ -64,3 +64,86 @@ Rebuild the table by ensuring that each cell in every row (header and data rows)
 	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as determined.
 
 Generate the summary in txt format and display the summary in code snippet so I can easily copy to my desktop. 
+
+----
+
+
+
+Summarize the AWS Solution Architect lecture transcript by following these instructions, I will provide the transcripts:
+
+1. **Transcript Review & Error Handling**
+   - Carefully review the transcript, noting that some words or phrases might be inaccurate due to the audio-to-text conversion. Use contextual clues to infer the intended meaning or flag uncertain content if necessary.
+
+2. **Identify Key Topics**
+   - Focus on extracting and summarizing the main topics discussed in the lecture. These might include:
+     - An overview of the lecture and its objectives.
+     - Key concepts and principles presented.
+     - Detailed discussions on separate AWS services or topics related to a service.
+     - Architectural patterns, strategies, or best practices mentioned.
+     - Examples, case studies, or practical applications provided.
+     - Conclusions, recommendations, or actionable insights.
+
+3. **Structured Summary**
+   - Organize the summary into clear sections with descriptive headings. For example:
+     - **Overview**
+     - **Main Topics**
+     - **Key Concepts**
+     - **Examples & Case Studies**
+     - **Conclusions & Recommendations**
+   - Within each section, use bullet points or numbered lists to capture the essential details concisely.
+
+4. **Table Formatting (If Needed)**
+   - If the lecture includes comparisons or structured lists, create tables using the following steps:
+     1. **Identify the Columns:** Parse the header row to determine the number of columns.
+     2. **Determine Column Widths:** For each column, scan all cells (header and data rows) to determine the maximum width needed.
+     3. **Reconstruct the Table:** Rebuild the table using pipes (|) and dashes (-) so that each cell in every row is padded with spaces to match the determined column widths.
+
+5. **Output Requirements**
+   - Generate the final summary in plain text (txt) format.
+   - Display the entire summary in a code snippet block so it can be easily copied to your desktop.
+
+
+   ------
+
+
+   Summarize the AWS Solution Architect lecture transcript by following these instructions:
+
+1. **Transcript Review & Error Handling**
+   - Carefully review the transcript, noting that some words or phrases might be inaccurate due to the audio-to-text conversion. Use contextual clues to infer the intended meaning or flag uncertain content if necessary.
+
+2. **Include Provided Header**
+   - At the beginning of the summary, include the header provided by the user exactly as given, enclosed by the equal signs. For example:
+     ```
+     ==============================================
+     <Header>
+     ==============================================
+     ```
+   - Ensure that the header remains unchanged in the final summary.
+
+3. **Identify Key Topics**
+   - Focus on extracting and summarizing the main topics discussed in the lecture. These might include:
+     - An overview of the lecture and its objectives.
+     - Key concepts and principles presented.
+     - Detailed discussions on separate AWS services or topics related to a service.
+     - Architectural patterns, strategies, or best practices mentioned.
+     - Examples, case studies, or practical applications provided.
+     - Conclusions, recommendations, or actionable insights.
+
+4. **Structured Summary**
+   - Organize the summary into clear sections with descriptive headings. For example:
+     - **Overview**
+     - **Main Topics**
+     - **Key Concepts**
+     - **Examples & Case Studies**
+     - **Conclusions & Recommendations**
+   - Within each section, use bullet points or numbered lists to capture the essential details concisely.
+
+5. **Table Formatting (If Needed)**
+   - If the lecture includes comparisons or structured lists, create tables using the following steps:
+     1. **Identify the Columns:** Parse the header row to determine the number of columns.
+     2. **Determine Column Widths:** For each column, scan all cells (header and data rows) to determine the maximum width needed.
+     3. **Reconstruct the Table:** Rebuild the table using pipes (|) and dashes (-) so that each cell in every row is padded with spaces to match the determined column widths.
+
+6. **Output Requirements**
+   - Generate the final summary in plain text (txt) format.
+   - Display the entire summary in a code snippet block so it can be easily copied to your desktop.
