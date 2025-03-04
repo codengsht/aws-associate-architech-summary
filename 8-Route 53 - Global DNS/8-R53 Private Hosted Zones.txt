@@ -1,0 +1,42 @@
+==============================================
+8-R53 Private Hosted Zones
+==============================================
+Overview
+--------
+- Introduces private hosted zones as a counterpart to public hosted zones within Route 53.
+- Explains that private hosted zones function similarly to public zones but are accessible only within associated VPCs.
+
+Main Topics
+-----------
+- **Private Hosted Zones:**
+  - Operate like public hosted zones but restrict DNS resolution to VPCs.
+  - Can be associated with VPCs via the console, CLI, or API, even across different accounts (API/CLI only).
+- **DNS Record Management:**
+  - Resource records are created within the zone, just as in public hosted zones.
+  - Provides a secure way to manage internal DNS records.
+- **Split Horizon (Split View) DNS:**
+  - Allows the creation of both public and private hosted zones using the same domain name.
+  - Enables different DNS responses: internal users see the full set of records, while external users receive a limited view.
+
+Key Concepts
+------------
+- **Access Control:**
+  - Only VPCs associated with the private hosted zone can resolve its records.
+  - VPCs not associated or public users cannot access these private DNS records.
+- **Security & Isolation:**
+  - Ideal for sensitive resources that should remain accessible only within an organization’s network.
+- **Dual DNS Views:**
+  - Split horizon DNS supports running the same domain name with separate public and private record sets, ensuring internal systems can have exclusive configurations.
+
+Examples & Case Studies
+-------------------------
+- **Internal vs. Public Record Sets:**
+  - Example scenario: A private hosted zone holds records for internal services like an accounting system, while a public hosted zone for the same domain offers only general website information.
+- **VPC-Based Access:**
+  - Demonstrates how only VPCs associated with the private hosted zone can resolve and access sensitive internal records.
+
+Conclusions & Recommendations
+-------------------------------
+- Private hosted zones are essential for securing DNS records intended solely for internal use.
+- The split horizon DNS technique is recommended when the same domain must serve both public and private needs.
+- Ensure proper VPC associations to maintain control over which resources can access the private DNS records.

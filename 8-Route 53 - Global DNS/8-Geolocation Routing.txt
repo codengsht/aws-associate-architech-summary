@@ -1,0 +1,46 @@
+==============================================
+8-Geolocation Routing
+==============================================
+Overview
+--------
+- Introduces geolocation routing as a Route 53 policy that directs DNS queries based on the geographic location of users.
+- Unlike latency routing, it uses the location of both the user and the DNS record (tagged by region) to determine responses.
+
+Main Topics
+-----------
+- **Record Tagging:**
+  - DNS records are tagged with geographic identifiers such as ISO country codes, ISO continent codes (e.g., SA for South America), or U.S. state codes (subdivisions).
+  - A default record can be set to handle queries from locations without a specific match.
+- **Routing Logic:**
+  - When a DNS query is received, Route 53 determines the user's location via IP lookup.
+  - It then checks for matching records in a hierarchical order:
+    1. **Subdivision:** Matches U.S. state records first.
+    2. **Country:** If no subdivision match exists, it checks for a country-level record.
+    3. **Continent:** If still no match, it looks for a continent-level record.
+    4. **Default:** Returns the default record if no other location-specific record is applicable.
+- **Location vs. Proximity:**
+  - Geolocation routing returns records based solely on geographic relevance, not the closest (in terms of latency).
+
+Key Concepts
+------------
+- **Geographic Relevance:** 
+  - Only records that exactly match the user's location criteria (state, country, or continent) are returned.
+- **Content Restriction & Localization:** 
+  - Ideal for scenarios where you want to restrict content to certain regions or provide region-specific versions of a website.
+- **Default Fallback:**
+  - A default record ensures that users in regions without a specific match still receive a DNS response.
+
+Examples & Use Cases
+---------------------
+- **Regional Content Delivery:** 
+  - Serve tailored content to users from the US by configuring records for specific states or for the country.
+- **Localization:** 
+  - Direct users to localized versions of a site based on their geographic location.
+- **Compliance and Access Control:** 
+  - Restrict access to content based on the geographic region, ensuring users only receive information applicable to their location.
+
+Conclusions & Recommendations
+-------------------------------
+- Use geolocation routing when you need to serve different content or services based on the user's location.
+- Ensure accurate tagging of DNS records and configure a default record to handle unmatched regions.
+- Remember that this policy strictly returns relevant records based on location—it does not consider the closest or lowest-latency endpoint.

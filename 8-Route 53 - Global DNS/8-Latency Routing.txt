@@ -1,0 +1,41 @@
+==============================================
+8-Latency Routing
+==============================================
+Overview
+--------
+- Introduces latency-based routing in Route 53 as a method to optimize performance and enhance user experience.
+- Aimed at directing users to the infrastructure with the lowest latency, thereby improving application responsiveness.
+
+Main Topics
+-----------
+- **Hosted Zone and Record Setup:**
+  - Uses a hosted zone containing multiple A records (e.g., WWW) with each record tied to a specific AWS region (e.g., US East 1, US West 1, AP Southeast 2).
+  - Only one record per region is allowed for latency-based routing.
+- **Latency Determination:**
+  - AWS maintains a real-time database of latencies between its regions and users around the world.
+  - When a DNS query is received, Route 53 uses an IP lookup to determine the user’s location and selects the record from the region with the lowest latency.
+- **Health Check Integration:**
+  - Latency routing can be combined with health checks.
+  - If the selected (lowest latency) record is unhealthy, Route 53 automatically chooses the next best (lowest latency) healthy record.
+
+Key Concepts
+------------
+- **Performance Optimization:**
+  - Ensures that DNS queries are answered with the endpoint that provides the best performance based on geographical latency.
+- **Real-Time Latency Data:**
+  - The underlying latency database is continuously updated, although it may not account for localized network issues.
+- **Health-Driven Failover:**
+  - Incorporates health checks to ensure that users are only directed to healthy and responsive endpoints.
+
+Examples & Use Cases
+---------------------
+- **Global Application Performance:**
+  - A user in Australia might be routed to an endpoint in AP Southeast 2 if that region offers the lowest latency compared to US-based endpoints.
+- **Improved User Experience:**
+  - Ideal for applications with a global user base where performance is critical.
+
+Conclusions & Recommendations
+-------------------------------
+- Latency-based routing significantly improves application performance by directing users to the fastest available endpoint.
+- Combining this routing policy with health checks ensures reliability by avoiding unhealthy endpoints.
+- Recommended for global applications where minimizing latency is essential for optimal user experience.

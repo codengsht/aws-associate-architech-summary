@@ -1,0 +1,43 @@
+==============================================
+8-Weighted Routing
+==============================================
+Overview
+--------
+- Introduces weighted routing as a method for simple load balancing and testing new software versions in Route 53.
+- Uses DNS records with assigned weights to control the distribution of traffic.
+
+Main Topics
+-----------
+- **Record Configuration:**
+  - Hosted zone contains multiple WWW A records pointing to different endpoints (e.g., EC2 instances).
+  - Each record is assigned a specific weight (e.g., 40, 40, 20) to determine its share of DNS responses.
+- **Weight Calculation:**
+  - The total weight is the sum of all record weights.
+  - Each record’s probability of being returned is calculated as its weight divided by the total weight.
+  - Setting a record’s weight to zero prevents it from being returned.
+- **Health Check Integration:**
+  - Weighted routing can be combined with health checks.
+  - If a record selected based on its weight is unhealthy, the process repeats until a healthy record is chosen.
+  - Health checks do not alter the overall weight calculation; they only skip over unhealthy endpoints.
+
+Key Concepts
+------------
+- **Load Distribution:**
+  - Traffic is distributed based on the ratio of each record’s weight to the total.
+  - This is useful for both balancing load and gradually testing new versions by directing a specific percentage of traffic.
+- **Controlled Traffic Flow:**
+  - Allows precise management of DNS responses, ensuring that only healthy endpoints are used.
+  - Ideal for scenarios where incremental changes or blue/green deployments are required.
+
+Examples & Use Cases
+---------------------
+- **Software Rollout:**
+  - For instance, directing 5% of traffic to a new server version by assigning it a lower weight compared to stable endpoints.
+- **Traffic Management:**
+  - Distributing requests among multiple servers based on predetermined weights to optimize resource usage.
+
+Conclusions & Recommendations
+-------------------------------
+- Weighted routing provides a straightforward DNS-based load balancing solution.
+- It is particularly effective when testing new versions or controlling traffic distribution across several endpoints.
+- Combining weighted routing with health checks enhances reliability by ensuring traffic is only directed to healthy resources.
