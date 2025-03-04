@@ -1,5 +1,9 @@
 # Changelog 
 
+## 0.0.5
+- R53 lectures are added
+- Maybe include separate folder/classes for DNSSEC: https://youtu.be/zEmUuNFBgN8?si=ZKJ9zn_X7-xpsB8F
+
 ## 0.0.4
 - EKS Lectures 
 - EC2 Advanced lectures
