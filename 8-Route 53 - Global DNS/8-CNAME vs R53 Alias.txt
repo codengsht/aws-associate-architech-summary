@@ -1,0 +1,44 @@
+==============================================
+8-CNAME vs R53 Alias
+==============================================
+Overview
+--------
+- Explains the differences between traditional CNAME records and AWS-specific alias records in Route 53.
+- Highlights why alias records are necessary, particularly for apex (naked) domains.
+
+Main Topics
+-----------
+- **CNAME Records:**
+  - Map one domain name to another.
+  - Work well for subdomains (e.g., www.example.com) but cannot be used for the domain apex.
+- **Alias Records:**
+  - AWS-specific records that map a domain to an AWS resource.
+  - Can be used for both subdomains and naked domains.
+  - Come in A record or CNAME record variants, matching the underlying resource's record type.
+- **Integration with AWS Services:**
+  - Essential when pointing to AWS resources (like ELBs, API Gateway, CloudFront, etc.) that don’t provide static IP addresses.
+  - AWS encourages alias records by offering free requests when they point to AWS services.
+
+Key Concepts
+------------
+- **Limitation of CNAME:**
+  - Cannot be used at the domain apex, limiting its applicability.
+- **Benefits of Alias Records:**
+  - Overcome the restrictions of CNAME records.
+  - Allow seamless DNS mapping for both naked domains and subdomains.
+  - Provide cost benefits and optimal routing for AWS-hosted resources.
+- **AWS Proprietary Nature:**
+  - Alias records are a non-standard extension available only when using Route 53 for DNS hosting.
+
+Examples & Case Studies
+-------------------------
+- **Apex Domain Example:**
+  - For a domain like categram.io (naked domain), a CNAME record isn’t supported; an alias record must be used to point to an AWS resource.
+- **Subdomain Example:**
+  - For subdomains like www.categram.io, both CNAME and alias records can be used, but alias records are preferred for AWS integrations.
+
+Conclusions & Recommendations
+-------------------------------
+- Default to using alias records for AWS resources, particularly for apex domains.
+- Leverage alias records to benefit from AWS’s cost-free query advantages when pointing to AWS services.
+- Remember that alias records are AWS-specific and require hosting on Route 53.

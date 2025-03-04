@@ -1,0 +1,50 @@
+==============================================
+8-R53 Public Hosted Zones
+==============================================
+Overview
+--------
+- Introduces the concept of DNS zones in Route 53, focusing on public hosted zones.
+- Explains that Route 53 supports two types of DNS zones: public and private.
+- Highlights Route 53’s global resilience through distributed name servers.
+
+Main Topics
+-----------
+- **Definition of a Hosted Zone:**
+  - A hosted zone is a DNS database for a specific domain (e.g., animalsforlife.org).
+  - It contains resource records (such as A, AAAA, MX, NS, TXT) that direct DNS queries.
+- **Creation and Management:**
+  - Hosted zones are automatically created when registering a domain with Route 53.
+  - They can also be manually created for domains registered elsewhere.
+- **Public Hosted Zones:**
+  - Hosted on Route 53’s public name servers, making them accessible via the public internet.
+  - They are also accessible within AWS VPCs through the Route 53 resolver.
+- **Integration with Global DNS:**
+  - After creating a public hosted zone, the domain’s NS records are updated to point to the allocated Route 53 name servers.
+  - This ensures that DNS queries from anywhere in the world can resolve the domain.
+
+Key Concepts
+------------
+- **Global Resilience:**
+  - Four globally distributed name servers host the zone file, ensuring high availability even during regional outages.
+- **DNS Resolution Process:**
+  - User queries start at local ISP resolvers, move to root servers, then to TLD servers (e.g., .org), and finally reach the authoritative Route 53 name servers.
+- **Resource Records:**
+  - These are the individual DNS records (e.g., WWW, email, TXT) created within the hosted zone to serve various purposes.
+- **Cost Considerations:**
+  - There is a monthly fee for each hosted zone plus additional charges based on query volume.
+
+Examples & Case Studies
+-------------------------
+- **Domain Example:**
+  - animalsforlife.org is used to illustrate the process of creating a public hosted zone.
+- **Practical Application:**
+  - A domain registered with an external provider (e.g., Hover or GoDaddy) can leverage Route 53 by creating a public hosted zone and updating its NS records accordingly.
+- **Resource Records Example:**
+  - The creation of typical records like WWW (for web access), A records (pointing to IP addresses), and TXT records is demonstrated.
+
+Conclusions & Recommendations
+-------------------------------
+- Public hosted zones provide a robust and globally accessible DNS service via Route 53.
+- The design ensures continuity and high availability, even if some regions experience outages.
+- While the cost is minimal for most sites, high-volume sites should monitor query charges.
+- Future sessions will delve into more detailed practical applications, including file hosting for externally registered domains.

@@ -1,0 +1,42 @@
+==============================================
+8-Failover Routing
+==============================================
+Overview
+--------
+- Introduces Route 53 failover routing as the second routing policy.
+- Designed to enable active-passive configurations by using primary and secondary records.
+
+Main Topics
+-----------
+- **Record Configuration:**
+  - Within a hosted zone (e.g., for the WWW record), two records of the same name are defined.
+  - One record is marked as primary and the other as secondary.
+- **Health Check Integration:**
+  - A health check is associated with the primary record.
+  - When the primary record passes the health check, DNS queries return its value.
+  - If the primary fails, DNS queries are directed to the secondary record.
+- **Use Case Example:**
+  - A common scenario is an out-of-band failure architecture:
+    - Primary resource: an EC2 instance.
+    - Secondary resource: an S3 bucket used as a failover.
+
+Key Concepts
+------------
+- **Active-Passive Failover:**
+  - Traffic is normally routed to the active (primary) resource.
+  - Automatic switch to the passive (secondary) resource occurs upon failure.
+- **Health-Driven Routing:**
+  - The effectiveness of failover routing relies on continuous health monitoring.
+  - Ensures high availability by preventing traffic from reaching unhealthy endpoints.
+
+Examples & Case Studies
+-------------------------
+- **Practical Implementation:**
+  - Primary record for WWW directs to an EC2 instance.
+  - Secondary record for WWW directs to an S3 bucket, activated if the primary fails.
+
+Conclusions & Recommendations
+-------------------------------
+- Use failover routing for environments requiring active-passive redundancy.
+- Ensure proper configuration of health checks to enable smooth automatic failover.
+- Consider this routing policy when maintaining high availability is critical.

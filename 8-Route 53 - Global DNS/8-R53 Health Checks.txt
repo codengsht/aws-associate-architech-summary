@@ -1,0 +1,47 @@
+==============================================
+8-R53 Health Checks
+==============================================
+Overview
+--------
+- Introduces the health check feature in Route 53, essential for advanced DNS architectures.
+- Emphasizes that health checks are managed separately from DNS records and performed by globally distributed checkers.
+
+Main Topics
+-----------
+- **Health Check Fundamentals:**
+  - Independently created and managed outside of DNS records.
+  - Used to evaluate the operational status of endpoints accessible via the public Internet.
+- **Types of Health Checks:**
+  - **Endpoint Checks:** Directly monitor the health of a specified endpoint (by IP address or domain name).
+  - **CloudWatch Alarm Checks:** Base the health status on CloudWatch alarms.
+  - **Calculated Checks:** Aggregate multiple health check results to derive an overall health status.
+- **Check Mechanisms:**
+  - **TCP Checks:** Attempt to establish a TCP connection (must succeed within 10 seconds).
+  - **HTTP Checks:** Establish a TCP connection (within 4 seconds) and expect a 200/300 status code within 2 seconds.
+  - **HTTP/HTTPS with String Matching:** In addition to status codes, the response must include a specified string within the first 520 bytes.
+- **Configuration & Management:**
+  - Health checks run every 30 seconds by default, with an option to increase frequency to every 10 seconds.
+  - Advanced options include setting failure thresholds, customizing the request interval, latency graphs, region selection, and even inverting health check results.
+  - Integration with SNS for notifications on health check failures.
+
+Key Concepts
+------------
+- **Global Distribution:** Health checks are performed by a fleet of checkers worldwide, ensuring broad and reliable monitoring.
+- **Independence from DNS Records:** Health checks exist separately and can be linked to multiple DNS records to influence traffic routing.
+- **Impact on DNS Responses:** Only healthy endpoints are returned in DNS queries, which helps maintain application availability.
+- **Configuration Nuances:** Adjusting parameters like TTL and failure thresholds can help balance between responsiveness and avoiding false positives.
+
+Examples & Case Studies
+-------------------------
+- **Console Walkthrough:**
+  - Demonstrated creating a health check in the Route 53 console by specifying parameters like IP/domain, port, protocol, and request path.
+  - Showed advanced settings such as string matching and regional configuration.
+- **Architectural Use Case:**
+  - Illustrated how health checks ensure that DNS responses exclude endpoints that are reported unhealthy by a majority of global checkers.
+
+Conclusions & Recommendations
+-------------------------------
+- Route 53 health checks are vital for ensuring that only healthy endpoints receive DNS traffic.
+- Proper configuration is crucial; adjust intervals and failure thresholds to suit your application’s needs.
+- Integrate health checks with SNS and CloudWatch to enable proactive monitoring and rapid response to outages.
+- Understanding and leveraging the different types of health checks (endpoint, CloudWatch, calculated) is key to building a resilient infrastructure.

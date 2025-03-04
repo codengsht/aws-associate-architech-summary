@@ -1,0 +1,44 @@
+==============================================
+8-Multi Value Routing
+==============================================
+Overview
+--------
+- Introduces multi-value routing as an advanced Route 53 routing policy that blends aspects of simple and failover routing.
+- Designed to improve application availability by actively returning only healthy endpoints.
+
+Main Topics
+-----------
+- **Record Configuration:**
+  - Multiple DNS records with the same name (e.g., multiple WWW records) can be created.
+  - Each record is typically an A record mapping to an IP address.
+- **Health Check Integration:**
+  - Each record can have an associated health check.
+  - Only healthy records are returned in response to DNS queries.
+- **Response Behavior:**
+  - Up to eight healthy records are returned to the client.
+  - If more than eight healthy records exist, eight are selected at random.
+  - The client then chooses one of these returned records to connect to.
+
+Key Concepts
+------------
+- **Active-Active Routing:**
+  - Unlike failover routing (active-passive), multi-value routing supports multiple active resources.
+  - Improves availability by distributing requests among several healthy endpoints.
+- **DNS-Based Load Distribution:**
+  - Provides a way to balance traffic using DNS without replacing a dedicated load balancer.
+- **Contrast with Other Routing Policies:**
+  - Simple routing lacks health checks and is typically used for a single resource.
+  - Failover routing is used for backup scenarios, while multi-value routing is suited for environments with many viable resources.
+
+Examples & Use Cases
+---------------------
+- **Scenario Example:**
+  - Three WWW records are configured for a domain.
+  - Each record is health checked, ensuring that only the healthy ones are returned.
+  - This setup is ideal when you have several resources capable of serving requests and you want DNS to distribute traffic randomly among them.
+
+Conclusions & Recommendations
+-------------------------------
+- Use multi-value routing when you have multiple resources that can handle client requests.
+- It enhances availability by ensuring that only healthy endpoints are provided to users.
+- While it improves DNS-level load distribution, it does not replace the need for a traditional load balancer.

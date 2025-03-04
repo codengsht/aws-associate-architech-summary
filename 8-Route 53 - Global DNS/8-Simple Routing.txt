@@ -1,0 +1,37 @@
+==============================================
+8-Simple Routing
+==============================================
+Overview
+--------
+- Introduces the simplest routing policy in Route 53.
+- Describes how simple routing is the default option for directing DNS queries.
+
+Main Topics
+-----------
+- **Basic Operation:**
+  - Simple routing is used within a hosted zone (e.g., animalsforlife.org) to manage DNS records.
+  - Only one record per name is created; for example, a WWW record using an A record type.
+- **Response Mechanism:**
+  - When a client queries the record, all associated values are returned in random order.
+  - The client then selects one value to connect to the corresponding server.
+- **Ideal Use Case:**
+  - Best suited for directing traffic to a single service, such as a web server.
+
+Key Concepts
+------------
+- **Simplicity:**
+  - Provides straightforward DNS routing without additional complexities.
+- **Limitations:**
+  - Does not support health checks to verify that the target resource is operational.
+  - Lacks the routing intelligence of other Route 53 policies that incorporate health monitoring.
+
+Examples & Case Studies
+-------------------------
+- **Web Server Example:**
+  - A simple routing policy is applied to the WWW record in a public hosted zone.
+  - Multiple IP values may be returned, but no health check is performed to confirm service availability.
+
+Conclusions & Recommendations
+-------------------------------
+- Simple routing is effective for basic DNS setups where advanced features are not required.
+- For environments needing enhanced reliability and resource verification, consider other routing policies that support health checks.
