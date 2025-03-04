@@ -1,0 +1,55 @@
+==============================================
+7-Enhanced Networking & EBS
+==============================================
+
+Overview
+--------
+- This lesson covers two key EC2 optimization features: Enhanced Networking and EBS Optimized Instances.
+- Both features are designed to boost performance by improving network throughput and reducing latency, and they are essential for high-performance workloads and supporting features like placement groups.
+
+Main Topics
+-----------
+- **Enhanced Networking**
+  - Uses Single Root I/O Virtualization (SR-IOV) to allow physical network interface cards (NICs) to present multiple logical interfaces.
+  - Offloads network processing from the host CPU, thereby reducing overhead and enabling higher bandwidth.
+  - Delivers lower latency and increased packets per second (PPS), which is critical for applications requiring high network performance.
+  - Often necessary for workloads deployed in cluster placement groups or other performance-sensitive environments.
+  
+- **EBS Optimized Instances**
+  - Provides dedicated network capacity for EBS traffic separate from regular data network traffic.
+  - Prevents contention between general instance networking and EBS storage I/O, resulting in improved throughput and consistent low latency.
+  - On modern instance types, EBS optimization is enabled by default; older instance types might require additional configuration or incur extra costs.
+  - Critical for I/O-intensive workloads, especially when using high-performance EBS volume types like io1 or gp2.
+
+Key Concepts
+------------
+- **Performance Enhancement:** Both features significantly improve performance—Enhanced Networking boosts network throughput and reduces latency, while EBS optimization ensures fast, reliable storage I/O.
+- **Offloading & Isolation:** Enhanced Networking offloads network processing to dedicated hardware, and EBS optimized instances isolate storage traffic to avoid network congestion.
+- **Built-In vs. Optional:** Modern EC2 instances typically have these optimizations built in, but understanding their architecture helps in designing systems that demand high performance.
+
+Examples & Use Cases
+---------------------
+- **Enhanced Networking Use Cases:**
+  - High-performance computing applications.
+  - Real-time data processing or analytics requiring rapid data exchange between instances.
+  - Deployments in cluster placement groups where low latency is essential.
+  
+- **EBS Optimized Instances Use Cases:**
+  - Databases or transactional systems with heavy I/O requirements.
+  - Applications using high IOPS and throughput EBS volume types.
+  - Workloads where storage performance is critical to overall system responsiveness.
+
+Conclusions & Recommendations
+-------------------------------
+- **Design Considerations:** As a solutions architect, ensure that your application’s networking and storage performance requirements are met by leveraging enhanced networking and EBS optimized instances.
+- **Modern Instances:** For most current EC2 instance types, these features are enabled by default; however, knowing their benefits helps in architecting high-performance, resilient systems.
+- **Performance Trade-offs:** Understand that offloading network processing (enhanced networking) and isolating storage traffic (EBS optimized) are crucial to achieving lower latency and higher throughput in demanding environments.
+
+Table: Comparison of Enhanced Networking vs. EBS Optimized Instances
+---------------------------------------------------------------------
+| Feature                 | Enhanced Networking                                | EBS Optimized Instances                          |
+|-------------------------|----------------------------------------------------|--------------------------------------------------|
+| Primary Function        | Improves network throughput and reduces latency    | Provides dedicated network capacity for EBS      |
+| Mechanism               | SR-IOV enables multiple logical NICs per physical NIC| Isolates EBS traffic from general instance networking |
+| Performance Impact      | Higher bandwidth, increased PPS, lower CPU overhead | Consistent low latency and improved IOPS/throughput |
+| Typical Use Cases       | High-performance, low-latency network applications   | I/O-intensive workloads such as databases         |

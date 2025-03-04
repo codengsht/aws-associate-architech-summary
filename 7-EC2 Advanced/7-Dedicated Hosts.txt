@@ -1,0 +1,63 @@
+==============================================
+7-Dedicated Hosts
+==============================================
+
+Overview
+--------
+- Dedicated Hosts are a feature of EC2 that provide you with an entire physical server exclusively for your use.
+- They are primarily used in scenarios such as enterprise software licensing, where software costs are based on physical hardware attributes.
+- For exam purposes, it is important to know that Dedicated Hosts exist and understand their basic architectural and pricing concepts.
+
+Main Topics
+-----------
+- **Definition and Purpose**
+  - A Dedicated Host is a physical server allocated to your AWS account.
+  - You pay for the entire host capacity rather than per-instance fees, which can benefit software licensing models.
+  
+- **Pricing Models**
+  - Hosts can be purchased On-Demand for short-term or uncertain requirements.
+  - For predictable, long-term needs, reservations (with one- or three-year terms, and various upfront payment options) are available.
+
+- **Hardware and Capacity**
+  - Dedicated Hosts are designed for specific instance families (e.g., A1, C5, M5) and come with a fixed number of physical sockets and cores.
+  - This capacity determines how many instances (of a fixed size) can be run on the host.
+  - Non-Nitro dedicated hosts require you to pre-set the instance size (e.g., 16 A1 medium instances, eight large, etc.).
+  
+- **Flexibility with Nitro-Based Hosts**
+  - Newer Nitro-based Dedicated Hosts (such as R5 or C5) allow mix-and-match of different instance sizes up to the host's total core capacity.
+  - This increased flexibility can maximize host utilization when your workload has varying instance size requirements.
+
+- **Limitations and Sharing**
+  - Certain AMIs (like some Linux/Windows versions) and features (e.g., placement groups) are not supported on Dedicated Hosts.
+  - Dedicated Hosts can be shared among different AWS accounts within an organization using AWS Resource Access Manager, with clear visibility and control separation.
+
+Key Concepts
+------------
+- **Dedicated Allocation:** The entire physical server is exclusively reserved for your use, allowing you to manage software licensing based on the actual hardware.
+- **Fixed Capacity vs. Flexibility:** Traditional Dedicated Hosts offer fixed instance sizes, while Nitro-based hosts allow a mix of sizes.
+- **Cost Efficiency:** You pay for the host capacity upfront; any instances launched on the host incur no additional instance charges.
+- **Use Case Specificity:** Their primary value is in addressing software licensing requirements and not general-purpose compute needs.
+
+Examples & Use Cases
+---------------------
+- **Fixed Configuration Example:** An A1 Dedicated Host with one socket and 16 cores might support 16 A1 medium instances, eight large, or other fixed configurations.
+- **Flexible Configuration Example:** An R5 Dedicated Host (Nitro-based) can support a combination of instance sizes (e.g., one 2xlarge, one 4xlarge, and four 2xlarge) as long as the total core limit isn’t exceeded.
+- **Licensing Scenarios:** Ideal for applications where enterprise licensing is based on physical hardware (sockets/cores), ensuring you only pay once for the host hardware.
+
+Conclusions & Recommendations
+-------------------------------
+- **For Exam Purposes:** Understand that Dedicated Hosts exist as a specialized offering with limited use cases—primarily for addressing software licensing challenges.
+- **Deployment Considerations:** Recognize that these hosts are tied to specific instance families and fixed configurations unless using Nitro-based options.
+- **Limitations to Note:** Dedicated Hosts do not support all features (like placement groups) and come with restrictions on instance sizing.
+- **Practical Use:** Use Dedicated Hosts when your workload has specific licensing or compliance requirements; otherwise, standard EC2 instance provisioning offers greater flexibility.
+  
+Table: Dedicated Hosts Summary
+-------------------------------
+| Aspect                   | Details                                                                                  |
+|--------------------------|------------------------------------------------------------------------------------------|
+| Allocation               | Entire physical server dedicated to your account                                         |
+| Pricing                  | Pay for host capacity (On-Demand or Reserved); no per-instance charges after purchase      |
+| Instance Family          | Specific to a particular instance family (e.g., A1, C5, M5)                                |
+| Capacity Management      | Fixed configurations for non-Nitro hosts; flexible mix-and-match for Nitro-based hosts     |
+| Use Cases                | Enterprise software licensing, compliance, and specific hardware-based cost models         |
+| Limitations              | Not all AMIs or features (like placement groups) are supported; less flexibility on sizing  |

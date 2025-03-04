@@ -1,0 +1,66 @@
+==============================================
+7-EC2 Placement Groups
+==============================================
+
+Overview
+--------
+- This lesson explains how EC2 placement groups let you control the physical placement of your instances.
+- Placement groups are used to optimize performance or enhance fault tolerance by influencing where instances are launched within an Availability Zone (AZ).
+
+Main Topics
+-----------
+- **Default Instance Placement**
+  - Normally, AWS determines the physical location of an EC2 instance based on capacity and availability within an AZ.
+- **Placement Group Types**
+  - **Cluster Placement Groups**
+    - Designed for maximum performance by placing instances physically close together.
+    - Best practices: launch the same instance type simultaneously in one AZ.
+    - Benefits include low latency and increased single-stream network throughput (up to 10 GB/s).
+    - Tradeoff: lower resilience—if the underlying hardware fails, many instances can be affected.
+  - **Spread Placement Groups**
+    - Ensure that instances are placed on separate physical hardware (different racks) within an AZ.
+    - Each instance gets its own isolated network and power source.
+    - Limited to 7 instances per AZ.
+    - Ideal for small numbers of critical instances where fault isolation is paramount.
+  - **Partition Placement Groups**
+    - Suitable for large-scale distributed applications that require fault isolation across many instances.
+    - Instances are divided into distinct partitions, with each partition isolated in terms of networking and power.
+    - Provides more flexibility than spread groups by allowing more than 7 instances per AZ.
+    - Best for topology-aware applications (e.g., HDFS, HBase, Cassandra) that can intelligently manage data replication and fault domains.
+
+Key Concepts
+------------
+- **Performance vs. Resilience**
+  - **Cluster Placement Groups:** Prioritize performance with low latency and high throughput, but offer minimal fault tolerance.
+  - **Spread Placement Groups:** Focus on high availability and fault isolation, suitable for critical services with fewer instances.
+  - **Partition Placement Groups:** Combine scalability with fault isolation for large, distributed systems that are topology-aware.
+- **Availability Zone Constraints**
+  - Cluster groups are restricted to a single AZ, while spread and partition groups can span multiple AZs (subject to specific limits).
+- **Deployment Considerations**
+  - For cluster groups, launching all instances simultaneously and using the same instance type maximizes performance.
+  - For spread groups, the strict limit of 7 instances per AZ ensures isolation.
+  - For partition groups, you can assign instances to specific partitions to control fault domains, making them ideal for complex, large-scale deployments.
+
+Examples & Use Cases
+---------------------
+- **Cluster Placement Groups:** High-performance computing, scientific simulations, and workloads requiring ultra-fast, low-latency inter-instance communication.
+- **Spread Placement Groups:** Critical applications (e.g., file servers or domain controllers) where each instance must remain isolated from failures in others.
+- **Partition Placement Groups:** Large-scale distributed databases or big data processing systems (e.g., Cassandra, HBase) that need controlled replication and fault containment.
+
+Conclusions & Recommendations
+-------------------------------
+- **Select Based on Needs:**
+  - Use **Cluster Placement Groups** for performance-intensive workloads where proximity and enhanced networking are crucial.
+  - Use **Spread Placement Groups** when maximum fault isolation is needed for a small number of critical instances.
+  - Use **Partition Placement Groups** for large-scale, distributed applications that benefit from controlled fault domains and scalability.
+- **Design Considerations:**
+  - Understand the trade-offs between performance and resilience.
+  - Ensure that the chosen placement group type aligns with the specific requirements of your workload and application architecture.
+
+Table: Comparison of EC2 Placement Groups
+------------------------------------------
+| Placement Group Type   | Purpose                                  | Characteristics                                                              | Use Cases                                      |
+|------------------------|------------------------------------------|-----------------------------------------------------------------------------|------------------------------------------------|
+| Cluster                | Maximize performance                     | Instances are co-located in one AZ; enhanced networking; low latency; up to 10 GB/s single-stream throughput | High-performance computing; scientific workloads|
+| Spread                 | Maximize fault isolation                 | Instances are placed on separate racks with isolated power/network; limited to 7 per AZ                    | Critical applications needing high availability |
+| Partition              | Support large-scale, distributed systems | Instances are divided into isolated partitions; scalable beyond 7 instances per AZ; topology-aware management    | Distributed databases; big data processing systems|
