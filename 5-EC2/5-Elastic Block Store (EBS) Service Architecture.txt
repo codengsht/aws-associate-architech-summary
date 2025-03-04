@@ -1,0 +1,68 @@
+==============================================
+5-Elastic Block Store (EBS) Service Architecture
+==============================================
+
+1. Introduction
+---------------
+- Amazon EBS is a block storage service integral to AWS.
+- It provides persistent, raw block storage volumes that can be addressed by block IDs.
+- EBS is used both directly and indirectly by various AWS services and applications.
+
+2. How EBS Works
+---------------
+- **Block Storage:**  
+  - EBS aggregates physical disks and presents them as volumes.
+  - Volumes appear as standard storage devices to EC2 instances, allowing file systems (e.g., EXT3, EXT4, XFS for Linux; NTFS for Windows) to be created on them.
+- **Encryption Option:**  
+  - Volumes can be created as unencrypted or encrypted (using AWS KMS; encryption details are covered in a separate lesson).
+
+3. Volume Attachment & Persistence
+------------------------------------
+- **Attachment:**  
+  - When attached to an EC2 instance, EBS volumes function as block devices.
+  - They are connected over a storage network.
+- **Persistence:**  
+  - Volumes are independent of the EC2 instance lifecycle. They persist across instance stops, restarts, or host migrations.
+  - Volumes can be detached from one instance and reattached to another (within the same Availability Zone).
+- **Multi-Attach:**  
+  - Some volume types support multi-attach, allowing a single volume to be connected to multiple instances. However, this requires careful application-level management to avoid data corruption.
+
+4. Availability Zone Considerations
+-------------------------------------
+- **AZ-Based Provisioning:**  
+  - EBS volumes are provisioned in a specific Availability Zone (AZ).
+  - An EC2 instance can only attach volumes from the same AZ.
+- **Resiliency Within an AZ:**  
+  - EBS replicates data across multiple physical devices in the same AZ, providing built-in resiliency.
+  - In the event of a complete AZ failure, both the instances and the EBS volumes within that AZ would be affected.
+
+5. Snapshots and Regional Resilience
+--------------------------------------
+- **Snapshots:**  
+  - Snapshots are backups of EBS volumes stored in Amazon S3.
+  - They capture only the used data (not the entire allocated size) and are incremental.
+- **Benefits of Snapshots:**  
+  - Snapshots are regionally resilient; data is replicated across AZs within a region.
+  - They enable volume recovery and migration across different AZs or even different regions.
+
+6. Billing and Pricing
+----------------------
+- **Pricing Model:**  
+  - EBS charges are based on the storage capacity used (measured in gigabytes per month).
+  - Billing is proportional: 1 GB for one month costs the same as 2 GB for half a month.
+- **Additional Costs:**  
+  - Some volume types with enhanced performance characteristics may incur extra charges.
+
+7. Overall Architecture
+-----------------------
+- **Regional & AZ Structure:**  
+  - EBS is an Availability Zone–based service; each region has multiple AZs, each with its own EBS deployment.
+  - For example, a region like US East 1 may have AZ A and AZ B, each with separate EBS infrastructures.
+- **Integration with S3:**  
+  - Snapshots are stored in S3, allowing data to be migrated or recovered across AZs and regions.
+
+8. Conclusion
+-------------
+- Amazon EBS provides reliable, block-level storage that is essential for EC2 instances.
+- Key points include its persistent nature, AZ-specific provisioning, and the ability to back up data via snapshots.
+- Understanding these fundamentals is critical for designing resilient architectures and for success in AWS exams.

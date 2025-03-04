@@ -1,0 +1,69 @@
+==============================================
+5-Amazon Machine Images (AMI) 
+==============================================
+
+1. Introduction
+---------------
+- AMIs are the images (templates) used to launch EC2 instances.
+- They capture an instance’s configuration, including the operating system, applications, and associated storage (via EBS snapshots).
+- Despite debates over pronunciation, AMIs are simply the blueprints for EC2 instances.
+
+2. What are AMIs?
+-----------------
+- AMIs provide a reproducible template for launching EC2 instances.
+- AWS offers several sources:
+  • AWS-provided AMIs (e.g., Amazon Linux)
+  • Community-provided AMIs (e.g., Red Hat, CentOS)
+  • Marketplace AMIs (which may include commercial software and licensing costs)
+- AMIs are a key mechanism for standardizing deployments across your environment.
+
+3. AMI Life Cycle and Customization
+-------------------------------------
+- **Lifecycle Phases:**
+  1. **Launch:** Start with an existing AMI to create an EC2 instance.
+  2. **Configure:** Customize the instance by installing software, modifying configurations, etc.
+  3. **Create Image:** Generate a new AMI from the configured instance. This process captures the instance state and creates EBS snapshots for attached volumes.
+  4. **Launch Again:** Use the newly created AMI to launch additional instances with the same configuration.
+- This process, often referred to as “AMI baking,” allows you to deploy preconfigured, consistent environments at scale.
+
+4. AMI Architecture and Block Device Mapping
+-----------------------------------------------
+- **Block Device Mapping:**
+  - When creating an AMI from an instance, EBS snapshots are taken for each attached volume.
+  - The AMI stores a mapping that links each snapshot to its original device name (e.g., /dev/xvda for the boot volume).
+  - When a new instance is launched from the AMI, these snapshots are used to re-create and attach EBS volumes with the same device configuration.
+- **Data Capture:**
+  - Only the used portion of an EBS volume is captured (not the entire allocated size), and subsequent snapshots are incremental.
+
+5. Regional and Permission Considerations
+-------------------------------------------
+- **Regional Scope:**
+  - AMIs are region-specific. Each region has its own set of AMIs, even for the same operating system.
+  - The snapshots referenced in an AMI are stored in S3 within that region.
+- **Permissions:**
+  - AMIs can be:
+    • **Private:** Accessible only to your account.
+    • **Public:** Made available to all AWS users.
+    • **Shared with Specific Accounts:** Permissions can be granted to selected AWS accounts.
+
+6. AMI Baking and Usage Scenarios
+-----------------------------------
+- **AMI Baking:**
+  - Involves configuring an instance (installing software, setting up configurations) and then creating an AMI from that instance.
+  - This “baked” AMI can be used to quickly deploy multiple instances with a standardized environment.
+- **Usage Scenarios:**
+  - Deploying consistent server environments.
+  - Scaling out applications with preconfigured instances.
+  - Migrating custom configurations between environments or regions by copying AMIs.
+
+7. Billing Considerations
+-------------------------
+- **Snapshot Storage Costs:**
+  - AMIs reference EBS snapshots, and you are billed for the actual data stored (used data), not the total volume size.
+  - Since snapshots are incremental, only changed data between snapshots consumes additional storage.
+
+8. Conclusion
+-------------
+- AMIs are a foundational component in AWS for creating, replicating, and managing EC2 instance configurations.
+- They streamline the deployment of custom environments, enforce consistency, and facilitate rapid scaling.
+- Understanding AMI lifecycle, block device mapping, regional limitations, and permission settings is critical for both practical AWS usage and for exam success.

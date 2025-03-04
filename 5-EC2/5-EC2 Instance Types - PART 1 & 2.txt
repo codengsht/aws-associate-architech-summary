@@ -1,0 +1,57 @@
+==============================================
+5-EC2 Instance Types - PART 1 & 2
+==============================================
+
+1. Introduction
+---------------
+- The lecture explains the different types of EC2 instances.
+- Emphasis is placed on how selecting the right instance type and size can impact system performance and customer experience.
+- Understanding instance strengths and weaknesses is key to making informed decisions, both in real-world scenarios and on the exam.
+
+2. Importance of Instance Type Selection
+------------------------------------------
+- **Resource Allocation:** Each instance is an operating system with allocated resources (virtual CPU, memory, storage, etc.).
+- **Performance Impact:** The right configuration ensures optimal performance, while a poor choice may lead to resource bottlenecks.
+- **Cost Considerations:** Instance type and size directly affect pricing; scaling strategies may favor multiple small instances versus fewer large ones.
+- **Workload Matching:** Different workloads (steady state, bursty, compute-intensive, memory intensive, etc.) require different resource ratios.
+
+3. Factors Influencing Instance Choice
+----------------------------------------
+- **Raw Resource Quantities:** Virtual CPU (vCPU), memory, and storage capacity.
+- **Resource Ratios:** Some instance types offer more CPU per dollar while others offer more memory.
+- **Network & Storage Bandwidth:** The instance’s capability can limit overall performance if not matched to workload needs.
+- **Hardware Architecture:** Options include ARM (e.g., A1, M6G) versus x86 (Intel or AMD) based instances.
+- **Additional Capabilities:** Certain instances include GPUs, FPGAs, or other acceleration features to support specialized tasks.
+
+4. Decoding the EC2 Instance Naming Scheme
+--------------------------------------------
+- **Full Instance Type:** Provides an unambiguous description (e.g., r5.large).
+- **Instance Family:** The first letter(s) (e.g., T, M, R) indicate the type of workload for which the instance is designed.
+- **Generation:** The number following the family (e.g., r5 indicates 5th generation) shows the hardware update level.
+- **Instance Size:** Descriptors like large, xlarge, 2xlarge indicate the scale of allocated resources.
+- **Additional Modifiers:** Letters (e.g., “a” for AMD, “d” for NVMe storage, “n” for network optimized) denote extra capabilities.
+
+5. EC2 Instance Categories
+--------------------------
+EC2 instances are grouped into five main categories based on workload requirements:
+
+| Category             | Workload Focus                                                  | Example Instance Families                     |
+|----------------------|-----------------------------------------------------------------|-----------------------------------------------|
+| General Purpose      | Balanced CPU & memory for steady state workloads                | A1, M6G, T3, T3a, M5, M5a, M5n                  |
+| Compute Optimized    | High CPU for compute-intensive tasks (HPC, scientific modeling, gaming, ML) | C, CN                                        |
+| Memory Optimized     | High memory for in-memory databases and data-intensive apps     | R5, RA, X (High Memory)                        |
+| Accelerated Computing| Specialized hardware acceleration (GPUs, FPGAs)                 | P3, G4, F1, (others for ML & parallel processing)|
+| Storage Optimized    | High-speed local storage for IO-intensive workloads             | Various types with NVMe/local storage support  |
+
+6. Tools & Resources
+--------------------
+- **AWS Documentation:** Detailed information on each EC2 instance type is available on the official AWS documentation site.
+- **Third-Party Tools:** Websites offering sortable, filterable lists of instance types help visualize resource allocations, pricing (on-demand vs. reserved), and additional features.
+- **Practical Tip:** Regularly refer to these resources to build mental associations between instance names and their capabilities, which is useful for exam scenarios and production planning.
+
+7. Conclusion
+-------------
+- Selecting the right EC2 instance type requires matching the instance’s resource profile to the workload's demands.
+- Understanding the naming scheme and the specific categories helps in making informed decisions.
+- The lecture encourages using AWS documentation and third-party tools to stay current with available options.
+- Ultimately, the goal is to ensure that performance and cost-effectiveness align with the application’s needs.

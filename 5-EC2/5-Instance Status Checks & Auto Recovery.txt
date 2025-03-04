@@ -1,0 +1,60 @@
+==============================================
+5-Instance Status Checks & Auto Recovery
+==============================================
+
+1. Introduction
+---------------
+- This lesson covers EC2 instance status checks and the auto recovery feature.
+- Every EC2 instance is monitored via two key status checks: the System Status Check and the Instance Status Check.
+
+2. Instance Status Checks
+-------------------------
+- **System Status Check:**
+  - Monitors the underlying AWS infrastructure (host hardware, power, network connectivity).
+  - Failures may indicate issues such as hardware problems, network interruptions, or power loss on the EC2 host.
+  
+- **Instance Status Check:**
+  - Evaluates the health of the instance itself (operating system, file system, network configuration).
+  - Failures may indicate OS-level issues like file system corruption or misconfigured network settings.
+
+- **Expected Outcome:**
+  - An instance should eventually show "2/2 passed" for both checks.
+  - Any failure in these checks signals a problem that needs attention.
+
+3. EC2 Auto Recovery
+--------------------
+- **Purpose:**
+  - Automatically recover an instance that fails a system status check.
+  
+- **How It Works:**
+  - Auto recovery is configured using CloudWatch alarms tied to the status checks.
+  - When triggered, EC2 will either reboot the instance or migrate it to a new host within the same Availability Zone.
+  - The instance retains its configuration and private IP address during the recovery process.
+
+4. Setup & Operation
+--------------------
+- **Configuration Steps:**
+  - Create a CloudWatch alarm that monitors one or both of the status checks.
+  - Define the alarm action to "recover" the instance upon a failure (after a specified period, e.g., one 5-minute interval).
+  
+- **Operational Behavior:**
+  - If a status check fails continuously for the defined period, the auto recovery action is triggered.
+  - The instance is then automatically recovered, either through a reboot or migration to a healthy host.
+
+5. Limitations & Considerations
+-------------------------------
+- **Instance Requirements:**
+  - Auto recovery works only with modern instance types that have EBS volumes attached (not with instance store volumes).
+  
+- **Capacity Dependencies:**
+  - Recovery relies on available spare capacity within the same Availability Zone.
+  - It does not protect against failures that impact an entire Availability Zone.
+
+- **Scope of Recovery:**
+  - Auto recovery is intended for isolated failures (host or instance level) and is not a substitute for high availability across multiple AZs.
+
+6. Conclusion
+-------------
+- Monitoring EC2 status checks is essential for proactive instance health management.
+- The auto recovery feature provides an automated way to mitigate isolated instance or host failures, reducing downtime.
+- Proper configuration of CloudWatch alarms and understanding the limitations of auto recovery ensures a more resilient EC2 environment.

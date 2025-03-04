@@ -1,0 +1,72 @@
+==============================================
+5-Choosing between the EC2 Instance Store and EBS 
+==============================================
+
+1. Introduction
+---------------
+- This lesson reviews scenarios and performance metrics to help decide when to use EBS versus instance store volumes.
+- It covers key decision factors including data persistence, performance requirements, cost, and application architecture.
+
+2. Persistence and Lifecycle Considerations
+---------------------------------------------
+- **EBS Volumes:**
+  - **Persistent Storage:** Data survives instance stops, reboots, and host migrations.
+  - **Flexibility:** Can be detached and reattached across instances.
+- **Instance Store Volumes:**
+  - **Ephemeral Storage:** Data is lost on instance stop/start, host migration, or hardware failure.
+  - **Launch-Only Attachment:** Must be attached at instance launch; cannot be added later.
+- **Default Rule:**  
+  - Use EBS when persistent, resilient storage is required.  
+  - Avoid instance store volumes for any critical or long-term data.
+
+3. When to Choose Each Storage Type
+-------------------------------------
+- **Use EBS When:**
+  - Data must be retained independently of the instance lifecycle.
+  - Storage needs to be isolated from host events (maintenance, migrations, etc.).
+  - The application relies on data persistence and backups (e.g., boot volumes, databases).
+- **Use Instance Store Volumes When:**
+  - High performance is critical and the application can tolerate non-persistent data.
+  - Cost is a primary concern (instance store is included in instance pricing).
+  - The application supports built-in replication or caching such that temporary data loss is acceptable.
+- **Situations Where It Depends:**
+  - For workloads with moderate persistence needs but very high performance requirements, evaluate whether the performance benefit of instance store outweighs its risk.
+  - Sometimes a hybrid approach is possible by combining multiple volumes to meet performance goals while mitigating risk.
+
+4. Performance Considerations and Limits
+------------------------------------------
+- **EBS Volume Performance Levels:**
+  - **GP2/GP3:**  
+    - Up to 16,000 IOPS per volume.
+    - GP3 provides a baseline of 3,000 IOPS with the option to provision more.
+  - **IO1/IO2:**  
+    - Up to 64,000 IOPS per volume.
+    - IOPS are provisioned independently of volume size.
+  - **IO2 Block Express:**  
+    - Up to 256,000 IOPS per volume.
+- **Per Instance Performance Limits:**
+  - There is an overall maximum performance cap on an EC2 instance (currently around 250,000 IOPS), regardless of the number of attached EBS volumes.
+  - Aggregating volumes in RAID 0 can help achieve higher combined performance, but the instance’s limit remains.
+- **Instance Store Performance:**
+  - Can deliver extremely high performance (potentially millions of IOPS) when using the appropriate instance types.
+  - Offers superior throughput and IOPS compared to equivalent EBS volumes, at the expense of persistence.
+
+5. Comparison Table: EBS vs. Instance Store
+---------------------------------------------
+| Storage Type           | Persistence       | Max IOPS per Volume          | Use Cases & Notes                                      |
+|------------------------|-------------------|------------------------------|--------------------------------------------------------|
+| EBS (GP2/GP3)          | Persistent        | Up to 16,000 IOPS            | Boot volumes, general-purpose workloads; GP3 offers a base of 3,000 IOPS with provisioned options |
+| EBS (IO1/IO2)          | Persistent        | Up to 64,000 IOPS            | High-performance, low-latency applications needing customizable IOPS independent of volume size |
+| EBS (IO2 Block Express)| Persistent        | Up to 256,000 IOPS           | Extreme performance requirements; suitable with larger instance types |
+| Instance Store Volumes | Ephemeral         | Potentially millions         | Ultra-high performance temporary data; included in instance pricing but data is lost on host events |
+
+6. Conclusion
+-------------
+- **For Persistent Needs:**  
+  - Default to EBS for its resilience and flexibility.
+- **For High-Performance, Cost-Sensitive, Temporary Workloads:**  
+  - Consider instance store volumes if the application can handle data loss.
+- **Exam Tip:**  
+  - Memorize key performance thresholds (e.g., 16,000 IOPS for GP2/GP3, 64,000 IOPS for IO1/IO2, and 250,000 IOPS per instance limit) as they are frequently referenced in exam questions.
+- **Overall:**  
+  - Understand the tradeoffs to design cost-effective, high-performing AWS architectures.

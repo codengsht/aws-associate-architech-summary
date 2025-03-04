@@ -1,0 +1,54 @@
+==============================================
+5-EBS Volume Types - General Purpose
+==============================================
+
+1. Introduction
+---------------
+- This lesson compares two general purpose SSD EBS volume types: GP2 (the current default) and GP3 (the newer option expected to feature on exams).
+- It covers their architectures, performance characteristics, pricing, and common usage scenarios.
+
+2. GP2 Overview
+---------------
+- **Volume Range:** 1 GB to 16 TB.
+- **Architecture:**  
+  - Uses a credit bucket mechanism where each I/O credit represents a 16 KB data block.
+  - Baseline performance is determined by volume size:  
+    • 3 IOPS per GB (with a minimum refill of 100 IOPS for volumes below ~33.33 GB).  
+    • Volumes can burst up to 3000 IOPS using accumulated credits.
+- **Credit Bucket:**  
+  - Starts full (5.4 million I/O credits) and replenishes at the baseline rate.
+  - If I/O consumption exceeds the refill rate, the bucket depletes, limiting performance.
+  - For volumes larger than 1 TB, the baseline meets or exceeds the 3000 IOPS burst, removing reliance on the credit bucket.
+- **Maximum Performance:**  
+  - Up to 16,000 IOPS (volumes > 5.33 TB achieve this maximum consistently).
+- **Usage Scenarios:**  
+  - Ideal for boot volumes, low-latency interactive applications, and dev/test environments.
+
+3. GP3 Overview
+---------------
+- **Volume Range:** 1 GB to 16 TB.
+- **Architecture:**  
+  - Eliminates the credit bucket system for a simpler, fixed baseline.
+  - Every GP3 volume provides a standard 3000 IOPS and 125 MB/s throughput regardless of volume size.
+- **Scalability:**  
+  - Additional performance can be provisioned (up to 16,000 IOPS and 1000 MB/s throughput) at an extra cost.
+- **Cost Efficiency:**  
+  - Base price is approximately 20% lower than GP2.
+- **Usage Scenarios:**  
+  - Suitable for similar workloads as GP2 (virtual desktops, medium-size databases, low-latency applications, dev/test environments, boot volumes).
+
+4. Comparison Table: GP2 vs. GP3
+--------------------------------
+| Feature               | GP2                                                        | GP3                                                   |
+|-----------------------|------------------------------------------------------------|-------------------------------------------------------|
+| Baseline IOPS         | 3 IOPS/GB (min 100 IOPS); burst up to 3000 IOPS             | Fixed at 3000 IOPS for all volumes                    |
+| Throughput            | Up to 250 MB/s maximum                                     | Standard 125 MB/s; up to 1000 MB/s if provisioned      |
+| Pricing               | Current default; higher base price                         | ~20% cheaper base price                               |
+| Performance Mechanism | Credit bucket system to manage burst IOPS                  | Fixed baseline without credit bucket; extra IOPS/throughput cost |
+| Scaling Behavior      | Performance scales with volume size; larger volumes hit baseline constantly | Performance is independent of size; additional performance must be provisioned |
+
+5. Conclusion
+-------------
+- **GP2** offers a proven, flexible solution with performance that scales with volume size, but its credit system can complicate management under heavy loads.
+- **GP3** simplifies performance by providing a consistent baseline and is more cost effective, with the option to add extra performance as needed.
+- Both volume types are suited for similar workloads, but GP3’s simplicity and lower cost make it an attractive choice for new deployments.

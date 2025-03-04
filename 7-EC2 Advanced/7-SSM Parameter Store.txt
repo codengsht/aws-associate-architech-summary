@@ -1,0 +1,56 @@
+==============================================
+7-SSM Parameter Store
+==============================================
+
+Overview
+--------
+- The lesson introduces AWS Systems Manager Parameter Store, a service designed to securely and scalably store configuration data, strings, documents, and secrets.
+- It highlights how Parameter Store improves upon traditional methods (such as embedding secrets in user data) by offering a resilient, secure solution with built-in versioning and encryption.
+
+Main Topics
+-----------
+- **Service Purpose & Benefits**
+  - Provides a centralized, secure repository for configuration data.
+  - Supports storing both plain text and sensitive data (secrets) using encryption.
+  - Enhances security by avoiding hard-coded credentials in EC2 user data.
+
+- **Parameter Types**
+  - **Strings:** For storing basic configuration values like connection strings.
+  - **String Lists:** Allows storing lists of values in a single parameter.
+  - **Secure Strings:** Uses AWS KMS for encryption, suitable for sensitive data like passwords.
+
+- **Hierarchical Structure & Versioning**
+  - Parameters can be organized hierarchically (e.g., by application or environment), aiding in structured management.
+  - Supports versioning, enabling tracking and rollback of changes.
+
+- **Integration with AWS Services**
+  - Natively integrated with CloudFormation, EC2, Lambda, and other AWS services.
+  - Permissions and access are managed via IAM, ensuring only authorized entities can retrieve or modify parameters.
+  - Public parameters exist for common use cases, such as retrieving the latest AMI ID for a given region.
+
+Key Concepts
+------------
+- **Security & Encryption:** By leveraging Secure Strings and KMS, Parameter Store ensures sensitive information is protected.
+- **Centralized Management:** Organizing parameters hierarchically simplifies configuration management and deployment across multiple environments.
+- **Automation & Integration:** Changes in parameters can trigger events in other AWS services, facilitating automated workflows.
+- **Best Practices:** Avoid embedding secrets in instance user data; instead, use Parameter Store for secure, scalable configuration management.
+
+Examples & Case Studies
+------------------------
+- **Storing Database Credentials:** Use Secure Strings to store passwords and connection details, ensuring they remain encrypted.
+- **Retrieving Public Parameters:** CloudFormation templates can reference public parameters (e.g., the latest AMI IDs) to streamline instance provisioning.
+- **Hierarchical Configurations:** Organize parameters under branches (e.g., `/wordpress/db_password`) to separate configurations for different applications or environments.
+
+Conclusions & Recommendations
+-------------------------------
+- **Adopt Parameter Store for Configuration Management:** Leverage its security, scalability, and native AWS integration to improve operational practices.
+- **Implement Hierarchical Naming and Versioning:** This approach simplifies management and allows for effective tracking of configuration changes.
+- **Integrate with Automation Tools:** Utilize the service’s ability to trigger events and integrate with CloudFormation and other AWS services for seamless automation.
+
+Table: Parameter Types Overview
+---------------------------------
+| Parameter Type | Description                                               |
+|----------------|-----------------------------------------------------------|
+| String         | Plain text values for configuration (e.g., DB usernames)  |
+| String List    | Comma-separated list of strings for multi-value settings  |
+| Secure String  | Encrypted data using AWS KMS for storing sensitive info     |

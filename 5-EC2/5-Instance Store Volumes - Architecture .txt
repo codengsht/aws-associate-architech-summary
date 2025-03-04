@@ -1,0 +1,57 @@
+==============================================
+5-Instance Store Volumes - Architecture 
+==============================================
+
+1. Introduction
+---------------
+- This lesson covers instance store volumes—a type of storage provided with certain EC2 instances.
+- Instance store volumes offer extremely high performance but come with significant tradeoffs regarding data persistence.
+
+2. What are Instance Store Volumes?
+------------------------------------
+- **Definition:**  
+  - Instance store volumes are raw block storage devices directly attached to an EC2 host.
+  - They appear to the operating system as disks on which file systems can be created.
+- **Physical Attachment:**  
+  - Unlike network-attached storage (EBS), these volumes reside on the physical hardware of the host.
+- **Launch Requirement:**  
+  - They must be attached at instance launch; you cannot add them after the instance is running.
+
+3. Key Characteristics and Use Cases
+--------------------------------------
+- **Performance:**  
+  - Provide the highest storage performance in AWS, with superior throughput and IOPS compared to EBS.
+  - Examples include storage optimized instances like D3 (up to 4.6 GB/s) and I3 (up to 16 GB/s, with millions of IOPS).
+- **Cost Efficiency:**  
+  - Included in the price of the instance, so there is no additional charge for using them.
+- **Ephemeral Nature:**  
+  - Data on instance store volumes is temporary:
+    - Lost if the instance is stopped, restarted, or migrated to a different host.
+    - Also lost in case of hardware failures on the host.
+
+4. Tradeoffs and Limitations
+----------------------------
+- **Advantages:**
+  - Exceptional performance (low latency, high IOPS, high throughput).
+  - Cost-effective as they are bundled with the instance pricing.
+- **Disadvantages:**
+  - Ephemeral storage: Data is not persistent and is lost upon instance stop/start, host migration, or hardware failure.
+  - Must be defined at launch; cannot be added or reattached later.
+  - Not suitable for storing critical or irreplaceable data.
+
+5. Summary Table: Pros and Cons of Instance Store Volumes
+----------------------------------------------------------
+| Aspect              | Instance Store Volumes                                       | Considerations                                    |
+|---------------------|--------------------------------------------------------------|---------------------------------------------------|
+| Attachment          | Must be attached at launch; cannot be added later            | Plan storage needs during instance launch         |
+| Persistence         | Ephemeral; data lost on host migration, stop/start, or failure | Not for critical or long-term data                |
+| Performance         | Extremely high throughput and IOPS                           | Ideal for temporary, high-performance workloads   |
+| Cost                | Included with the instance pricing                           | No extra cost but trade off with data persistence   |
+| Usage Scenarios     | Caching, temporary storage, scratch data                     | Use only for non-critical, replaceable data       |
+
+6. Conclusion
+-------------
+- Instance store volumes deliver unmatched local storage performance within AWS.
+- They are best suited for workloads where temporary, high-speed data access is needed (e.g., caches, scratch space).
+- Their ephemeral nature means they are not suitable for persistent or critical data.
+- Understanding these tradeoffs is essential for designing effective AWS architectures and succeeding on the AWS exams.

@@ -1,0 +1,99 @@
+==============================================
+5-Reserved Instances - the rest
+==============================================
+
+1. Introduction
+---------------
+- EC2 purchase options determine how you pay for compute capacity.
+- They impact cost, capacity allocation, and hardware isolation.
+- Key options include various types of Reserved Instances, Capacity Reservations, Dedicated Hosts/Instances, and Savings Plans.
+
+2. Standard Reserved Instances
+------------------------------
+- **Definition:**  
+  - Long-term (1- or 3-year) commitment for 24/7/365 usage.
+- **Benefits:**  
+  - Lowest per-second pricing for continuous, predictable workloads.
+- **Use Case:**  
+  - Ideal for mission-critical components that must run continuously.
+
+3. Scheduled Reserved Instances
+-------------------------------
+- **Definition:**  
+  - Reservations for recurring, but not continuous, usage.
+- **Key Characteristics:**  
+  - Specify frequency, duration, and specific time windows (e.g., 5 hours per day).
+  - Minimum commitment of 1,000 hours per year with a 1-year term.
+- **Use Case:**  
+  - Best for predictable tasks that only run during certain hours or days (e.g., batch processing or back-end jobs).
+
+4. Capacity Reservations
+------------------------
+- **Definition:**  
+  - Reserve EC2 capacity in a specific Availability Zone without a long-term billing commitment.
+- **Key Points:**  
+  - Provides guaranteed capacity during high-demand events or major failures.
+  - Can be purchased as either regional (billing benefit only) or zonal (reserves capacity in a specific AZ).
+  - You pay for the reserved capacity regardless of usage.
+- **Use Case:**  
+  - Critical workloads that cannot tolerate interruption when capacity is scarce.
+
+5. Dedicated Hosts
+------------------
+- **Definition:**  
+  - Entire physical EC2 host dedicated exclusively to your account.
+- **Key Characteristics:**  
+  - You pay for the host; instances launched on the host incur no additional per-second charge.
+  - Suitable for meeting licensing requirements based on physical cores or sockets.
+  - You must manage capacity manually; unused host capacity is wasted.
+- **Use Case:**  
+  - Environments with strict licensing or compliance requirements needing full hardware isolation.
+
+6. Dedicated Instances
+----------------------
+- **Definition:**  
+  - Instances that run on hardware isolated to your account, without managing the underlying host.
+- **Key Characteristics:**  
+  - Offers physical isolation similar to Dedicated Hosts, but without the need to manage host capacity.
+  - Typically incur an extra fee compared to shared on-demand instances.
+- **Use Case:**  
+  - When isolation from other customers is required but host management is not desired.
+
+7. Savings Plans
+----------------
+- **Definition:**  
+  - Flexible pricing model where you commit to a fixed hourly spend over 1 or 3 years.
+- **Types:**  
+  - **General Compute Savings Plan:** Applies across EC2, Fargate, and Lambda (up to 66% savings).
+  - **EC2 Savings Plan:** Specific to EC2 with higher discounts (up to 72% savings).
+- **Mechanism:**  
+  - You receive discounted rates on usage up to your committed hourly spend; any usage beyond that is billed at on-demand rates.
+- **Use Case:**  
+  - Ideal for organizations with predictable overall compute spending, especially if using multiple compute services.
+
+8. Comparison Table: EC2 Purchase Options
+------------------------------------------
+| Purchase Option             | Commitment & Duration                | Capacity/Cost Benefit                                      | Key Use Cases                                          |
+|-----------------------------|--------------------------------------|------------------------------------------------------------|--------------------------------------------------------|
+| Standard Reserved Instances | 1 or 3 years, continuous use         | Lowest cost for 24/7/365 usage                             | Mission-critical, always-on workloads                  |
+| Scheduled Reserved Instances| Minimum 1 year; scheduled hours only | Discounts for fixed recurring schedules                    | Batch jobs, periodic processing (e.g., 5 hrs/day)      |
+| Capacity Reservations       | No long-term billing discount        | Guarantees capacity in a specific AZ; paid regardless of use | Critical workloads needing guaranteed capacity         |
+| Dedicated Hosts             | Pay per host; long-term commitment   | Full hardware isolation; meets physical licensing needs    | Software with per-socket/core licensing requirements   |
+| Dedicated Instances         | Additional fee; managed by AWS       | Physical isolation without host management overhead        | Isolation requirements without managing host capacity  |
+| Savings Plans               | 1 or 3 years; fixed hourly spend     | Broad discounts across EC2 (or compute services) up to 66–72%| Flexible if using multiple AWS compute services        |
+
+9. Conclusion
+-------------
+- **Default Strategy:**  
+  - Start with On-Demand for unpredictable or short-term needs.
+- **For Predictable, Continuous Workloads:**  
+  - Use Standard Reserved Instances to secure the lowest cost.
+- **For Scheduled, Non-Continuous Tasks:**  
+  - Opt for Scheduled Reserved Instances to match specific time windows.
+- **To Guarantee Capacity:**  
+  - Consider Capacity Reservations if your workload is critical during high-demand periods.
+- **For Strict Hardware Isolation:**  
+  - Choose Dedicated Hosts or Dedicated Instances based on your management preferences.
+- **For Flexible Cost Optimization:**  
+  - Savings Plans offer a versatile way to reduce compute costs across multiple services.
+- Understanding these options and their tradeoffs is essential for designing cost-effective, resilient AWS architectures and for success on the AWS exams.

@@ -1,0 +1,65 @@
+==============================================
+5-EBS Volume Types - HDD-Based
+==============================================
+
+1. Introduction
+---------------
+- This lesson covers HDD-based EBS volume types.
+- HDD volumes use spinning platters and moving read/write heads, resulting in slower performance compared to SSDs.
+- They are designed for specific use cases where cost efficiency and sequential throughput are more important than high IOPS.
+
+2. Overview of HDD Storage in AWS
+----------------------------------
+- **HDD Characteristics:**
+  - Composed of mechanical parts (platters and heads).
+  - Generally slower and less agile than SSD storage.
+  - Suitable for workloads that are tolerant of higher latency and lower IOPS.
+- **Volume Types:**
+  - Although three types exist (with one legacy option), the focus is on two that are in general use:
+    - **ST1:** Throughput Optimized HDD.
+    - **SC1:** Cold HDD.
+
+3. ST1: Throughput Optimized HDD
+---------------------------------
+- **Purpose:**  
+  - Optimized for frequently accessed, throughput-intensive sequential workloads.
+- **Performance:**
+  - Measured in MB per second (each I/O operation corresponds to a 1 MB block).
+  - **Baseline Throughput:** 40 MB/s per TB of volume size.
+  - **Burst Throughput:** Up to 250 MB/s per TB, with a maximum of 500 IOPS (i.e., 500 MB/s).
+- **Use Cases:**  
+  - Big data, data warehouses, log processing, and other applications where large sequential data transfers are common.
+- **Cost:**  
+  - Lower cost than SSD options while providing adequate performance for sequential workloads.
+
+4. SC1: Cold HDD
+-----------------
+- **Purpose:**  
+  - Designed for infrequently accessed data, where cost is a critical factor.
+- **Performance:**
+  - Also measured in MB per second.
+  - **Baseline Throughput:** 12 MB/s per TB of volume size.
+  - **Burst Throughput:** Up to 80 MB/s per TB, with a maximum of 250 IOPS (i.e., 250 MB/s).
+- **Use Cases:**  
+  - Archival storage or data that is rarely accessed.
+- **Cost:**  
+  - The lowest cost option, optimized for long-term storage of cold data.
+
+5. Comparison Table: ST1 vs. SC1
+--------------------------------
+| Feature               | ST1 (Throughput Optimized HDD)                      | SC1 (Cold HDD)                                    |
+|-----------------------|-----------------------------------------------------|---------------------------------------------------|
+| **Use Case**          | Frequently accessed, throughput-intensive data    | Infrequently accessed, archival or cold data      |
+| **Volume Size Range** | 15 GB to 16 TB                                      | 15 GB to 16 TB                                    |
+| **Maximum IOPS**      | 500 IOPS (500 MB/s, as I/O measured in 1 MB blocks)  | 250 IOPS (250 MB/s)                               |
+| **Baseline Throughput**| 40 MB/s per TB                                     | 12 MB/s per TB                                    |
+| **Burst Throughput**  | Up to 250 MB/s per TB (max 500 MB/s)                 | Up to 80 MB/s per TB (max 250 MB/s)                 |
+| **Cost**              | Lower cost option for high-throughput sequential workloads | Lowest cost option for rarely accessed data      |
+
+6. Conclusion
+-------------
+- **Selection Guidelines:**
+  - Choose **ST1** when you need a balance between cost and performance for workloads that involve frequent, sequential data access.
+  - Choose **SC1** when your storage needs are centered on cost efficiency and the data is accessed infrequently.
+- For applications requiring high IOPS or random access, SSD-based volumes are recommended over HDD options.
+- Understanding these trade-offs is essential for designing cost-effective and performance-appropriate storage solutions in AWS.

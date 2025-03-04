@@ -1,0 +1,63 @@
+==============================
+6-ECS - Concepts
+==============================
+
+Overview:
+- This lecture introduces AWS Elastic Container Service (ECS), a managed container orchestration service.
+- It builds on previous lessons by transitioning from manually running containers on EC2 instances (using the Docker container engine) to using ECS, which reduces the overhead of managing container hosts.
+- ECS supports two primary modes: EC2 mode and Fargate mode.
+
+Main Topics:
+1. ECS Operating Modes:
+   - **EC2 Mode:** 
+     - Uses EC2 instances as container hosts.
+     - You manage the underlying infrastructure while ECS handles container orchestration.
+   - **Fargate Mode:** 
+     - AWS manages the container host infrastructure.
+     - Allows you to focus solely on defining and deploying containers.
+
+2. Core ECS Components:
+   - **Clusters:** 
+     - Logical groupings where your containers (tasks or services) run.
+   - **Container Definition:** 
+     - Specifies the container image location (from registries like AWS ECR or Docker Hub).
+     - Defines essential settings such as exposed ports.
+   - **Task Definition:** 
+     - Acts as a blueprint for a self-contained application.
+     - Can include one or more container definitions.
+     - Specifies resource requirements and the task role (an IAM role that provides temporary credentials for accessing AWS resources).
+   - **Service Definition:** 
+     - Wraps tasks to provide scalability and high availability.
+     - Determines the desired number of task copies and integrates with load balancers to distribute incoming traffic.
+     - Manages the replacement of failed tasks to ensure service continuity.
+
+3. Integration with Container Registries:
+   - AWS offers the Elastic Container Registry (ECR), which integrates seamlessly with ECS.
+   - Alternatives like Docker Hub can also be used to source container images.
+
+Key Concepts:
+- **Managed Container Orchestration:** ECS automates the scheduling, deployment, and management of containerized applications, reducing administrative overhead.
+- **Separation of Concerns:** 
+  - A container definition focuses on the specifics of a single container (image, ports).
+  - A task definition aggregates one or more container definitions and includes security (task role) and resource settings.
+- **Scalability and High Availability:** 
+  - Using ECS services, you can deploy multiple copies of tasks, enabling load balancing and resilience in production environments.
+
+Examples & Practical Applications:
+- The lecture references a previously created Go container image that was tested on an EC2 instance.
+- Demonstrates how such containers can be deployed in an ECS cluster using task definitions and optionally managed through ECS services for scaling and load balancing.
+
+Conclusions & Recommendations:
+- ECS simplifies container management by abstracting much of the infrastructure administration, similar to how EC2 abstracts physical server management for virtual machines.
+- Choosing between EC2 mode and Fargate mode depends on the level of control you need over the infrastructure.
+- For production applications, leveraging ECS services is recommended to ensure scalability, high availability, and efficient resource utilization.
+- The lesson sets the stage for deeper exploration of ECS components and a subsequent hands-on demo.
+
+Comparison Table: ECS Modes
+
+| Aspect         | EC2 Mode                                      | Fargate Mode                                   |
+|----------------|-----------------------------------------------|------------------------------------------------|
+| Infrastructure | Managed by the user via EC2 instances         | Fully managed by AWS                           |
+| Administration | Requires management of container hosts        | Minimal administrative overhead                |
+| Use Case       | Greater control over the environment          | Simplified, serverless container deployment    |
+| Integration    | Integrated with ECS clusters on EC2           | Integrated with AWS managed container services |

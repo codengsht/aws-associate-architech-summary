@@ -1,0 +1,68 @@
+==============================================
+7-EC2 Instance Roles & Profile
+==============================================
+
+Overview
+--------
+- The lecture explains how EC2 instance roles allow AWS services to securely grant permissions to other AWS services.
+- It emphasizes that roles are the best practice for providing temporary credentials to applications running on EC2 instances, avoiding long-term credential storage.
+
+Main Topics
+-----------
+- **IAM Roles and Permissions**
+  - IAM roles define a set of permissions through an attached policy.
+  - When a service or instance assumes a role, it receives temporary security credentials with the permissions granted by that policy.
+
+- **EC2 Instance Roles**
+  - EC2 instances can assume IAM roles, allowing any application running on the instance to use the temporary credentials.
+  - These credentials are delivered via the instance metadata service, ensuring that applications have continuous, valid access as they are automatically rotated.
+
+- **Instance Profiles**
+  - An instance profile acts as a wrapper for an IAM role.
+  - It is the mechanism by which the role’s credentials are passed into the EC2 instance.
+  - When using the AWS Management Console, an instance profile is automatically created with the same name as the role; however, separate creation may be required when using the CLI or CloudFormation.
+
+Key Concepts
+------------
+- **Temporary Credentials and Rotation**
+  - When an EC2 instance assumes a role, temporary credentials are generated.
+  - These credentials are automatically renewed before expiration via interactions between EC2 and the secure token service.
+
+- **Security Best Practices**
+  - It is recommended to use instance roles rather than embedding long-term credentials (access keys) within the instance.
+  - Tools such as the AWS CLI automatically utilize these temporary credentials when an instance role is attached.
+
+- **Access via Instance Metadata**
+  - Applications retrieve the temporary credentials from the instance metadata under a dedicated IAM tree.
+  - This ensures that any application running on the instance can securely access AWS resources (like S3) using the provided credentials.
+
+Examples & Case Studies
+------------------------
+- **Role Usage Example:**
+  - An EC2 instance with an attached instance profile can automatically provide its applications with the necessary permissions to interact with other AWS services.
+  - AWS CLI and SDKs within the instance detect and use these credentials without additional configuration.
+
+- **Security Implementation:**
+  - By using instance roles, organizations avoid the risk associated with storing long-term credentials on the instance.
+  - This practice reduces potential security vulnerabilities and simplifies credential management.
+
+Conclusions & Recommendations
+-------------------------------
+- **Adopt Instance Roles:**
+  - Always use IAM roles for EC2 instances to leverage temporary credentials and enhance security.
+  - Avoid storing static access keys on instances to minimize exposure.
+
+- **Understand the Architecture:**
+  - Recognize that the instance profile is essential for delivering role credentials into the EC2 instance.
+  - Ensure that applications check the instance metadata for updated credentials to maintain uninterrupted access.
+
+- **Practical Usage:**
+  - Leverage AWS tooling that automatically uses instance role credentials for seamless and secure operations.
+  - Integrate this practice into all deployments to adhere to AWS best practices and improve overall security posture.
+  
+Table: Comparison of IAM Role and Instance Profile
+---------------------------------------------------
+| Component       | Description                                                             |
+|-----------------|-------------------------------------------------------------------------|
+| IAM Role        | Defines permissions via an attached policy and provides temporary credentials when assumed. |
+| Instance Profile| A wrapper for the IAM role that delivers the role's credentials to the EC2 instance via metadata. |

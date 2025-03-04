@@ -1,0 +1,69 @@
+==============================
+5-Virtualization 101
+==============================
+
+1. Introduction
+---------------
+- The lesson provides a brief introduction to the basics of virtualization.
+- It is designed for beginners and serves as a starting point for understanding virtualization.
+- The course is part of an Infrastructure as a Service (IaaS) product, Easy 2, which delivers virtualization as a service.
+- Additional resources and links are provided for further learning.
+
+2. Fundamentals of Virtualization
+---------------------------------
+- **Definition:** Virtualization is the process of running more than one operating system on a single physical server.
+- **Traditional Architecture:**
+  - A server traditionally had a single operating system running in privileged mode (kernel) with user applications in unprivileged mode.
+  - Only the kernel could interact directly with hardware, ensuring system stability and security.
+- **The Challenge:** Running multiple unmodified operating systems on the same hardware would normally cause conflicts and crashes due to privileged instructions.
+
+3. Virtualization Methods
+-------------------------
+The lesson discusses three main approaches to virtualization:
+
+a. Emulated (Software) Virtualization
+   - **Overview:** Uses a host operating system and a hypervisor to create virtual machines.
+   - **Operation:** Guest operating systems run unmodified within virtual machines with emulated hardware.
+   - **Key Process:** Binary translation intercepts and translates privileged instructions on the fly.
+   - **Drawback:** Significant performance penalty due to software-based translation.
+
+b. Paravirtualization
+   - **Overview:** Involves modifying the guest operating system so that privileged calls are redirected to the hypervisor (using hypercalls).
+   - **Operation:** Only a subset of operating systems that can be modified are compatible.
+   - **Advantage:** Improves performance by reducing the overhead of binary translation.
+   - **Limitation:** Tied to specific hypervisors due to the required OS modifications.
+
+c. Hardware Assisted Virtualization
+   - **Overview:** The physical hardware (especially the CPU) is designed to be virtualization aware.
+   - **Operation:** The CPU traps privileged instructions and redirects them directly to the hypervisor.
+   - **Advantage:** Minimal performance degradation compared to native hardware execution.
+   - **Focus:** Enhances overall virtualization performance by reducing software overhead.
+
+A comparison of these methods is provided in the table below.
+
+-------------------------
+Comparison of Virtualization Methods
+-------------------------
+
+| Aspect                 | Emulated Virtualization          | Paravirtualization               | Hardware Assisted Virtualization |
+|------------------------|----------------------------------|----------------------------------|----------------------------------|
+| Modification required  | No                               | Yes (OS modification)            | No                               |
+| Performance impact     | High (binary translation overhead) | Improved through modified drivers | Low (direct hardware support)    |
+| OS compatibility       | Generic OS support               | Limited to modified OS           | Generic OS support               |
+
+4. I/O Performance and SR-IOV
+-----------------------------
+- **I/O Bottleneck:** Even with hardware virtualization, input/output operations (network and disk I/O) may suffer due to software layers.
+- **SR-IOV (Single Root I/O Virtualization):**
+  - Allows a physical hardware device (e.g., network card) to appear as several virtual mini-cards.
+  - Enables guest operating systems to directly access virtualized hardware without hypervisor translation.
+  - **Enhanced Networking Benefits:**
+    - Faster speeds and lower latency.
+    - Consistent performance even under high load.
+    - Reduced CPU overhead on the host.
+
+5. Conclusion and Future Topics
+-------------------------------
+- The lesson provided a high-level overview of virtualization, its types, and key challenges.
+- Emphasis was placed on understanding SR-IOV as a means to improve network performance.
+- Future lessons will explore advanced topics, such as AWS's Nitro hypervisor stack and additional virtualization features.

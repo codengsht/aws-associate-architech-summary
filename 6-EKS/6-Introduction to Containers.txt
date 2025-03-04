@@ -1,0 +1,51 @@
+==============================
+6-Introduction to Containers
+==============================
+
+Overview:
+- This lecture introduces container computing as an alternative to traditional virtualization.
+- It explains how containers work, their advantages over virtual machines, and sets the stage for a hands-on demo where you'll create your own container.
+- The primary goal is to clarify the benefits of containerization in terms of resource efficiency, portability, and isolation.
+
+Main Topics:
+1. Virtualization vs. Containerization:
+   - **Traditional Virtualization:** Involves running multiple complete operating systems on the same hardware via a hypervisor (e.g., AWS EC2 with Nitro).
+   - **Resource Overhead:** Virtual machines require full operating systems, consuming significant memory and disk space, leading to duplicated resource use.
+   - **Containerization:** Runs applications as isolated processes on a single host OS, eliminating the need for multiple OS copies and reducing overhead.
+
+2. Container Technology & Architecture:
+   - **Container Engine:** Tools like Docker allow containers to run as processes within the host operating system.
+   - **Isolation & Efficiency:** Containers use the host OS for tasks like networking and file I/O while maintaining isolated execution environments.
+   - **Resource Optimization:** Only the application and its runtime dependencies are included, allowing for higher density and more efficient resource usage.
+
+3. Docker Images and Dockerfiles:
+   - **Layered Architecture:** Docker images are built in layers using a Dockerfile; each command creates a new, read-only file system layer.
+   - **Example Process:** 
+     - Start with a base image (e.g., CentOS 7).
+     - Apply updates and install necessary software (e.g., Apache).
+     - Add custom scripts or configurations as additional layers.
+   - **Read-Write Layer:** When a container is launched from an image, it gets a unique read-write layer, ensuring each container remains isolated even if built from the same image.
+
+4. Benefits and Practical Considerations:
+   - **Efficiency and Speed:** Containers require fewer resources and start/stop faster compared to virtual machines.
+   - **Portability and Consistency:** Containers encapsulate all necessary dependencies, ensuring that applications run consistently across different environments.
+   - **Scalability:** The layered image approach minimizes storage duplication, allowing many containers to share the same base layers, which is ideal for large-scale deployments.
+   - **Real-World Use:** Container registries (e.g., Docker Hub) facilitate sharing and reuse of images, further enhancing deployment efficiency.
+
+Examples & Case Studies:
+- **Resource Usage Example:** A virtual machine with 4GB allocated may lose 60–70% of its resources to the OS, whereas a container only uses what is necessary for the application and its dependencies.
+- **Layered Image Visualization:** The lecture described a Docker image as a stack of layers (base image, software updates, customizations) that are reused across multiple containers, with only a small, unique read-write layer for each container.
+
+Conclusions & Recommendations:
+- Containers offer a lightweight, efficient alternative to virtual machines by sharing the host operating system.
+- They provide high density, fast start-up times, and excellent portability, making them ideal for modern application deployment.
+- The theoretical concepts discussed set the foundation for the upcoming demo, where you will gain practical experience in creating container images and launching containers.
+
+Comparison Table: Virtual Machines vs. Containers
+
+| Aspect              | Virtual Machines                                     | Containers                                                  |
+|---------------------|------------------------------------------------------|-------------------------------------------------------------|
+| Isolation Mechanism | Full OS isolation via hypervisor                     | Process-level isolation using the host OS                   |
+| Resource Usage      | High overhead due to separate OS instances           | Minimal overhead; shared OS with only app-specific layers    |
+| Speed & Density     | Slower start/stop, lower density                     | Fast start/stop, high density with minimal resource usage     |
+| Storage Duplication | Separate full OS disk images                         | Layered file system sharing common base layers                |

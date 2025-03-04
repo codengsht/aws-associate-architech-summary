@@ -1,0 +1,76 @@
+==============================================
+5-Snapshots, Restore & Fast Snapshot Restore (FSR)
+==============================================
+
+1. Introduction
+---------------
+- **Purpose:** EBS snapshots provide a reliable and efficient method to back up EBS volumes by storing their data on S3.
+- **Benefits:**
+  - Protects data against availability zone issues or local hardware failures.
+  - Enables migration of EBS volume data between availability zones or even AWS regions.
+  - Increases data resilience by leveraging S3’s regional durability.
+
+2. How Snapshots Work
+----------------------
+- **Backup Mechanism:**
+  - **Initial Snapshot:**  
+    - Creates a full backup of the volume’s used data (not the total allocated size).
+    - May take longer to complete depending on the amount of data.
+  - **Incremental Snapshots:**  
+    - Only capture changes made since the previous snapshot.
+    - Each incremental snapshot is self-sufficient; they reference previous snapshots for unchanged data.
+- **Data Storage:**  
+  - Snapshots are stored on S3, making them regionally resilient.
+  - They serve as a point-in-time backup that can be used to restore or clone volumes.
+
+3. Usage and Flexibility
+-------------------------
+- **Volume Creation:**  
+  - New EBS volumes can be created either as blank or from an existing snapshot.
+  - When created from a snapshot, the restore happens lazily; data is pulled from S3 on first access.
+- **Cross-AZ and Cross-Region Migration:**
+  - Snapshots enable the creation of volumes in a different availability zone than the source.
+  - They can also be copied to different regions, supporting global disaster recovery and migration strategies.
+
+4. Performance Considerations
+-----------------------------
+- **Lazy Restoration:**  
+  - When a volume is restored from a snapshot, data is transferred from S3 in the background.
+  - Initial reads of blocks not yet restored may experience lower performance.
+- **Forced Initialization:**  
+  - Tools like `dd` (on Linux) can be used to read every block, triggering immediate data restoration.
+- **Fast Snapshot Restore (FSR):**  
+  - Option to configure snapshots for instant volume restoration.
+  - Limited to 50 FSR sets per region and incurs additional cost.
+
+5. Cost Considerations
+----------------------
+- **Billing:**  
+  - Snapshots are charged based on the actual amount of used data (GB-month), not the total allocated volume size.
+  - Incremental nature means that only changed data is stored in subsequent snapshots, optimizing storage costs.
+- **Efficiency:**  
+  - Frequent snapshots are feasible without significant cost increases since only differences are recorded.
+
+6. Visual Overview
+------------------
+- **Snapshot Chain:**  
+  - **First Snapshot:** Full copy of all used data from the source volume.
+  - **Subsequent Snapshots:** Only new or changed data is saved, referencing earlier snapshots for unchanged data.
+  
+  -----------------------------
+  | Snapshot         | Data Stored                     | Key Point                         |
+  |------------------|---------------------------------|-----------------------------------|
+  | Initial Snapshot | Full copy of used data          | Takes longer; complete backup     |
+  | Subsequent Snapshots | Only changed/new data         | Faster and more cost-efficient    |
+  -----------------------------
+
+7. Conclusion
+-------------
+- **Primary Use:**  
+  - Use snapshots to back up EBS volumes for resilience, recovery, and data migration.
+- **Key Takeaways:**  
+  - Snapshots are incremental and stored in S3, ensuring regional durability.
+  - Restoring volumes from snapshots may require initialization to achieve full performance.
+  - Fast Snapshot Restore is available for instant performance but comes at an extra cost.
+- **Exam Relevance:**  
+  - Understand these mechanisms and tradeoffs to answer questions on backup, recovery, and migration strategies in AWS.

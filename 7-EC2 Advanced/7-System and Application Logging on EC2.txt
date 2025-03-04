@@ -1,0 +1,61 @@
+==============================================
+7-System and Application Logging on EC2
+==============================================
+
+Overview
+--------
+- This lesson explains how to capture internal system and application logs on an EC2 instance.
+- It highlights the limitations of native CloudWatch and CloudWatch Logs, which only monitor external-facing metrics.
+- The solution involves installing and configuring the CloudWatch Agent to access OS-level performance metrics and log files.
+
+Main Topics
+-----------
+- **CloudWatch Limitations**
+  - CloudWatch and CloudWatch Logs do not natively capture data from inside an EC2 instance.
+  - Internal metrics like process details, memory consumption, and internal log files remain hidden without additional configuration.
+
+- **Role of the CloudWatch Agent**
+  - The CloudWatch Agent must be installed on the EC2 instance to collect internal operating system metrics and logs.
+  - It gathers data such as application logs, system logs, and other performance counters, then sends this data to CloudWatch.
+
+- **Configuration and Permissions**
+  - **Configuration:** The agent requires a configuration file that specifies which metrics and log files to collect. This configuration can be centrally managed using AWS Systems Manager Parameter Store.
+  - **Permissions:** An IAM role with the proper permissions to interact with CloudWatch and CloudWatch Logs must be attached to the instance. This avoids the need to use long-term credentials.
+  
+- **Log Organization**
+  - Logs are organized into log groups in CloudWatch Logs.
+  - Each log file to be captured is assigned a separate log group, and each instance writes to its own log stream within that group.
+
+Key Concepts
+------------
+- **Internal Monitoring:** To gain visibility into OS-level processes and resource usage, the CloudWatch Agent is essential.
+- **Security Best Practices:** Use IAM roles for providing temporary credentials instead of embedding static access keys on the instance.
+- **Centralized Configuration:** Leveraging Parameter Store for managing the CloudWatch Agent’s configuration ensures consistency and scalability across multiple instances.
+- **Automation at Scale:** Manual setup works for a single instance, but automating the process (e.g., with CloudFormation) is recommended for larger deployments.
+
+Examples & Case Studies
+------------------------
+- **Single Instance Setup:**
+  - Manually install the CloudWatch Agent on an EC2 instance.
+  - Configure the agent with a file that defines which logs and metrics to capture.
+  - Attach an IAM role with permissions to interact with CloudWatch services.
+  
+- **Automated Deployment:**
+  - Use CloudFormation templates to deploy the CloudWatch Agent and associated IAM roles and configurations across many EC2 instances.
+  - Store the agent configuration in Parameter Store for centralized management and ease of updates.
+
+Conclusions & Recommendations
+-------------------------------
+- **Deploy the CloudWatch Agent:** Essential for capturing internal metrics and logs that are not available through CloudWatch by default.
+- **Use IAM Roles:** Ensure secure, temporary credentials are provided to the agent, eliminating the risks associated with long-term credential storage.
+- **Centralize Configuration:** Utilize Parameter Store to manage and distribute the CloudWatch Agent’s configuration, facilitating scalable deployments.
+- **Plan for Automation:** Consider automating the installation and configuration process (e.g., via CloudFormation) for consistent deployment across multiple instances.
+
+Table: CloudWatch Agent Deployment Components
+-----------------------------------------------
+| Component            | Description                                                             |
+|----------------------|-------------------------------------------------------------------------|
+| CloudWatch Agent     | Software installed on EC2 to collect OS-level metrics and logs.         |
+| IAM Role             | Provides secure, temporary credentials for the agent to access CloudWatch services. |
+| Parameter Store      | Stores the agent’s configuration for centralized management.            |
+| Log Groups/Streams   | Organizes captured log data in CloudWatch Logs by log file and instance.  |

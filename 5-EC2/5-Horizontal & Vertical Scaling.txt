@@ -1,0 +1,59 @@
+==============================================
+5-Horizontal & Vertical Scaling
+==============================================
+
+1. Introduction
+---------------
+- Scaling adjusts system resources to meet changing load demands.
+- Two primary approaches:
+  • Vertical Scaling: Increasing the capacity of a single instance.
+  • Horizontal Scaling: Adding more instances to distribute the load.
+
+2. Vertical Scaling
+-------------------
+- **Definition:**  
+  - Enhances a single server's resources (e.g., upgrading from T3.large to T3.xlarge).
+- **How It Works:**  
+  - Resizing an EC2 instance to provide more vCPUs, memory, etc.
+  - Typically involves stopping and restarting the instance.
+- **Pros:**  
+  - Simple to implement—requires no changes to application architecture.
+  - Ideal for monolithic applications.
+- **Cons:**  
+  - Downtime during the resizing process.
+  - Limited by the maximum instance size available.
+  - Scaling up may lead to disproportionately higher costs.
+  - Not ideal for rapid changes in load since scaling must occur during maintenance windows.
+
+3. Horizontal Scaling
+---------------------
+- **Definition:**  
+  - Increases capacity by adding more instances rather than enhancing one.
+- **How It Works:**  
+  - Deploy multiple smaller instances and distribute incoming requests using a load balancer.
+  - Enables near-infinite scaling as additional instances can be added.
+- **Pros:**  
+  - No downtime—new instances can be added or removed dynamically.
+  - Often more cost-effective by using commodity-sized instances.
+  - Provides finer granularity in scaling (e.g., adding one instance at a time).
+- **Cons:**  
+  - Requires application design to support stateless operation or external session management.
+  - More complex load balancing and orchestration needed.
+  - Sessions must be managed externally (using a shared cache or database) to avoid user disruption.
+
+4. Comparison Table: Vertical vs. Horizontal Scaling
+------------------------------------------------------
+| Aspect             | Vertical Scaling                         | Horizontal Scaling                                  |
+|--------------------|------------------------------------------|-----------------------------------------------------|
+| Approach           | Increase capacity of a single instance   | Add more instances to distribute load              |
+| Implementation     | Resize instance (e.g., upgrade type/size)  | Deploy multiple instances behind a load balancer     |
+| Downtime           | Requires restart; may cause service disruption | Typically no downtime; scaling is seamless           |
+| Cost Efficiency    | Higher cost per resource unit; non-linear pricing | Generally lower cost using smaller, commodity instances |
+| Scalability Limit  | Capped by maximum instance size           | Can scale almost infinitely by adding more instances  |
+| Application Impact | Minimal changes; works for monolithic apps | Requires stateless design or off-host session management |
+
+5. Conclusion
+-------------
+- **Vertical Scaling** is straightforward and ideal when minimal application changes are desired but is limited by downtime and instance size caps.
+- **Horizontal Scaling** offers flexibility and robust growth without downtime, provided the application supports stateless operation or external session handling.
+- Understanding these tradeoffs is critical for designing scalable, cost-effective architectures and will be a foundation for more advanced high availability and elasticity topics later in the course.

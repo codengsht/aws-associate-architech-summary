@@ -1,0 +1,63 @@
+==============================================
+5-EBS Encryption
+==============================================
+
+1. Introduction
+---------------
+- EBS encryption secures data at rest on EBS volumes and snapshots by encrypting it before it is written to disk.
+- It enhances data security by mitigating risks associated with physical storage attacks.
+
+2. How EBS Works Without Encryption
+-------------------------------------
+- By default, EBS volumes store data in plaintext exactly as written by the operating system.
+- Data (e.g., files, images) is stored on one or more physical disks without any encryption applied.
+
+3. How EBS Encryption Operates
+------------------------------
+- **Key Management Service (KMS):**
+  - EBS encryption uses AWS KMS to manage keys.
+  - A KMS key (either AWS-managed or customer-managed) is used to generate a unique data encryption key (DEK) for each volume created from scratch.
+- **Encryption Process:**
+  - When an encrypted volume is created, EBS calls KMS (using the GenerateDataKeyWithoutPlaintext API) to generate an encrypted DEK.
+  - The encrypted DEK is stored with the volume on the raw storage.
+  - At the time of use (e.g., when the instance mounts the volume), KMS decrypts the DEK, and the decrypted key is loaded into the memory of the EC2 host.
+  - Data is then encrypted/decrypted in transit between the EC2 host and the EBS volume using AES-256.
+- **Lifecycle of the DEK:**
+  - The decrypted DEK exists only in memory on the host during active use.
+  - When an instance is migrated (stopped, restarted, or moved to another host), the decrypted key is discarded; only the encrypted DEK remains on disk.
+- **Snapshots:**
+  - Snapshots taken of an encrypted volume are also encrypted using the same DEK.
+  - Any volume created from an encrypted snapshot remains encrypted.
+
+4. Key Points for Security and Exam Scenarios
+-----------------------------------------------
+- **Default Encryption Settings:**
+  - AWS accounts can be configured to encrypt all new EBS volumes by default.
+  - You can choose a default AWS-managed KMS key or specify a customer-managed KMS key.
+- **Uniqueness of Data Encryption Keys:**
+  - A new, unique DEK is generated for every new EBS volume created from scratch.
+  - Volumes created from snapshots reuse the DEK from the source volume.
+- **Immutability of Encryption:**
+  - Once a volume or snapshot is encrypted, it cannot be converted to unencrypted; the only workaround is to copy data at the OS level.
+- **Transparency to the Operating System:**
+  - The encryption/decryption process is transparent to the operating system; it always sees data in plaintext.
+  - For additional encryption at the OS level (software disk encryption), separate configuration is required.
+- **Cost and Performance:**
+  - EBS encryption is provided at no additional cost and does not impact performance.
+
+5. Comparison: Unencrypted vs. Encrypted EBS Volumes
+------------------------------------------------------
+| Attribute               | Unencrypted EBS Volume                         | Encrypted EBS Volume                         |
+|-------------------------|------------------------------------------------|----------------------------------------------|
+| Data at Rest            | Stored in plaintext on physical disks        | Encrypted using AES-256 before storage       |
+| Key Management          | No key management required                     | Managed via AWS KMS (AWS-managed or customer-managed) |
+| Snapshots               | Snapshots are unencrypted                      | Snapshots are encrypted with the same DEK    |
+| Data Persistence        | Vulnerable to physical storage attacks         | Protects against unauthorized physical access|
+| Performance Overhead    | No encryption overhead                         | No measurable performance loss               |
+| Cost                    | Standard EBS pricing                           | Same cost as unencrypted volumes             |
+
+6. Conclusion
+-------------
+- EBS encryption is essential for securing sensitive data at rest without additional cost or performance degradation.
+- It integrates seamlessly with AWS KMS, ensuring that each volume and its snapshots are uniquely secured.
+- Understanding the encryption architecture and key lifecycle is critical for both real-world security implementations and AWS exam success.

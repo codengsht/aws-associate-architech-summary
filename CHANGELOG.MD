@@ -1,5 +1,17 @@
 # Changelog 
 
+## 0.0.4
+- EKS Lectures 
+- EC2 Advanced lectures
+- New prompt
+
+## 0.0.3
+- All the EC2 summaries are added.
+- Added images
+- o3-mini-high model used for summary
+- ------- All VPC lectures are printed -------
+- ------- All EC2 lectures are printed -------
+
 ## 0.0.2
 - All the VPC summaries are added. 
 
