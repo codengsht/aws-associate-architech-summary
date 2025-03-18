@@ -1,0 +1,35 @@
+==============================================
+11-ASG HealthCheck Comparison - EC2 vs ELB
+==============================================
+
+1. Purpose of Health Checks
+---------------------------
+- Auto Scaling Groups (ASGs) use health checks to monitor the state of EC2 instances.
+- If an instance fails a health check, the ASG automatically terminates it and provisions a replacement, enabling self-healing.
+
+2. Types of Health Checks
+-------------------------
+a. **EC2 Health Checks (Default):**
+   - Evaluate the instance based on EC2 status (e.g., running, impaired, stopping, terminated).
+   - Any state other than "running" is considered unhealthy.
+
+b. **ELB Health Checks:**
+   - Can be integrated into ASGs when using an Elastic Load Balancer.
+   - Require instances to be both running and passing the ELB's application-aware health check.
+   - Useful when you need to ensure the application (not just the instance) is functioning properly (e.g., checking a specific URL or header).
+
+c. **Custom Health Checks:**
+   - Allow integration with external systems.
+   - You can mark instances as healthy or unhealthy based on business-specific criteria.
+
+3. Health Check Grace Period
+----------------------------
+- A configurable period (default is 300 seconds or 5 minutes) during which an instance is exempt from health checks after launch.
+- This grace period ensures that instances have sufficient time to boot, run startup scripts, and complete configuration.
+- Insufficient grace period may lead to premature marking of instances as unhealthy, causing continuous termination and provisioning.
+
+4. Key Takeaways for the Exam
+-----------------------------
+- ASGs replace instances automatically if health checks (EC2, ELB, or custom) indicate failure.
+- Understand the differences between EC2, ELB, and custom health checks.
+- The health check grace period is critical for avoiding unnecessary instance cycling during application initialization.

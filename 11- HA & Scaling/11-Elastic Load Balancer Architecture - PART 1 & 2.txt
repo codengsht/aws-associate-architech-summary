@@ -1,0 +1,68 @@
+==============================================
+11-Elastic Load Balancer Architecture - PART 1 & 2 
+==============================================
+
+1. Introduction
+---------------
+- **Purpose:** ELBs accept incoming connections from clients and distribute them across registered back-end compute resources (e.g., EC2 instances).
+- **Abstraction:** They hide the details of the underlying physical infrastructure, allowing instances to scale up, scale down, or be replaced without impacting client connectivity.
+
+2. Logical & Physical Architecture
+------------------------------------
+- **Single ELB Object, Multiple Nodes:**
+  - Although you see one ELB with a single DNS record, it consists of multiple load balancer nodes.
+  - These nodes are deployed into one subnet per chosen Availability Zone (AZ).
+- **DNS Record:**
+  - The ELB’s DNS name (an A record) resolves to all its nodes.
+  - Incoming client requests are distributed across these nodes automatically.
+
+3. Configuration Options
+------------------------
+- **IP Addressing:**
+  - Choose between IPv4-only or dual stack (IPv4 and IPv6).
+- **Availability Zones:**
+  - When provisioning an ELB, select one subnet in each desired AZ.
+  - Each subnet must have enough free IP addresses (AWS recommends a /27 subnet, which provides at least 11 usable IP addresses).
+- **Internet-Facing vs. Internal:**
+  - **Internet-Facing ELB:**
+    - Nodes are assigned public IP addresses.
+    - Can route traffic to both public and private instances.
+  - **Internal ELB:**
+    - Nodes receive only private IP addresses.
+    - Used for inter-tier communications (e.g., between web and application layers).
+
+4. Listener Configuration
+-------------------------
+- **Function:** Determines which protocols and ports the ELB will accept for incoming connections.
+- **Role:** Acts as the front end for client requests, directing them to the appropriate back-end targets.
+
+5. Scaling and Load Distribution
+----------------------------------
+- **Auto-Scaling of Nodes:**
+  - ELB nodes automatically scale within each selected AZ based on incoming traffic load.
+- **Cross-Zone Load Balancing:**
+  - **Without Cross-Zone:** Each ELB node routes traffic only to targets in its own AZ, potentially causing imbalanced load if target counts vary.
+  - **With Cross-Zone:** Traffic is evenly distributed across all registered targets across all AZs.
+    - Enabled by default in application load balancers.
+    - Ensures fair distribution even if some AZs have more targets than others.
+
+6. Tiered Application Architecture Example
+--------------------------------------------
+- **Multi-Tier Deployment:**
+  - **Front-End (Web Tier):** An Internet-facing ELB accepts user traffic and routes it to a web server auto-scaling group.
+  - **Application Tier:** An internal ELB distributes traffic from web servers to application servers.
+  - **Database Tier:** Application servers interact with the database directly.
+- **Benefits:**
+  - Each tier is decoupled, allowing independent scaling.
+  - Users always interact with a stable ELB DNS name, regardless of changes in the underlying instance count.
+
+7. Summary of Key Points
+------------------------
+- **ELB Structure:** Single logical ELB composed of multiple nodes across selected AZs.
+- **DNS Resolution:** A single DNS record resolves to all ELB nodes for load distribution.
+- **Public vs. Private:** Internet-facing ELBs have public IPs; internal ELBs use private IPs.
+- **Listener & Protocols:** ELBs use listener configurations to manage incoming protocols and ports.
+- **Cross-Zone Load Balancing:** Ensures even distribution of requests across AZs, mitigating imbalances due to uneven target counts.
+- **Subnet Size:** Minimum recommended subnet size is /27 to ensure enough free IP addresses for scaling.
+
+This architectural design abstracts the complexities of instance management, enhances fault tolerance, and enables seamless scalability of your applications.

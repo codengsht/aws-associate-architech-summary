@@ -1,0 +1,56 @@
+==============================================
+9-Aurora Global Database
+==============================================
+
+1. Introduction
+---------------
+- **Purpose:** Enables global-level replication for Aurora clusters.
+- **Replication:** Data is replicated from a primary region to up to 5 secondary AWS regions.
+- **Exam Awareness:** Understand that Aurora Global Database provides cross-region disaster recovery and global read scaling, even if it isn’t a major exam focus.
+
+2. Architecture
+---------------
+- **Primary Region:**
+  - Functions like a standard Aurora cluster.
+  - Contains one read/write primary instance along with up to 15 read-only replicas.
+- **Secondary Regions:**
+  - Consist entirely of read-only replicas (up to 16 per region).
+  - Data is replicated from the primary at the storage layer with a typical replication time of under one second.
+  - Secondary clusters are read-only by default but can be promoted to read/write in disaster scenarios.
+- **Data Flow & Performance:**
+  - Writes occur in the primary region; replicas (in both primary and secondary regions) handle read operations.
+  - Replication happens at the storage layer, incurring no extra ACU usage and not impacting performance.
+
+3. Use Cases
+------------
+- **Cross-Region Disaster Recovery & Business Continuity:**
+  - In the event of a regional failure, a secondary region can be promoted to become the new primary.
+  - Provides very low Recovery Point Objectives (RPO) and Recovery Time Objectives (RTO).
+- **Global Scaling:**
+  - Enhances performance for international users by offloading read traffic to geographically closer secondary regions.
+  - Reduces latency and improves user experience across different regions.
+
+4. Key Exam Points
+------------------
+- Aurora Global Database supports up to 5 secondary regions.
+- The primary region operates as a standard Aurora cluster (1 primary, up to 15 replicas).
+- Secondary regions are entirely read-only (up to 16 replicas each) and replicate data within ~1 second.
+- Replication is one-way (from primary to secondary) and is handled at the storage layer.
+- Use cases include disaster recovery, business continuity, and global read scaling.
+
+5. Comparison Table: Primary vs. Secondary Regions
+---------------------------------------------------
+
+| Aspect                  | Primary Region                                  | Secondary Region                             |
+|-------------------------|-------------------------------------------------|----------------------------------------------|
+| Instance Role           | 1 read/write primary + up to 15 read replicas    | Read-only replicas (up to 16 per region)     |
+| Data Replication        | Writes processed and replicated at storage layer | Receives replicated data from primary (<1 sec)|
+| Write Capability        | Supports write operations                        | Read-only (until promoted in disaster)       |
+| Use Cases               | Daily operations, handling read/write traffic    | Cross-region DR, global read scaling         |
+| Promotion               | Default primary                                  | Can be promoted to primary during a disaster |
+
+6. Conclusion
+-------------
+- Aurora Global Database extends standard Aurora functionality across multiple regions.
+- It ensures high availability, low latency, and robust disaster recovery by replicating data quickly and efficiently.
+- For exams, be aware of its architecture, replication mechanism, and use cases for global scalability and continuity.

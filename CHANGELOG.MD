@@ -1,5 +1,12 @@
 # Changelog 
 
+## 0.0.6
+- RDS lectures added
+- EFS lectures added
+- HA & Scaling lectures added
+- Reverted prompt, still using o3-high
+------- All lectures are printed -------
+
 ## 0.0.5
 - R53 lectures are added
 - Maybe include separate folder/classes for DNSSEC: https://youtu.be/zEmUuNFBgN8?si=ZKJ9zn_X7-xpsB8F

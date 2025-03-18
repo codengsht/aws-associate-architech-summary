@@ -1,0 +1,61 @@
+==============================================
+9-RDS Data Security
+==============================================
+
+1. Introduction
+---------------
+- RDS provides robust data security through:
+  - Encryption in transit (SSL/TLS)
+  - Encryption at rest (KMS/EBS encryption and TDE)
+  - Authentication (local DB users and IAM-based options)
+  - Authorization (managed by internal database permissions)
+- These measures protect data both during transmission and while stored on disk.
+
+2. Encryption in Transit
+-------------------------
+- **Mechanism:** SSL/TLS encryption
+- **Details:**
+  - Encrypts data between clients and the RDS instance.
+  - Can be enforced on a per-user basis.
+  - Ensures that sensitive information is securely transmitted over the network.
+
+3. Encryption at Rest
+---------------------
+- **Mechanisms:**
+  - **KMS & EBS Encryption:**
+    - Data written by the DB engine is encrypted by the underlying host.
+    - Utilizes AWS KMS to generate Customer Master Keys (CMKs) and Data Encryption Keys (DEKs).
+    - Applies to the storage (EBS volumes), snapshots, logs, and replicas.
+  - **Transparent Data Encryption (TDE):**
+    - Supported by Microsoft SQL Server and Oracle.
+    - Encryption and decryption occur within the database engine.
+    - Oracle can leverage CloudHSM for enhanced key control and regulatory compliance.
+- **Key Considerations:**
+  - Once enabled, encryption cannot be disabled.
+  - All stored data—including backups and replicas—is uniformly protected.
+
+4. Authentication
+-----------------
+- **Local Database Users:**
+  - Default method using usernames and passwords.
+- **IAM-Based Authentication:**
+  - Configurable option that allows IAM roles/users to generate an authentication token (valid for 15 minutes) for logging into the database.
+  - Requires a mapping between an IAM identity and a local database user.
+- **Key Point:** IAM authentication is only for verifying identity; it must be explicitly enabled on the RDS instance.
+
+5. Authorization
+----------------
+- **Mechanism:** Managed by local database user permissions and roles.
+- **Details:**
+  - Determines access levels to the database resources.
+  - Remains independent of IAM-based authentication.
+- **Key Point:** Although IAM can handle authentication, authorization is controlled internally by the database.
+
+6. Summary Table
+----------------
+| Security Aspect       | Mechanism/Method                                               | Key Points                                                                   |
+|-----------------------|----------------------------------------------------------------|------------------------------------------------------------------------------|
+| Encryption in Transit | SSL/TLS encryption                                             | Secures data between client and RDS; enforceable per user                    |
+| Encryption at Rest    | KMS/EBS encryption; TDE (for MS SQL & Oracle, with CloudHSM option)| Uses CMKs/DEKs for storage encryption; applies to snapshots, logs, and replicas|
+| Authentication        | Local DB users; IAM-based token authentication                 | IAM tokens (15 min validity) serve as an alternative to passwords            |
+| Authorization         | Local DB permission management                                 | Controlled within the database; IAM affects only authentication              |

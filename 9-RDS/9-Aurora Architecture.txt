@@ -1,0 +1,77 @@
+==============================================
+9-Aurora Architecture
+==============================================
+
+1. Introduction
+---------------
+- Aurora is a managed database engine under RDS but is architecturally distinct.
+- It is built around a “cluster” model, differing radically from standard RDS engines.
+- Key benefits include combined high availability with read scaling and rapid failover.
+
+2. Aurora Cluster Architecture
+------------------------------
+- **Cluster Composition:**
+  - Consists of one primary instance and up to 15 replicas.
+  - Replicas serve dual roles: they provide read scaling during normal operations and act as failover targets.
+- **Failover:**
+  - Any replica can be promoted quickly, reducing failover time.
+  - No storage modifications are required during failover, speeding up the process.
+
+3. Storage Architecture
+-----------------------
+- **Shared Cluster Volume:**
+  - Aurora uses a shared, SSD-based cluster volume instead of local instance storage.
+  - Storage is automatically distributed across 6 storage nodes in multiple Availability Zones.
+  - Maximum storage capacity is 128 TiB.
+- **On-Demand Storage:**
+  - Storage allocation is dynamic; you are billed based on the highest consumption (high watermark).
+  - When data is removed, billing remains at the peak level unless a new cluster is created.
+- **Resiliency:**
+  - Automatic repair of disk failures is managed by leveraging data from other storage nodes.
+  - Reduces risk of data loss without the need for time-consuming restores.
+
+4. Endpoints and Access
+-----------------------
+- **Multiple Endpoints:**
+  - **Cluster Endpoint:** Always points to the primary for read/write operations.
+  - **Reader Endpoint:** Load balances read traffic across all available replicas.
+  - **Custom/Instance Endpoints:** Available for advanced configurations.
+- **Access Flexibility:**
+  - The separation of endpoints simplifies read scaling and offers application-level flexibility.
+
+5. Cost & Backup Considerations
+-------------------------------
+- **Cost Model:**
+  - Aurora does not offer a free tier; it requires larger instance types than standard micro instances.
+  - Compute is billed per second (with a 10-minute minimum), while storage is billed per GB-month based on peak usage.
+  - Additional I/O charges apply for storage requests.
+- **Backup Integration:**
+  - Backups function similarly to standard RDS, with free backup storage up to the cluster’s consumption.
+  - Backups are automated and stored in AWS-managed S3 buckets.
+
+6. Advanced Features
+--------------------
+- **Backtrack:**
+  - Allows in-place rollback of the Aurora cluster to a previous point in time.
+  - Must be enabled per cluster; useful for recovering from corruption without a full restore.
+- **Fast Clone:**
+  - Creates a new database by referencing the original shared storage.
+  - Only stores differences between the source and the clone, resulting in rapid cloning and reduced storage use.
+
+7. Comparison: Aurora vs. Traditional RDS
+-----------------------------------------
+
+| Feature                | Aurora                                           | Traditional RDS                             |
+|------------------------|--------------------------------------------------|---------------------------------------------|
+| Architecture           | Cluster with shared storage volume               | Standalone instance with local storage      |
+| Replication            | Synchronous at storage level across 6 nodes      | Synchronous replication to a single standby  |
+| Failover Options       | Up to 15 replicas; fast, no extra storage steps    | One standby replica; DNS update (~60-120 sec) |
+| Read Scaling           | Built-in via reader endpoint load balancing      | Read replicas separate from primary         |
+| Storage Provisioning   | On-demand, billed based on high watermark          | Provisioned storage per instance            |
+| Advanced Features      | Backtrack, Fast Clone                            | Standard backup/restore only                |
+
+8. Conclusion
+-------------
+- Aurora’s unique cluster architecture provides significant benefits in availability, performance, and scalability.
+- Its shared storage and advanced features (like backtrack and fast clone) set it apart from traditional RDS engines.
+- While cost models and storage billing differ, Aurora offers a robust solution for high-demand applications with superior read scaling and rapid failover.

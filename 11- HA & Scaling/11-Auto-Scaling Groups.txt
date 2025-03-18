@@ -1,0 +1,78 @@
+===============================================
+11-Auto-Scaling Groups
+==============================================
+
+1. Introduction
+---------------
+- ASGs provide automatic scaling and self-healing for EC2 instances based on demand.
+- They are typically used in conjunction with Elastic Load Balancers (ELB) and launch configurations/templates.
+- ASGs help maintain desired capacity and enable elastic, fault-tolerant architectures.
+
+2. Core Concepts & Configuration
+----------------------------------
+- **Launch Configuration/Template:**  
+  - ASGs use a predefined launch configuration or a specific version of a launch template.
+  - These documents define instance settings (AMI, instance type, storage, networking, IAM role, user data).
+- **Capacity Settings:**  
+  - **Minimum, Desired, and Maximum Capacity:**  
+    - For example, setting values as 1 (min), 2 (desired), and 4 (max) ensures at least 1 instance is running,
+      aims for 2 instances, and will not exceed 4.
+  - The ASG continually adjusts the number of running instances to match the desired capacity.
+- **Distribution Across Subnets/AZs:**  
+  - Instances are launched into specified subnets across one or more Availability Zones to enhance resiliency.
+
+3. Scaling Policies
+-------------------
+- **Manual Scaling:**  
+  - You directly update the desired capacity as needed.
+- **Scheduled Scaling:**  
+  - Adjusts capacity based on known patterns or business hours (e.g., scale out during peak sales periods).
+- **Dynamic Scaling:**  
+  - Uses CloudWatch metrics to automatically adjust capacity.
+  - **Simple Scaling:**  
+    - Adds or removes a fixed number of instances when a threshold (e.g., CPU > 50%) is crossed.
+  - **Step Scaling:**  
+    - Allows for different scaling actions based on how far the metric is from the target (e.g., add 1 if CPU >50%, add 3 if CPU >80%).
+  - **Target Tracking:**  
+    - Automatically adjusts capacity to maintain a target metric (e.g., keeping average CPU utilization at 40%).
+
+4. Integration with Load Balancers
+------------------------------------
+- **Load Balancer Integration:**  
+  - ASGs register instances with ELBs (ALB or NLB) via target groups.
+  - New instances are automatically added to the load balancer, and unhealthy ones are replaced.
+- **Health Checks:**  
+  - Uses EC2 status checks and can optionally use ELB health checks for more application-aware monitoring.
+- **Decoupling Tiers:**  
+  - Allows for independent scaling of the web, application, and database tiers by abstracting instance details behind a load balancer.
+
+5. Additional Features & Considerations
+-----------------------------------------
+- **Self-Healing:**  
+  - Automatically replaces failed or terminated instances to maintain the desired capacity.
+- **Lifecycle Controls:**  
+  - ASGs offer controls to suspend/resume scaling actions (e.g., launch, termination, rebalancing, scheduled actions).
+- **Cost Efficiency:**  
+  - ASGs are free; you pay only for the EC2 instances launched.
+  - Using smaller instances can provide finer granularity and cost control.
+- **Availability:**  
+  - Distributes instances evenly across Availability Zones for enhanced fault tolerance.
+- **Instance Standby:**  
+  - Specific instances can be set to standby for maintenance, exempting them from scaling actions temporarily.
+
+6. Scaling Policy Types Comparison
+------------------------------------
+
+| Scaling Type      | Description                                         | Use Case                                               |
+|-------------------|-----------------------------------------------------|--------------------------------------------------------|
+| Manual Scaling    | Directly adjust the desired capacity               | Predictable capacity changes                           |
+| Scheduled Scaling | Adjust capacity based on a predefined schedule       | Known periods of high/low usage (e.g., business hours)   |
+| Simple Scaling    | Scale up/down by a fixed amount based on a metric    | Basic adjustments when a metric threshold is met       |
+| Step Scaling      | Scale more aggressively based on metric severity     | Handling sudden spikes with multiple scaling actions   |
+| Target Tracking   | Auto-adjust capacity to maintain a target metric     | Consistent performance by maintaining a desired metric   |
+
+7. Conclusion
+-------------
+- ASGs automate the scaling and self-healing of EC2 instances, ensuring your application meets demand.
+- They work seamlessly with ELBs and use launch configurations/templates to maintain consistent settings.
+- Understanding ASG capacity settings, scaling policies, and integration with load balancers is crucial for designing elastic AWS architectures and is a key exam concept.

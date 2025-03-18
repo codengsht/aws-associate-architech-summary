@@ -1,0 +1,80 @@
+==============================================
+9-Databases on EC2
+==============================================
+
+1. Overview
+-----------
+- This lecture discusses the pros and cons of running databases directly on AWS EC2.
+- While AWS offers many managed database services, deploying a database on EC2 can sometimes be justified but generally comes with significant drawbacks.
+- The discussion is framed around architectural choices, administrative overhead, and exam-related scenarios.
+
+2. Architectural Models for Running Databases on EC2
+-----------------------------------------------------
+- **Single Instance Architecture:**
+  - Both the application (e.g., a WordPress stack) and the database run on a single EC2 instance.
+  - Simpler setup but less scalable and resilient.
+  
+- **Split Architecture:**
+  - The application and database are hosted on separate EC2 instances.
+  - These instances can be located in the same Availability Zone (free internal communication) or across different zones (incurs inter-AZ data transfer costs).
+  - Introduces a dependency on reliable communication between the instances.
+
+3. Reasons to Run Databases on EC2 (Justifications)
+----------------------------------------------------
+- **OS-Level Access:**
+  - Required when deep customization or tuning of the database is necessary.
+  - Often driven by application vendor requirements rather than actual business needs.
+  
+- **Unsupported Database Versions:**
+  - Needed when a specific database or version is not available via AWS managed services.
+  
+- **Specific Project Requirements:**
+  - Detailed or niche requirements might necessitate a particular OS and database version combination.
+  
+- **Organizational Mandates:**
+  - Sometimes decision makers demand databases on EC2, even if it’s not best practice.
+
+4. Reasons Against Running Databases on EC2 (Drawbacks)
+---------------------------------------------------------
+- **Administrative Overhead:**
+  - Increased effort required for patching, upgrading, and general maintenance of both the EC2 instance and the database.
+  
+- **Backups and Disaster Recovery (DR):**
+  - Greater complexity in setting up and managing backups and DR strategies compared to managed services.
+  
+- **Availability Zone Limitations:**
+  - Typically, an EC2-based database runs in a single Availability Zone, increasing risk if that zone encounters issues.
+  
+- **Limited Advanced Features:**
+  - Managed database products offer performance optimizations and advanced features that are not available when self-managing on EC2.
+  
+- **Scalability Challenges:**
+  - EC2 instances do not scale as flexibly as managed services; they have fixed costs and can struggle with bursty demand.
+  
+- **Replication Complexity:**
+  - Manual configuration and maintenance of replication increase the risk and management burden.
+
+5. Exam Power-Up Points
+------------------------
+- **Justification Scenarios:** Be ready to identify scenarios where running a database on EC2 might be necessary (e.g., specific version requirements or OS-level access needs).
+- **Trade-Off Analysis:** Understand that while self-managing on EC2 offers complete control, it also introduces significant administrative and scalability challenges.
+- **AWS Managed Advantages:** Recognize that AWS managed database products generally provide better scalability, reduced management overhead, and advanced features.
+- **Critical Evaluation:** When exam questions present scenarios involving databases on EC2, evaluate the need for OS-level access versus the benefits of managed services.
+
+6. Final Conclusion
+-------------------
+- Running databases on EC2 can be done, but it is generally considered a bad practice due to the heavy administrative overhead, limited scalability, and potential for increased risk.
+- The benefits of using AWS managed database products typically outweigh the flexibility offered by self-managed EC2 deployments.
+- Future demos will illustrate transitioning from a monolithic deployment to a split architecture, paving the way for migration to managed database services.
+
+7. Comparison Table: Running Databases on EC2
+----------------------------------------------
+
+| Aspect                         | Justifications (Pros)                                     | Drawbacks (Cons)                                                        |
+|--------------------------------|-----------------------------------------------------------|-------------------------------------------------------------------------|
+| OS-Level Access                | Enables fine-tuning and custom configurations             | Often unnecessary; driven by vendor demands rather than business needs  |
+| Database Version Support       | Allows use of niche or unsupported database versions      | Managed services cover most use cases; self-management is complex        |
+| Administrative Overhead        | Complete control over the environment                     | High effort for patching, upgrades, backups, and DR                     |
+| Scalability                    | Customizable to specific requirements                     | Fixed instance costs; limited auto-scaling; risk with single AZ usage     |
+| Advanced Features              | Possibility for custom implementations                    | Miss out on AWS advanced features and performance optimizations         |
+| Replication & Availability     | Flexible design choices                                   | Increased complexity; potential costs when spanning multiple AZs         |

@@ -1,0 +1,70 @@
+==============================================
+11-Regional and Global AWS Architecture
+==============================================
+
+1. Introduction
+---------------
+- This lesson covers how global and regional architectures are structured in AWS.
+- The Netflix example is used to illustrate a global application composed of smaller, regional deployments.
+- Three main architecture types are discussed:
+  • Single-region applications.
+  • Regional applications with disaster recovery (DR) in a secondary region.
+  • Multi-region, globally distributed systems that operate continuously across regions.
+
+2. Global Architecture
+----------------------
+- **Service Location & Discovery:**
+  - Uses DNS (e.g., Route 53) with health checks to route users to the optimal region.
+  - Example: Netflix.com directs traffic primarily to a US region (e.g., US East 1) and fails over to a secondary region (e.g., Australia) if needed.
+- **Content Delivery:**
+  - A global Content Delivery Network (CDN) such as CloudFront caches content near users.
+  - Ensures low latency and efficient delivery of media and data.
+- **Global Health Checks & Failover:**
+  - Monitors the health of regional infrastructures.
+  - Automatically directs user requests to a healthy region if the primary fails.
+
+3. Regional Architecture
+------------------------
+- **Regional Entry Points:**
+  - Traffic entering a region typically passes through an Application Load Balancer (ALB) or API Gateway.
+  - These services abstract the underlying infrastructure, allowing for independent scaling and updates.
+- **Regional Components:**
+  - **Compute Tier:** Services like EC2, Lambda, and ECS handle application processing.
+  - **Storage Tier:** Utilizes EBS for block storage, EFS for file storage, and S3 for object storage (e.g., media content).
+  - **Database Tier:** Managed database services such as RDS, Aurora, DynamoDB, and Redshift store application data.
+  - **Caching Tier:** Services like ElastiCache and DynamoDB Accelerator (DAX) offload read operations to improve performance.
+  - **Application Services:** Services like SNS, SQS, and Step Functions provide additional application functionality.
+
+4. Architectural Tiers in a Global Application
+-----------------------------------------------
+- **Web Tier:**
+  - Acts as the regional entry point.
+  - Uses load balancers or API gateways to distribute user requests.
+- **Compute Tier:**
+  - Hosts application logic (EC2, containers, Lambda).
+  - Interacts with other tiers for processing and storage.
+- **Storage Tier:**
+  - Manages data persistence through services like S3, EBS, and EFS.
+  - Supports content delivery via integration with global CDNs.
+- **Database Tier:**
+  - Stores structured data and supports high availability through replication and regional failover.
+- **Caching Layer:**
+  - Reduces database load by serving frequently accessed data quickly.
+- **Application Services:**
+  - Provide additional functions like messaging, notifications, and orchestration.
+
+5. Global vs. Regional Components (Comparison)
+------------------------------------------------
+
+| Component                     | Global Functionality                                | Regional Functionality                             |
+|-------------------------------|-----------------------------------------------------|----------------------------------------------------|
+| Service Discovery             | DNS (Route 53) routes users to healthy regions      | Regional entry points (ALB/API Gateway) direct traffic within the region |
+| Content Delivery              | Global CDN (CloudFront) caches content near users     | Regional storage services (S3, EFS) serve as origins for content |
+| Health Checks & Failover      | Monitors regions and performs cross-region failover  | Monitors regional infrastructure and scales local services  |
+
+6. Conclusion
+-------------
+- A robust global architecture consists of both global and regional components working in harmony.
+- Global services like DNS, CDN, and cross-region health checks ensure users are directed to the best-performing region.
+- Regional architectures consist of multiple tiers (web, compute, storage, database, caching, application services) that operate independently but integrate seamlessly.
+- When designing AWS solutions, consider which components need global resilience versus those that can be managed on a regional basis.

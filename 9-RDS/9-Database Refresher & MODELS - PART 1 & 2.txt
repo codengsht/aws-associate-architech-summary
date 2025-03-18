@@ -1,0 +1,81 @@
+==============================================
+9-Database Refresher & MODELS - PART 1 & 2
+==============================================
+
+1. Introduction
+---------------
+- Overview of database fundamentals aimed at both beginners and experienced users.
+- Provides a refresher on key database concepts and additional reading resources.
+- Focuses on understanding different database types and when to use each.
+
+2. Relational Databases (SQL)
+-----------------------------
+- **Definition:** Databases that store data in tables with rows and columns.
+- **Schema:** Fixed and predefined structure specifying table definitions, column names, data types, and relationships.
+- **Key Components:**
+  - Tables composed of rows (records) and columns (attributes).
+  - Primary keys uniquely identify each row.
+  - Composite keys (used in joint tables) enable many-to-many relationships.
+- **Exam Power-Ups:** Recognize questions emphasizing fixed schemas, primary/composite keys, and table relationships.
+
+3. Non-Relational (NoSQL) Databases
+-----------------------------------
+- **Overview:** A broad category of databases that do not adhere to the traditional relational model.
+- **Subtypes:**
+  - **Key-Value Stores:**  
+    - Structure: Simple key-value pairs with no or weak schema.
+    - Use Cases: Ideal for caching and simple in-memory operations.
+    - Exam Tip: Look for scenarios with unstructured data or simple name–value pair requirements.
+    
+  - **Wide Column Stores:**  
+    - Structure: Fixed key (partition and optional sort key) with flexible, variable attributes.
+    - Use Cases: Scalable and high-performance systems (e.g., DynamoDB).
+    - Exam Tip: Focus on unique key constraints and scalability aspects.
+    
+  - **Document Databases:**  
+    - Structure: Flexible schema using documents (commonly JSON or XML) that can vary in structure.
+    - Use Cases: Content management, catalogues, and order databases.
+    - Exam Tip: Emphasize support for nested data and flexible indexing.
+    
+  - **Row-based vs. Column-based Databases:**
+    - *Row-based:*  
+      - Data is stored row-wise.
+      - Optimized for OLTP (transaction processing) such as inserting, updating, and deleting records.
+      - Exam Tip: Ideal when entire records are frequently manipulated.
+    - *Column-based:*  
+      - Data is stored column-wise.
+      - Optimized for reporting and analytics; efficient for queries targeting specific columns (e.g., Redshift).
+      - Exam Tip: Recognize scenarios requiring fast aggregated data retrieval.
+    
+  - **Graph Databases:**  
+    - Structure: Data represented as nodes (entities) and edges (relationships) with properties.
+    - Use Cases: Social networks and systems with complex, dynamic relationships.
+    - Exam Tip: Identify exam questions involving extensive relationship mapping or networked data.
+
+4. Exam Power-Up Points Summary
+--------------------------------
+- **Relational Databases:** Focus on fixed schema, primary keys, and pre-defined table relationships.
+- **Key-Value Stores:** Ideal for scenarios with simple, unstructured key–value pair data.
+- **Wide Column Stores:** Emphasize unique key constraints and scalability for large-scale applications.
+- **Document Databases:** Look for flexibility in document structure and nested data querying.
+- **Row-based vs. Column-based:** Understand that row-based systems excel in OLTP, while column-based systems are better for reporting and analytics.
+- **Graph Databases:** Use for scenarios with complex relationships (e.g., social media networks).
+
+5. Final Conclusions
+--------------------
+- The lecture covers both relational and non-relational database models.
+- Each database type offers distinct advantages depending on data structure, access patterns, and scalability needs.
+- A solid grasp of these concepts is crucial for making informed design decisions and for answering exam questions effectively.
+
+6. Comparison Table of Database Types
+---------------------------------------
+
+| Database Type             | Schema                                           | Storage Organization                    | Exam Highlights                                                              |
+|---------------------------|--------------------------------------------------|-----------------------------------------|------------------------------------------------------------------------------|
+| Relational (SQL)          | Fixed, predefined                                | Tables with rows & columns              | Primary keys, composite keys, fixed relationships                            |
+| Key-Value Stores          | No/weak schema                                   | Simple key-value pairs                  | Ideal for unstructured, in-memory data                                       |
+| Wide Column Stores        | Flexible attributes; fixed key structure         | Grouped by partition and sort keys      | Unique key constraints; high scalability (e.g., DynamoDB)                    |
+| Document Databases        | Flexible (JSON/XML documents)                    | Document-oriented storage               | Supports nested data and flexible indexing                                   |
+| Row-based Databases       | Fixed schema                                     | Data stored row-wise                    | Optimized for OLTP transactions                                              |
+| Column-based Databases    | Fixed schema                                     | Data stored column-wise                 | Efficient for reporting/analytics queries (e.g., Redshift)                   |
+| Graph Databases           | Flexible for nodes & edges                       | Nodes with relationships (edges)        | Optimized for complex relationship queries (e.g., social networks)           |

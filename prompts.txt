@@ -147,3 +147,31 @@ Summarize the AWS Solution Architect lecture transcript by following these instr
 6. **Output Requirements**
    - Generate the final summary in plain text (txt) format.
    - Display the entire summary in a code snippet block so it can be easily copied to your desktop.
+
+
+
+
+   ----
+
+   I will provide the lecture from audio recording transcript. Carefully review the transcript, noting that some words or phrases might be inaccurate due to the audio-to-text conversion. Use contextual clues to infer the intended meaning or flag uncertain content if necessary.
+
+I want you to:
+
+Summarize the key points of the lecture, focusing on the main topics discussed, essential details, and any conclusions drawn. Organize the summary in a structured format with headings for each major section. Especially note exam power ups points. 
+
+Additional to summary, ceate tables where deemed appropriate if there is a comparison or etc.. 
+For the table follow this structure:
+If create a table formatted with pipes (|) and dashes (-), adjust the alignment of the table as follows:
+	1.	Identify the Columns:
+Parse the header row to determine how many columns the table contains.
+	2.	Determine Column Widths:
+For each column, scan all cells (including the header and the data rows) and determine the maximum width needed for that column based on the longest text in that column.
+	3.	Reconstruct the Table:
+Rebuild the table by ensuring that each cell in every row (header and data rows) is padded with spaces so that it matches the determined width for that column.
+	•	The header row should be aligned to match the content width of its cells.
+	•	The separator row (usually the second row, composed of dashes and pipes) should be adjusted accordingly, using the same width for each column as determined.
+
+
+6. **Output Requirements**
+   - Generate the final summary in plain text (txt) format.
+   - Display the entire summary in a code snippet block so it can be easily copied to your desktop.

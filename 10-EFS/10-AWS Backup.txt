@@ -1,0 +1,68 @@
+==============================================
+10-AWS Backup
+==============================================
+
+1. Introduction
+---------------
+- AWS Backup is a fully managed data protection service.
+- It centralizes the management and storage of backups across multiple AWS services, accounts, and regions.
+- It not only handles backup and restore operations but also offers auditing and policy management features.
+
+2. Key Features
+---------------
+- **Centralized Management:**  
+  - Consolidates backups from various services (e.g., EC2, EBS, EFS, FSx, RDS, Aurora, Neptune, DynamoDB, DocumentDB, S3) into one dashboard.
+- **Cross-Account & Cross-Region:**  
+  - Supports backup management across multiple AWS accounts and enables copying backups between regions for extra protection.
+- **Backup Plans:**  
+  - Schedule backups using defined frequencies (hourly, daily, weekly, monthly) with options for custom cron expressions.
+  - Configure backup windows and lifecycle policies (e.g., transition to cold storage, automatic expiry).
+- **Continuous Backups & Point-in-Time Recovery:**  
+  - For supported services, continuous backups enable restoration to a specific point in time.
+- **Backup Vaults:**  
+  - Backups are stored in secure backup vaults.
+  - Vaults can be configured in immutable (WORM) mode, where a 72-hour cool-off period prevents deletion for compliance.
+- **On-Demand Backups:**  
+  - In addition to scheduled backups, you can perform backups on demand.
+
+3. Core Components
+------------------
+- **Backup Plans:**  
+  - Define how and when backups occur.
+  - Allow customization of frequency, backup window, and retention lifecycle.
+- **Backup Resources:**  
+  - Specify the AWS resources (e.g., RDS instance, S3 bucket) to be backed up.
+- **Backup Vaults:**  
+  - Serve as the secure destination for storing backup data.
+  - Support features like cross-region copying and WORM mode.
+- **Region Copy:**  
+  - Enables backup data to be replicated to another AWS region for disaster recovery.
+
+4. Benefits & Use Cases
+------------------------
+- **Simplification:**  
+  - Eliminates the need for custom scripts across different AWS services.
+- **Compliance & Data Protection:**  
+  - Centralizes backup policies and retention settings, aiding in compliance.
+- **Disaster Recovery:**  
+  - Enables rapid recovery across regions with configurable backup retention and point-in-time restore.
+- **Multi-Service Coverage:**  
+  - Integrates with a wide array of AWS services, making it a key tool for end-to-end data protection.
+
+5. Comparison of Key Components
+---------------------------------
+
+| Component            | Description                                                    | Key Settings/Features                          |
+|----------------------|----------------------------------------------------------------|------------------------------------------------|
+| Backup Plans         | Schedules backups and sets lifecycle policies                  | Frequency (hourly/daily/weekly), backup windows, retention rules |
+| Backup Resources     | Defines what AWS resources are to be backed up                 | EC2, EBS, RDS, S3, etc.                          |
+| Backup Vaults        | Secure storage for backups                                     | Immutable mode (WORM), cross-region copy options |
+| Region Copy          | Replicates backup data to a different AWS region               | Enhances disaster recovery and data protection   |
+| Point-in-Time Recovery| Allows restoration to a specific moment in time               | Continuous backups for supported services         |
+
+6. Conclusion
+-------------
+- AWS Backup simplifies and centralizes the backup process for a wide range of AWS services.
+- It enhances data protection, compliance, and disaster recovery strategies.
+- While it’s essential for most AWS environments and exams, deep technical details are less critical for basic certifications.
+- For up-to-date capabilities and further details, refer to the latest AWS Backup documentation.

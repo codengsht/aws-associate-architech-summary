@@ -1,0 +1,56 @@
+==============================================
+9-RDS Custom
+==============================================
+
+1. Introduction
+---------------
+- RDS Custom is a niche feature that bridges the gap between standard RDS (fully managed, limited OS access) and self-managed databases on EC2.
+- It is designed for scenarios where deeper customization and direct OS/engine access are needed.
+
+2. Purpose of RDS Custom
+------------------------
+- Provides a middle ground:
+  - **Standard RDS:** Offers a managed database server with limited access (no SSH/OS-level control).
+  - **EC2-based Databases:** Offer complete control but require full management of OS, patches, backups, and high availability.
+- RDS Custom allows some level of customization while still leveraging RDS automation and AWS management for many tasks.
+
+3. Key Features
+---------------
+- **Direct Access:** 
+  - Enables connections via SSH, RDP, or Session Manager, providing access to the operating system and database engine.
+- **Supported Engines:** 
+  - Currently available for Oracle and Microsoft SQL.
+- **In-Account Deployment:** 
+  - Unlike standard RDS, RDS Custom runs within your AWS account, so you can see EC2 instances, EBS volumes, and backups in your account.
+- **Automation Control:** 
+  - You can pause the automated management processes to perform customizations and then resume full automation.
+
+4. Access and Management
+-------------------------
+- **Customization Flexibility:** 
+  - Offers increased control over the database environment while still benefiting from AWS-managed infrastructure.
+- **Shared Responsibility Model:** 
+  - AWS manages the underlying hardware and basic infrastructure.
+  - Customers retain responsibility for application optimization and any custom configurations.
+
+5. Service Model Comparison
+---------------------------
+| Service Model         | AWS Responsibility                          | Customer Responsibility                     | Customization/Access             |
+|-----------------------|---------------------------------------------|---------------------------------------------|----------------------------------|
+| On-Premises           | None                                        | Everything (hardware to application)        | Full control                     |
+| Standard RDS          | Hardware, OS, patches, backups, HA          | Application optimization                    | Limited (no OS/SSH access)       |
+| Self-Managed on EC2   | Hardware only                               | OS management, patches, backups, HA, scaling  | Full control; high admin overhead|
+| RDS Custom            | Hardware & underlying infrastructure        | Application optimization, customizations    | Middle ground (OS/SSH access available)|
+
+6. Exam & Real-World Usage
+--------------------------
+- **For the Exam:** 
+  - Understand that RDS Custom exists as a niche option and know its key differentiators.
+- **Real-World:** 
+  - Rarely encountered; useful when specific customization needs prevent using standard RDS.
+
+7. Conclusion
+-------------
+- RDS Custom offers a compromise between the ease of standard RDS and the full control of self-managed databases on EC2.
+- It provides increased customization and direct access while maintaining many AWS-managed benefits.
+- Primarily supports Oracle and MS SQL, making it a niche solution for specialized use cases.

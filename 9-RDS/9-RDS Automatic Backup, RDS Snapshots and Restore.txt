@@ -1,0 +1,63 @@
+==============================================
+9-RDS Automatic Backup, RDS Snapshots and Restore
+==============================================
+
+1. Backup Types
+---------------
+- **Automated Backups:**
+  - Taken automatically during a defined backup window.
+  - The first backup is a full copy; subsequent backups store only changed data.
+  - Transaction logs are continuously saved (approximately every 5 minutes) to S3, enabling point-in-time recovery.
+  - In Multi-AZ deployments, backups are taken from the standby instance (minimizing impact on primary performance).
+  - Retention period is configurable from 0 to 35 days; backups older than the retention period are automatically purged.
+  - These backups cover the entire RDS instance (all databases hosted on it).
+
+- **Snapshots:**
+  - Initiated manually (via console, scripts, or custom applications).
+  - Similar to automated backups, the first snapshot is a full copy and later snapshots capture only changes.
+  - Snapshots do not expire automatically; they remain until manually deleted.
+  - Can be scheduled at any frequency (e.g., hourly, daily, weekly) to meet lower recovery point objectives.
+  - Stored in AWS-managed S3 buckets (not directly visible in your S3 console).
+
+2. Storage & Resilience
+------------------------
+- Both automated backups and snapshots are stored in AWS-managed S3 buckets.
+- S3 replicates data across multiple Availability Zones within the region, ensuring high durability.
+- Although the backups reside in S3, they are managed by AWS and are accessed only through the RDS console.
+
+3. Restore Process
+------------------
+- **Restoration Creates a New Instance:**
+  - When you restore from an automated backup or snapshot, a new RDS instance is created.
+  - This new instance gets a different endpoint, so applications must be updated accordingly.
+- **Point-in-Time Recovery:**
+  - Restores can use the closest full backup (or snapshot) and then replay transaction logs to recover to a specific point.
+  - This method can potentially achieve a recovery point objective (RPO) of around 5 minutes.
+- **Time Considerations:**
+  - Restoring a large database can be time-consuming, which is critical when planning recovery time objectives (RTO).
+
+4. Exam Power-Up Points
+-----------------------
+- RDS backups (both automated and snapshots) are stored in AWS-managed S3 buckets and are not visible in your S3 console.
+- Automated backups capture the entire instance and are retained based on a user-defined period (up to 35 days).
+- Snapshots must be manually managed and deleted; they do not expire automatically.
+- Restoring a backup creates a new instance with a new endpoint.
+- Transaction logs play a crucial role in achieving fine-grained, point-in-time recovery.
+
+5. Comparison Table: Automated Backups vs. Snapshots
+-----------------------------------------------------
+
+| Feature                 | Automated Backups                                              | Snapshots                                      |
+|-------------------------|----------------------------------------------------------------|------------------------------------------------|
+| Initiation              | Automatic during a defined backup window                       | Manual or scripted initiation                  |
+| Data Capture            | Full backup initially, then incremental changes                | Full backup initially, then incremental changes|
+| Retention               | Configurable (0 to 35 days); auto-expiry after retention period  | Do not expire automatically; require manual deletion|
+| Performance Impact      | Minimal in Multi-AZ (from standby); potential pauses in Single-AZ| Brief interruption during snapshot creation    |
+| Transaction Logs        | Continuously stored for point-in-time recovery (every ~5 minutes)| Not applicable                                  |
+| Use Cases               | Regular, scheduled recovery; point-in-time restore capability    | On-demand backups for flexible recovery points  |
+
+6. Conclusion
+-------------
+- **Backup Strategy:** RDS employs both automated backups and snapshots to ensure data durability and recovery.
+- **Recovery Options:** Automated backups enable scheduled, continuous protection with transaction logs for precise recovery, while snapshots offer flexible, manual backup options.
+- **Planning:** Restoring from backups creates a new instance (with a new endpoint) and can be time-intensive, which should be factored into your disaster recovery planning.
