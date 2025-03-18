@@ -1,0 +1,48 @@
+==============================================
+11-Gateway Load Balancer
+==============================================
+
+1. Purpose & Use Cases
+-----------------------
+• Designed to integrate and scale third-party security appliances (firewalls, IDS/IPS, data analysis tools) in AWS.
+• Ideal for scenarios requiring transparent, inline inspection and filtering of both inbound and outbound traffic.
+• Enables organizations to use existing security solutions within AWS while maintaining elasticity and resilience.
+
+2. Key Components
+-----------------
+• **Gateway Load Balancer Endpoints:**
+  - Function similarly to VPC interface endpoints.
+  - Configured in VPC route tables to direct relevant traffic to the GWLB.
+• **Gateway Load Balancer (GWLB):**
+  - Distributes incoming packets across a fleet of backend security appliance instances.
+  - Uses the Gene protocol to encapsulate packets into tunnels, preserving original source/destination IP addresses and ports.
+
+3. How It Works
+---------------
+• Traffic Flow:
+  - Client traffic enters the VPC (via an Internet Gateway) and is routed by the VPC route table to a GWLB endpoint.
+  - The GWLB receives the packets and encapsulates them using the Gene tunneling protocol.
+  - Encapsulated packets are forwarded to one of the backend security appliances (running on EC2 instances).
+  - The security appliance inspects, filters, or analyzes the packets and then returns them through the same tunnel.
+  - The GWLB de-encapsulates the packets and routes them back through the GWLB endpoint to their intended destination.
+• Transparency:
+  - Original packet attributes (IP addresses, ports, etc.) remain unaltered, ensuring that security appliances can accurately perform their functions.
+
+4. Benefits
+-----------
+• **Scalability & Resilience:**
+  - Horizontally scales by load balancing across multiple security appliance instances.
+  - Provides flow stickiness, ensuring consistent handling of individual traffic flows.
+• **Operational Transparency:**
+  - Maintains the integrity of the original packet information, critical for in-depth security analysis.
+• **Flexible Integration:**
+  - Supports seamless deployment of third-party security solutions, which can be scaled dynamically as application demand changes.
+• **Simplified Architecture:**
+  - Decouples security processing from application logic, allowing both layers to scale and fail independently.
+
+5. Architectural Recap
+----------------------
+• GWLB endpoints are added to your VPC route tables, directing traffic to the GWLB.
+• The GWLB encapsulates traffic via the Gene protocol and forwards it to backend security appliances.
+• After processing, traffic is de-encapsulated and returned to its destination, ensuring end-to-end transparency.
+• This model supports elastic and resilient security architectures, particularly for multi-tenant or large-scale environments.

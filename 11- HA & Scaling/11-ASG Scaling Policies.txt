@@ -1,0 +1,75 @@
+==============================================
+11-ASG Scaling Policies
+==============================================
+
+1. Introduction
+---------------
+- Auto Scaling Groups (ASGs) adjust the number of EC2 instances based on demand.
+- Scaling policies modify the desired capacity dynamically, ensuring that the ASG maintains the appropriate number of instances between a defined minimum and maximum.
+- Without scaling policies, ASGs operate with static settings (manual scaling).
+
+2. Types of Scaling Policies
+-----------------------------
+a. Manual Scaling
+   - Directly updating the minimum, desired, or maximum capacity.
+   - Useful for testing, urgent capacity changes, or cost control measures.
+
+b. Dynamic Scaling
+   - Adjusts desired capacity in response to real-time metrics.
+   - Three main subtypes:
+
+   i. Simple Scaling
+      - Uses CloudWatch alarms to trigger fixed adjustments.
+      - Example: Add 2 instances if average CPU > 50% or remove 2 if CPU < 50%.
+      - Limitation: The adjustment is static regardless of how far the metric deviates.
+
+   ii. Step Scaling
+       - Allows multiple step adjustments based on the severity of the metric breach.
+       - You can define ranges with varying adjustments (e.g., add 1 instance if CPU is 60–69%, add 2 if 70–79%, add 3 if 80–100%).
+       - Provides more flexibility than simple scaling by reacting proportionally to changes.
+
+   iii. Target Tracking
+        - Sets a target value for a specific metric (e.g., maintain 40–50% CPU utilization).
+        - ASG automatically adjusts capacity to keep the metric at the desired target.
+        - Common metrics include average CPU, network in/out, or ALB request count per target.
+
+c. SQS-based Scaling
+   - Scales the ASG based on the number of messages in an SQS queue.
+   - Particularly useful for worker pool architectures where capacity should correlate with message volume.
+
+3. Key Concepts & Mechanics
+-----------------------------
+- **Capacity Settings:**  
+  - Defined by Minimum, Desired, and Maximum values (e.g., 1, 2, 4).
+  - The ASG ensures the running instance count matches the desired capacity within the min-max range.
+  
+- **Scaling Process:**  
+  - When metrics exceed thresholds, scaling policies modify the desired capacity.
+  - The ASG either provisions new instances or terminates existing ones based on the updated capacity.
+
+- **Cooldown Period:**  
+  - A configurable time in seconds that the ASG waits after a scaling action before evaluating further scaling needs.
+  - Prevents rapid, repeated scaling actions that might lead to cost inefficiencies.
+
+4. Visual Examples (Conceptual)
+-------------------------------
+- **Simple Scaling Example:**  
+  - ASG with min=1, desired=1, max=4.
+  - If CPU utilization jumps from 10% to 60%, a simple scaling policy might add 2 instances, raising desired capacity to 3.
+  - If CPU then drops, a rule may remove 2 instances, reducing capacity back to the minimum of 1.
+
+- **Step Scaling Example:**  
+  - Instead of a fixed adjustment, rules are set based on ranges:
+    • CPU 50–59%: No change.
+    • CPU 60–69%: Add 1 instance.
+    • CPU 70–79%: Add 2 instances.
+    • CPU 80–100%: Add 3 instances.
+  - In reverse, similar steps remove instances when the metric is lower.
+  - This allows for finer granularity in response to load changes.
+
+5. Conclusion
+-------------
+- ASG scaling policies are essential for dynamic, cost-effective, and resilient architectures.
+- Simple scaling offers basic fixed-step adjustments, while step scaling provides proportional, flexible adjustments.
+- Target tracking automates the process to maintain a desired metric value.
+- Proper configuration (including cooldowns and using the correct policy type) ensures the ASG efficiently manages instance capacity to match demand.

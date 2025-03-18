@@ -1,0 +1,62 @@
+==============================================
+9-Relational Database Service (RDS) - RDS Proxy
+==============================================
+
+RDS Proxy Overview
+==================
+
+1. Introduction
+---------------
+- RDS Proxy is a fully managed database proxy service designed for use with both RDS and Aurora.
+- It helps reduce the overhead of opening/closing database connections and simplifies failover management.
+
+2. Why Use RDS Proxy?
+---------------------
+- **Connection Overhead Reduction:**  
+  - Opening and closing connections for small, frequent operations (e.g., in serverless applications) can be resource-intensive.
+  - The proxy maintains a pool of long-lived connections, reducing latency and resource use.
+- **Improved Failure Handling:**  
+  - Abstracts the complexities of database instance failures.
+  - During failover events, the proxy re-establishes connections to the new primary, minimizing disruption.
+- **Resource Efficiency:**  
+  - Uses multiplexing to allow many client connections to share fewer backend connections, reducing load on smaller database instances.
+
+3. Architecture & Functionality
+-------------------------------
+- **Proxy Layer:**  
+  - Sits between client applications (EC2 instances, Lambda functions) and the database.
+  - Clients connect to the RDS Proxy endpoint instead of directly to the database.
+- **Connection Pooling & Multiplexing:**  
+  - Maintains a persistent pool of connections to the database.
+  - Multiplexes client requests over these pooled connections.
+- **High Availability & Auto Scaling:**  
+  - The proxy is highly available and auto-scales within a VPC across multiple availability zones.
+  - Accessible only from within a VPC or via private network connections.
+- **Security:**  
+  - Supports SSL/TLS enforcement to secure data in transit.
+- **Failover Enhancement:**  
+  - Reduces failover time by over 60% (approx. 66-67% improvement), as the proxy abstracts backend changes and maintains client connections during transitions.
+
+4. Use Cases
+------------
+- **Serverless Environments:**  
+  - Ideal for AWS Lambda functions where connection setup overhead can slow down execution.
+- **Small or Bursty Database Instances:**  
+  - Particularly useful with T2/T3 instances where minimizing connection overhead is critical.
+- **Long-Running SaaS Applications:**  
+  - Helps maintain low latency by reusing established connections.
+- **Resilience-Focused Architectures:**  
+  - Enhances application availability by handling failover transparently.
+
+5. Key Exam Points
+------------------
+- RDS Proxy is a managed service that reduces admin overhead by pooling and multiplexing connections.
+- It operates only within a VPC, ensuring secure and private connectivity.
+- It significantly improves application resilience by abstracting failover events from clients.
+- Supports SSL/TLS for secure data transmission.
+- Particularly beneficial in scenarios with high connection churn (e.g., serverless applications).
+
+6. Conclusion
+-------------
+- RDS Proxy simplifies database connectivity by reducing connection overhead and providing a robust failover mechanism.
+- It enhances both performance and resilience, making it an essential component in modern, scalable AWS architectures.

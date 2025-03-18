@@ -1,0 +1,67 @@
+==============================================
+11-Evolution of the Elastic Load Balancer
+==============================================
+
+1. Introduction
+---------------
+- ELB is a family of AWS load balancing services that distribute incoming traffic across multiple targets.
+- Over time, ELB has evolved from its original version (Classic Load Balancer) to more advanced, version 2 options.
+
+2. ELB Evolution & Heritage
+---------------------------
+- **Classic Load Balancer (CLB):**
+  - Introduced in 2009.
+  - Operates at lower layers; supports HTTP, HTTPS, and lower-level protocols.
+  - Lacks deep integration with HTTP/HTTPS features (e.g., advanced routing, host-based routing).
+  - Supports only one SSL certificate per load balancer, which can be limiting and more expensive for large deployments.
+- **Version 2 Load Balancers:**
+  - Developed to address the limitations of CLB.
+  - Two main types are available:
+    • **Application Load Balancer (ALB):**
+      - Operates at Layer 7 (application layer).
+      - Supports HTTP, HTTPS, and WebSocket protocols.
+      - Ideal for modern web applications requiring advanced routing based on URL paths, host headers, etc.
+    • **Network Load Balancer (NLB):**
+      - Operates at Layer 4 (transport layer).
+      - Supports TCP, TLS (secure TCP), and UDP.
+      - Designed for high-performance use cases and applications that use non-HTTP protocols (e.g., email, SSH, custom protocols).
+
+3. Key Differences & Considerations
+-------------------------------------
+- **Protocol Support:**
+  - ALB: Optimized for HTTP/HTTPS and WebSocket.
+  - NLB: Suitable for TCP/TLS and UDP traffic.
+- **Performance & Scalability:**
+  - Version 2 load balancers offer faster performance and improved scalability.
+  - They support target groups and routing rules, allowing a single load balancer to distribute traffic for multiple services.
+- **Cost Efficiency:**
+  - CLB can become costly due to its one SSL certificate limitation and lack of consolidation features.
+  - Version 2 products provide better cost efficiency and operational flexibility.
+- **Recommendation:**
+  - AWS strongly recommends using version 2 load balancers (ALB or NLB) for new deployments.
+  - CLB should be phased out in favor of the more advanced options.
+
+4. Comparison Table: CLB vs. ALB vs. NLB
+------------------------------------------
+
+| Feature                        | Classic Load Balancer (CLB)              | Application Load Balancer (ALB)            | Network Load Balancer (NLB)              |
+|--------------------------------|------------------------------------------|--------------------------------------------|------------------------------------------|
+| Layer                          | Layer 4/7 (basic HTTP/HTTPS support)     | Layer 7 (full HTTP/HTTPS, WebSocket)       | Layer 4 (TCP/TLS, UDP)                   |
+| Protocol Support               | HTTP, HTTPS, TCP                         | HTTP, HTTPS, WebSocket                     | TCP, TLS, UDP                            |
+| SSL Certificate Support        | 1 per load balancer                      | Multiple SSL certificates                  | Multiple SSL certificates (via TLS)      |
+| Advanced Routing               | Limited                                  | Supports advanced routing rules            | N/A (focused on performance)             |
+| Performance & Scalability      | Older generation; less efficient         | Optimized for modern web apps              | High performance for non-HTTP traffic      |
+| Use Case                       | Legacy applications                      | Web applications requiring smart routing   | Applications using non-HTTP protocols     |
+
+5. Exam & Real-World Takeaways
+------------------------------
+- When asked about load balancing in AWS, default to version 2 load balancers (ALB/NLB) for modern deployments.
+- Understand that CLB is considered legacy and has significant limitations.
+- Know the distinctions in protocol support and routing capabilities between ALB and NLB.
+- For exam scenarios, identify the appropriate load balancer type based on the application’s protocol and performance requirements.
+
+6. Conclusion
+-------------
+- The evolution of ELB has moved from the classic, limited-feature CLB to more robust, scalable version 2 options (ALB and NLB).
+- This evolution reflects AWS's commitment to improving performance, scalability, and cost-efficiency for modern applications.
+- In practice, new deployments should leverage ALB or NLB depending on the specific needs of the workload.

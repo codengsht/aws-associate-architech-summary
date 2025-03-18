@@ -1,0 +1,53 @@
+==============================================
+9-ACID vs BASE
+==============================================
+
+1. Overview
+-----------
+- This lesson introduces two fundamental transaction models used in databases: ACID and BASE.
+- These models are grounded in the CAP theorem, which highlights trade-offs among Consistency, Availability, and Partition Tolerance.
+- Understanding these models is crucial for both exam scenarios and real-world applications.
+
+2. ACID Transaction Model
+-------------------------
+- **Definition:** A transaction model emphasizing strict consistency and data integrity.
+- **Components:**
+  - **Atomicity:** Ensures that a transaction is an all-or-nothing operation (e.g., in a money transfer, both the debit and credit must occur).
+  - **Consistency:** Guarantees that transactions transform the database from one valid state to another according to predefined rules.
+  - **Isolation:** Ensures that concurrent transactions do not interfere with each other, simulating a sequential execution.
+  - **Durability:** Once a transaction is committed, it remains permanent, even in the event of a system failure.
+- **Exam Power-Up Points:**
+  - ACID is typically associated with RDS (Relational Database Systems).
+  - Emphasizes the importance of strict rules that ensure data integrity but may limit scalability.
+
+3. BASE Transaction Model
+-------------------------
+- **Definition:** A model designed to prioritize availability and scalability over immediate consistency.
+- **Components:**
+  - **Basically Available:** The system guarantees a response for every request, though it might not be the most up-to-date.
+  - **Soft State:** The state of the system can change over time, meaning that the database does not enforce its own consistency; instead, the application handles it.
+  - **Eventual Consistency:** Over time, given no new updates, the data will become consistent.
+- **Exam Power-Up Points:**
+  - BASE is generally linked to NoSQL databases (e.g., DynamoDB).
+  - Recognize that BASE sacrifices immediate consistency for high performance and scalability.
+
+4. CAP Theorem and Trade-offs
+------------------------------
+- **CAP Theorem:** States that in any distributed database system, only two out of three properties (Consistency, Availability, Partition Tolerance) can be fully guaranteed.
+- **Implications:**
+  - **ACID:** Chooses Consistency and, by extension, may reduce availability in distributed settings.
+  - **BASE:** Chooses Availability and Partition Tolerance, with the trade-off of eventual rather than immediate consistency.
+
+5. Comparison Table: ACID vs. BASE
+----------------------------------
+
+| Transaction Model | Full Form Explanation                                    | Key Properties                                                  | Exam Defaults/Power-Ups                             |
+|-------------------|----------------------------------------------------------|-----------------------------------------------------------------|-----------------------------------------------------|
+| ACID              | Atomicity, Consistency, Isolation, Durability            | Strict consistency, all-or-nothing transactions, sequential isolation | Default for RDS; emphasizes data integrity; limits scalability |
+| BASE              | Basically Available, Soft state, Eventual Consistency      | High availability, eventual consistency, application-managed state | Default for NoSQL; favors scalability and performance; e.g., DynamoDB  |
+
+6. Final Conclusions
+--------------------
+- **ACID** is ideal for scenarios requiring strong data integrity, such as financial transactions.
+- **BASE** is better suited for systems that demand high availability and scalability, accepting eventual consistency.
+- A solid grasp of these transaction models aids in making informed design decisions and in tackling exam questions that test on the trade-offs between consistency and availability.

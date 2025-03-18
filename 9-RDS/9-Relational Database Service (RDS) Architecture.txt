@@ -1,0 +1,86 @@
+==============================================
+9-Relational Database Service (RDS) Architecture
+==============================================
+
+1. Introduction
+---------------
+- The video provides an architectural overview of Amazon RDS (Relational Database Service).
+- It is the first in a series that will dive deeper into specific features in later lessons.
+- Emphasis is placed on understanding that RDS is best described as a managed database server “as a service” rather than a pure DBaaS.
+
+2. What is RDS?
+---------------
+- **Definition:** RDS provides you with a fully managed database server.
+  - You receive a managed database server that can host multiple databases.
+  - Unlike traditional DBaaS (which implies a complete database), RDS delivers a database server without OS or SSH access.
+- **Supported Engines:** MySQL, MariaDB, PostgreSQL, Oracle, and Microsoft SQL.
+  - Licensing implications differ between open source and commercial engines.
+- **Important Distinction:** Amazon Aurora is a separate, custom-engine product that should not be confused with RDS.
+
+3. RDS Deployment Architecture
+-------------------------------
+- **VPC-based Service:** RDS instances run within a Virtual Private Cloud (VPC) in a specified AWS region (e.g., US East 1, AP Southeast).
+- **Availability Zones (AZs):** RDS can span multiple AZs for high availability.
+  - Example setup includes three AZs (A, B, and C) in US East 1.
+
+4. DB Subnet Groups
+-------------------
+- **Definition:** A DB subnet group is a collection of subnets within the VPC that RDS can use.
+- **Usage:**
+  - You can create multiple DB subnet groups to control whether RDS instances are deployed in public or private subnets.
+  - A best practice is to use one DB subnet group per RDS deployment.
+- **Connectivity:**
+  - Private subnets restrict access to within the VPC or via connected networks (VPN, Direct Connect).
+  - Public subnets can be used for Internet-accessible deployments, although this is generally discouraged from a security standpoint.
+
+5. Instance & Storage Details
+-----------------------------
+- **Multiple Databases:** A single RDS instance can host multiple databases.
+- **Dedicated Storage:** Each RDS instance uses its own dedicated storage provided by EBS.
+  - In multi-AZ configurations, both primary and standby instances have separate EBS volumes.
+- **Replication:**
+  - Multi-AZ deployments use synchronous replication between the primary and standby.
+  - Read replicas (for scaling and resilience) can be in the same or different regions.
+
+6. Backup & Recovery
+--------------------
+- **Backups:** Automated backups are stored in AWS-managed S3 buckets.
+  - Backups are replicated across multiple AZs.
+  - In multi-AZ setups, backups are taken from the standby instance to avoid impacting primary performance.
+
+7. Cost Architecture
+--------------------
+- RDS pricing is based on resource allocation rather than usage.
+- Cost components include:
+  - Instance size and type (hourly rate, billed per second)
+  - Multi-AZ deployments (additional instance cost)
+  - Storage (per GB per month; type-dependent, e.g., provisioned IOPS)
+  - Data transfer (charges for inter-AZ or Internet traffic)
+  - Backups/Snapshots (storage beyond the allocated DB size is charged)
+  - Additional costs for commercial database engine licensing
+
+8. Exam Power-Up Points
+-----------------------
+- **Service Model:** Understand that RDS provides a managed database server—not a full DBaaS—and lacks OS/SSH access.
+- **Deployment Choices:** Be prepared to justify subnet selection (public vs. private) and the implications of multi-AZ deployments.
+- **Replication & Backup:** Recognize the importance of synchronous replication for high availability and automated S3 backups.
+- **Cost Considerations:** Know the various cost factors associated with RDS and how they compare to EC2-based deployments.
+- **Distinctions:** Clearly separate RDS from Amazon Aurora in exam scenarios.
+
+9. Cost Components Comparison Table
+-------------------------------------
+
+| Cost Component           | Description                                                          | Notes                                         |
+|--------------------------|----------------------------------------------------------------------|-----------------------------------------------|
+| Instance Size & Type     | Hourly rate based on instance type, charged per second               | Similar to EC2 pricing                        |
+| Multi-AZ Option          | Additional instance cost for standby in multiAZ setups               | Increases cost due to duplicate instance      |
+| Storage                  | Per GB per month fee; varies by storage type (e.g., provisioned IOPS)  | Depends on allocated capacity                 |
+| Data Transfer            | Cost per GB for data moving in/out of DB instance                    | Involves inter-AZ/internet charges            |
+| Backups/Snapshots        | First equivalent size free; extra storage charged                    | Extra storage beyond DB size is charged       |
+| Commercial DB Engines    | Additional licensing cost for proprietary engines                    | May incur extra licensing fees                |
+
+10. Conclusion
+--------------
+- RDS simplifies database management by handling hardware, OS, and DB engine maintenance.
+- Its design—running within a VPC with controlled subnet groups and high availability options—provides a secure, scalable environment.
+- Understanding the architecture, cost components, and exam-relevant details is crucial for designing AWS-based database solutions.

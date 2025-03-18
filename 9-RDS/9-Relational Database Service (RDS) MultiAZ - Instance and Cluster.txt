@@ -1,0 +1,65 @@
+==============================================
+9-Relational Database Service (RDS) MultiAZ - Instance and Cluster
+==============================================
+
+1. Overview
+-----------
+- This video explains how Amazon RDS achieves high availability using two distinct architectures:
+  - Multi-AZ Instance (historically the only option)
+  - Multi-AZ Cluster (an enhanced, scalable approach)
+- Both architectures ensure database resilience by replicating data across different Availability Zones (AZs).
+
+2. Multi-AZ Instance Architecture
+---------------------------------
+- **Replication:**
+  - A primary database instance synchronously replicates data at the storage level to a single standby replica located in a different AZ.
+  - Replication methods vary by engine:
+    - MariaDB, MySQL, Oracle, PostgreSQL use Amazon failover technology.
+    - Microsoft SQL uses database mirroring or Always On availability groups.
+- **Access & Operation:**
+  - All client connections use a DNS CNAME that points to the primary instance.
+  - The standby replica is not accessible for reads or writes; its sole purpose is to take over during a failure.
+  - Backups can be performed from the standby to reduce load on the primary.
+- **Failover:**
+  - In a failover event (caused by instance failure, AZ outage, manual intervention, etc.), the DNS is updated to point to the standby.
+  - This process typically takes 60–120 seconds due to DNS propagation delays.
+
+3. Multi-AZ Cluster Architecture
+-------------------------------
+- **Replication:**
+  - Utilizes transaction log–based replication, which is more efficient than storage-level replication.
+  - Data is considered committed once written to the primary and at least one reader confirms the write.
+- **Architecture & Endpoints:**
+  - Consists of one writer instance (for both read and write operations) and up to two reader instances (dedicated to read operations).
+  - **Endpoints:**
+    - **Cluster Endpoint:** Points to the writer; used for read/write operations and administrative tasks.
+    - **Reader Endpoint:** Load-balances read queries across the reader instances.
+    - **Instance Endpoints:** Unique to each instance; not recommended for production use as they lack failover capability.
+- **Performance & Failover:**
+  - Typically runs on faster hardware (e.g., local NVMe SSDs) with a combination of local storage and EBS.
+  - Failover times can be as short as ~35 seconds plus the time needed to apply pending transaction logs.
+  - This architecture allows the reader instances to offload read traffic from the writer, thereby improving overall performance.
+
+4. Exam Power-Up Points
+-----------------------
+- **Multi-AZ Instance:**
+  - Know that only the primary handles active operations, with a passive standby for failover.
+  - Failover involves a DNS update that may cause a brief outage.
+- **Multi-AZ Cluster:**
+  - Understand the use of multiple endpoints for balancing read traffic and ensuring rapid failover.
+  - Recognize the role of transaction log–based replication and the benefit of faster hardware.
+- **Key Differentiator:** The cluster mode supports read scaling by allowing dedicated reader instances, whereas instance mode supports only a single standby.
+
+5. Comparison Table: Multi-AZ Instance vs. Multi-AZ Cluster
+------------------------------------------------------------
+
+| Architecture Type   | Replication Method                             | Failover Time                | Read/Write Access                           | Additional Details                                       |
+|---------------------|----------------------------------------------  |------------------------------|---------------------------------------------|----------------------------------------------------------|
+| Multi-AZ Instance   | Synchronous replication at storage level       | 60-120 seconds (DNS switch)  | Primary only; standby is passive            | Single standby; backups are taken from the standby       |
+| Multi-AZ Cluster    | Transaction log–based replication              | ~35+ seconds (faster)        | Writer for R/W; readers for read scaling     | 1 writer + up to 2 readers; uses fast NVMe SSD; load-balanced reads |
+
+6. Conclusion
+-------------
+- **Multi-AZ Instance** provides basic high availability through a passive standby replica, ensuring data is synchronously replicated, but with longer failover times.
+- **Multi-AZ Cluster** enhances high availability and performance by enabling dedicated reader instances for scaling and faster failover using transaction logs.
+- Understanding these architectures is critical for exam scenarios and for designing resilient RDS deployments on AWS.

@@ -1,0 +1,64 @@
+==============================================
+11-SSL Offload & Session Stickiness
+==============================================
+
+1. Secure Connection Handling Methods
+---------------------------------------
+ELB can handle secure connections in three ways, each with distinct advantages and limitations:
+
+• **Bridging Mode (Default for ALB):**
+  - **How It Works:**  
+    - Client establishes an HTTPS connection to the load balancer.
+    - The load balancer terminates the SSL connection, decrypting the traffic.
+    - It then re-encrypts the traffic (forming a new HTTPS connection) when forwarding it to backend instances.
+  - **Advantages:**  
+    - The load balancer can inspect HTTP content (headers, cookies, paths) to make routing decisions.
+  - **Disadvantages:**  
+    - Both the ELB and backend EC2 instances require SSL certificates.
+    - Backend instances must perform additional cryptographic operations, which may add overhead.
+    - The fact that AWS (via the LB) decrypts traffic might be a concern in highly secure environments.
+
+• **Pass-Through Mode:**
+  - **How It Works:**  
+    - The load balancer passes the encrypted SSL connection directly to the backend instance without decryption.
+  - **Advantages:**  
+    - End-to-end encryption is maintained; AWS does not need to access your SSL certificate.
+    - Enhances security in environments where certificate control is critical.
+  - **Disadvantages:**  
+    - The load balancer cannot inspect HTTP-level details, so advanced routing (based on URL paths or headers) isn’t possible.
+    - Backend instances must manage SSL decryption, potentially increasing their load.
+
+• **Offload Mode:**
+  - **How It Works:**  
+    - Client establishes an HTTPS connection with the load balancer.
+    - The load balancer terminates the SSL connection and sends the traffic to backend instances using plain HTTP.
+  - **Advantages:**  
+    - Reduces cryptographic load on backend instances since they only handle unencrypted traffic.
+    - Simplifies backend configuration as they do not require SSL certificates.
+  - **Disadvantages:**  
+    - Traffic between the load balancer and backend is unencrypted, which might be a risk if not secured within a private network.
+
+2. Session Stickiness (Sticky Sessions)
+-----------------------------------------
+Session stickiness ensures that a client’s requests are consistently directed to the same backend instance:
+
+• **How It Works:**
+  - When enabled on an Application Load Balancer (ALB), the first request from a client triggers the generation of a cookie (e.g., AWSALB).
+  - The cookie, with a configurable duration (from 1 second up to 7 days), is sent back to the client.
+  - Subsequent requests that include this cookie are routed to the same backend instance.
+  
+• **Advantages:**
+  - Essential for applications that store session state locally on an instance (e.g., shopping carts, user sessions).
+  
+• **Disadvantages:**
+  - Can lead to uneven load distribution if some instances receive more sticky sessions than others.
+  - Increases dependency on the statefulness of backend instances; ideally, applications should be stateless by offloading session data to external stores like DynamoDB or memcached.
+
+3. Summary
+----------
+- **Secure Connection Handling:**  
+  Choose bridging for advanced HTTP inspection; pass-through for strict end-to-end encryption; offload to reduce backend cryptographic load.
+- **Session Stickiness:**  
+  Use stickiness to maintain user sessions on a specific instance, but be mindful of potential load imbalances.
+
+These features are critical for designing secure, scalable, and efficient architectures with AWS Elastic Load Balancers.

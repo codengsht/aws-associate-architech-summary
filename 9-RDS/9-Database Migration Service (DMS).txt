@@ -1,0 +1,74 @@
+==============================================
+9-Database Migration Service (DMS)
+==============================================
+
+1. Introduction
+---------------
+- DMS is a fully managed service designed to simplify database migrations.
+- It is used to move data between different database engines or from on‐premises to AWS with minimal downtime.
+- At least one of the endpoints (source or target) must reside within AWS.
+
+2. Key Components of DMS
+-------------------------
+- **Replication Instance:**
+  - Runs on an EC2 instance and hosts the migration software.
+  - Executes one or more replication tasks.
+- **Replication Tasks:**
+  - Define source and destination endpoints with the necessary connection and migration details.
+  - Facilitate data movement from the source to the target database.
+
+3. Migration Task Types
+-----------------------
+- **Full Load Migration:**
+  - Copies existing data from the source to the target.
+  - Suitable if a scheduled downtime is acceptable.
+- **Full Load + Change Data Capture (CDC):**
+  - Performs a full initial data load and then captures ongoing changes.
+  - Enables near zero-downtime migration by syncing changes until cutover.
+- **CDC Only:**
+  - Migrates only the incremental changes.
+  - Often used when the bulk data is migrated by other means (e.g., native export/import).
+
+   Comparison Table: Migration Task Types
+   ----------------------------------------
+
+   | Task Type            | Description                                                | Use Case                                         |
+   |----------------------|------------------------------------------------------------|--------------------------------------------------|
+   | Full Load            | Migrates all existing data in one go                       | When downtime is acceptable                      |
+   | Full Load + CDC      | Migrates data and then continuously applies changes         | Near zero-downtime migrations                    |
+   | CDC Only             | Migrates only ongoing changes after initial data load       | When initial bulk migration is done externally    |
+
+4. Schema Conversion Tool (SCT)
+-------------------------------
+- **Purpose:** Converts database schema and code when migrating between different database engines.
+- **Usage:**
+  - Used only when the source and target engines differ (e.g., from Oracle to AWS RDS MySQL).
+  - Supports traditional RDBMS (MySQL, Microsoft SQL, Oracle) and OLAP systems (Teradata, Vertica, Greenplum).
+  - Converts schema into a generic file format to facilitate migration.
+- **Key Rule:** SCT is *not* used if both source and target databases use the same engine.
+
+5. Integration with Snowball for Large Migrations
+--------------------------------------------------
+- **Challenge:** Migrating multi-terabyte databases over the network can be inefficient.
+- **Solution:**
+  - DMS can work in conjunction with AWS Snowball for offline bulk data transfer.
+  - **Process:**
+    1. Use SCT to extract data into a generic file format.
+    2. Transfer data to a Snowball device.
+    3. Ship the device to AWS, where data is loaded into an S3 bucket.
+    4. DMS then imports data from S3 to the target database.
+  - This method minimizes network usage and accelerates migration for very large databases.
+
+6. Exam Power-Up Points
+-----------------------
+- **DMS Use Cases:** Default to DMS for any database migration scenarios in AWS exams, especially for "no downtime" migrations.
+- **Endpoint Requirement:** Remember that one endpoint must be within AWS.
+- **Task Selection:** Understand the differences between full load, full load with CDC, and CDC-only tasks.
+- **SCT Role:** Know that SCT is only used when converting schemas between different database engines.
+- **Snowball Integration:** Be aware that DMS can integrate with Snowball for large data volumes when network transfer isn’t practical.
+
+7. Conclusion
+-------------
+- DMS simplifies complex, manual migration processes by automating data replication tasks.
+- It supports various migration strategies tailored to downtime tolerance and data volume.
+- Combined with SCT and Snowball, DMS provides a comprehensive solution for heterogeneous and large-scale migrations, making it a critical tool for AWS solutions architects.

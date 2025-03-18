@@ -1,0 +1,79 @@
+==============================================
+10-EFS Architecture
+==============================================
+
+1. Introduction
+---------------
+- EFS is AWS’s managed network file system that implements the NFSv4 protocol.
+- It provides a scalable, shared file storage solution that can be mounted by multiple Linux EC2 instances.
+- Common use cases include storing media files for applications (e.g., a WordPress site) to ensure data persistence across instance replacements and scaling events.
+
+2. Key Concepts
+---------------
+- **Shared Storage:** Unlike EBS (block storage), EFS offers file-level storage that is independent of individual instances.
+- **Multi-Mount Capability:** Multiple EC2 instances (or on-premises Linux servers via hybrid connectivity) can mount an EFS file system simultaneously.
+- **High Availability:** EFS file systems are accessed via mount targets placed in subnets across multiple Availability Zones (AZs) within a VPC, ensuring high availability and resiliency.
+
+3. Architecture
+---------------
+- **File Systems & Mount Targets:**
+  - You create an EFS file system which is then made available in your VPC through mount targets.
+  - Mount targets are provisioned in each AZ, each receiving an IP address from the respective subnet.
+- **Hybrid Access:** EFS can be accessed from on-premises environments via VPN, Direct Connect, or VPC peering.
+- **Seamless Integration:** Linux instances mount EFS like any other file system, enabling applications to use a centralized, persistent storage repository.
+
+4. Performance Modes
+--------------------
+- EFS offers two performance modes:
+  - **General Purpose:** Default mode with low latency, suitable for web servers, content management systems, and home directories.
+  - **Max I/O:** Designed for highly parallelized workloads (e.g., big data, media processing) that can tolerate slightly higher latency.
+
+   Comparison Table: Performance Modes
+   -------------------------------------
+
+   | Performance Mode | Description                                          | Use Cases                                    |
+   |------------------|------------------------------------------------------|----------------------------------------------|
+   | General Purpose  | Low latency; default mode                            | Web servers, CMS, home directories           |
+   | Max I/O          | Higher throughput with increased latency             | High-parallel workloads (big data, media)      |
+
+5. Throughput Modes
+-------------------
+- EFS offers two throughput modes:
+  - **Bursting Throughput:** The default mode; throughput scales with the size of the file system (similar to EBS GP2).
+  - **Provisioned Throughput:** Allows you to set specific throughput levels independent of file system size for predictable performance.
+
+   Comparison Table: Throughput Modes
+   ------------------------------------
+
+   | Throughput Mode | Characteristics                                            | When to Use                                          |
+   |-----------------|------------------------------------------------------------|------------------------------------------------------|
+   | Bursting        | Throughput scales with file system size; default setting    | Variable workloads with normal usage patterns         |
+   | Provisioned     | User-specified throughput, independent of storage size      | Workloads requiring consistent, predictable throughput |
+
+6. Storage Classes
+------------------
+- EFS provides two storage classes to help manage costs:
+  - **Standard:** For frequently accessed data (default class).
+  - **Infrequent Access (IA):** Lower cost for data that is accessed less often; lifecycle policies can automatically transition files between classes.
+
+   Comparison Table: Storage Classes
+   -----------------------------------
+
+   | Storage Class      | Description                                    | Use Case                             |
+   |--------------------|------------------------------------------------|--------------------------------------|
+   | Standard           | For frequently accessed data                   | Daily operations, high-access files  |
+   | Infrequent Access  | Lower-cost storage for rarely accessed data    | Archival, backup data                 |
+
+7. Exam Power-Up Points
+-----------------------
+- **Linux-Only:** EFS is officially supported only on Linux instances.
+- **Mount Targets:** Critical for high availability; ensure one exists per AZ in your VPC.
+- **Performance & Throughput Options:** Know the differences between General Purpose vs. Max I/O and Bursting vs. Provisioned throughput modes.
+- **Storage Classes:** Understand when to use Standard vs. Infrequent Access, similar to S3 storage classes.
+- **Hybrid Access:** EFS can be accessed via VPN, Direct Connect, or VPC peering from on-premises systems.
+
+8. Conclusion
+-------------
+- EFS decouples file storage from EC2 instances, enhancing scalability and resiliency.
+- It is ideal for shared storage scenarios where data persistence is crucial (e.g., media storage for web applications).
+- With flexible performance, throughput, and storage class options, EFS is a versatile tool in the AWS ecosystem and an important concept for the exam.

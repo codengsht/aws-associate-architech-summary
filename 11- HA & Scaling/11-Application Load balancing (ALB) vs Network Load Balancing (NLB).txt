@@ -1,0 +1,79 @@
+==============================================
+11-Application Load balancing (ALB) vs Network Load Balancing (NLB)
+==============================================
+
+1. Introduction
+---------------
+- **Purpose of Load Balancers:**  
+  Distribute incoming client connections across multiple backend compute resources while abstracting the underlying infrastructure.
+- **Focus of This Lesson:**  
+  Detailed comparison of Application Load Balancers (ALB) and Network Load Balancers (NLB) and when to choose each.
+
+2. Consolidation & Evolution
+----------------------------
+- **Legacy (Classic) Load Balancers:**  
+  Required one load balancer per SSL certificate due to lack of SNI support, leading to inefficient, unscalable architectures.
+- **Advancements in Version 2 ELBs:**  
+  - **ALB:** Supports multiple SSL certificates via listener rules, allowing consolidation of several applications under one load balancer.
+  - **NLB:** Offers high performance and supports non-HTTP protocols, addressing scenarios where ALB’s advanced features aren’t needed.
+
+3. Application Load Balancer (ALB)
+----------------------------------
+- **Layer:** Operates at Layer 7 (Application Layer).
+- **Protocol Support:**  
+  - Supports HTTP, HTTPS, and WebSocket protocols.
+  - **Limitation:** Does not support non-HTTP protocols (e.g., SMTP, SSH).
+- **Advanced Routing Capabilities:**  
+  - Can inspect HTTP headers, cookies, request methods, path patterns, query strings, and even source IP addresses.
+  - Uses listener rules to route traffic to different target groups based on these conditions.
+- **SSL/TLS Handling:**  
+  - Terminates HTTPS connections at the load balancer, requiring SSL certificates to be installed on the ALB.
+  - **Security Note:** SSL is terminated at ALB, so end-to-end encryption (client to target) is not maintained.
+- **Performance:**  
+  - Provides rich features but has higher latency due to Layer 7 processing.
+
+4. Network Load Balancer (NLB)
+-------------------------------
+- **Layer:** Operates at Layer 4 (Transport Layer).
+- **Protocol Support:**  
+  - Supports TCP, TLS (for secure TCP), and UDP.
+  - Ideal for applications using non-HTTP protocols (e.g., email, SSH, gaming, financial services).
+- **SSL/TLS Handling:**  
+  - Can forward encrypted TCP connections without terminating SSL, enabling unbroken end-to-end encryption.
+- **Static IP & Performance:**  
+  - Supports static IP addresses, which is useful for whitelisting in strict security environments.
+  - Provides high performance with low latency and can handle millions of requests per second.
+- **Health Checks:**  
+  - Performs basic health checks (ICMP and TCP), not application-aware.
+
+5. Comparison Table: ALB vs. NLB
+--------------------------------
+
+| Feature                     | Application Load Balancer (ALB)                | Network Load Balancer (NLB)                  |
+|-----------------------------|-----------------------------------------------|----------------------------------------------|
+| **Layer**                   | Layer 7 (Application)                          | Layer 4 (Transport)                          |
+| **Protocol Support**        | HTTP, HTTPS, WebSocket                        | TCP, TLS, UDP                                |
+| **SSL/TLS Handling**        | Terminates SSL at the load balancer; requires certificate installation | Supports pass-through; maintains end-to-end encryption |
+| **Advanced Routing**        | Supports routing based on headers, cookies, paths, etc. | No application-level routing capabilities     |
+| **Performance**             | Higher latency due to complex processing       | Lower latency, ideal for high-performance needs|
+| **Static IP Addresses**     | Not available                                  | Supports static IPs for whitelisting         |
+| **Use Cases**               | Web applications requiring detailed routing and SNI support | Non-HTTP applications, unbroken encryption, and high throughput scenarios |
+
+6. Exam Power-Up Points
+------------------------
+- **When to Choose ALB:**  
+  - Your application uses HTTP/HTTPS and requires advanced routing (e.g., host/path-based rules, multiple SSL certificates).
+  - You can tolerate SSL termination at the ALB (i.e., not requiring end-to-end encryption).
+- **When to Choose NLB:**  
+  - Your application uses non-HTTP protocols (e.g., TCP, UDP, TLS-based applications).
+  - You require static IP addresses for firewall whitelisting or strict security environments.
+  - Performance is a priority, and you need very low latency with the ability to handle millions of requests.
+  - You need unbroken end-to-end encryption between clients and backend instances.
+
+7. Conclusion
+-------------
+- **ALB vs. NLB Summary:**  
+  - **ALB** is best for web applications that benefit from Layer 7 features and advanced routing.
+  - **NLB** is optimal for non-HTTP applications and scenarios demanding high performance, static IP support, and uninterrupted encryption.
+- **Design Consideration:**  
+  Choose the load balancer type based on your application’s protocol requirements, security needs, and performance targets. For most web-based applications, ALB is ideal; for everything else, particularly performance-critical and non-HTTP workloads, opt for NLB.

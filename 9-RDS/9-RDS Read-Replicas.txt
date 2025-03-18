@@ -1,0 +1,59 @@
+==============================================
+9-RDS Read-Replicas
+==============================================
+
+1. Introduction
+---------------
+- Read replicas are read-only copies of a primary RDS instance.
+- They are used to improve read performance, enable cross-region failover, and achieve low recovery time objectives (RTO) in failure scenarios (excluding data corruption).
+
+2. Key Concepts
+---------------
+- **Read-Only:** Read replicas are designed exclusively for handling read operations until they are manually promoted.
+- **Separate Endpoints:** Each read replica has its own unique endpoint; applications must be configured to use these endpoints.
+- **Asynchronous Replication:** Data is first committed to the primary instance and then asynchronously replicated to the read replicas, which may introduce a short lag.
+- **No Automatic Failover:** Unlike standby replicas in Multi-AZ deployments, read replicas do not automatically take over if the primary fails.
+
+3. Replication Methods
+----------------------
+- **Asynchronous Replication:** 
+  - Data is written to the primary and then propagated to the read replicas.
+  - This replication method can result in a slight delay (lag) depending on network conditions and workload.
+- **Exam Note:** For RDS (excluding Aurora), remember that read replicas use asynchronous replication.
+
+4. Benefits of Read Replicas
+----------------------------
+- **Read Scalability:** Up to five read replicas per primary instance can be created, each adding additional read capacity.
+- **Global Performance:** Cross-region read replicas allow local access for users in different regions, reducing latency.
+- **Disaster Recovery:** In a failure scenario (excluding data corruption), a read replica can be quickly promoted to serve as the new primary, offering near-zero Recovery Point Objective (RPO) and low RTO.
+
+5. Limitations & Considerations
+-------------------------------
+- **Replication Lag:** The asynchronous nature may cause a slight delay in data replication; chaining replicas can exacerbate lag.
+- **Manual Promotion:** Failover is not automatic; read replicas must be manually promoted during disaster recovery.
+- **Application Support:** Applications must be designed or configured to recognize and use the separate endpoints of read replicas.
+- **Data Corruption:** Since replicas mirror the primary’s data, any corruption in the primary will be replicated.
+
+6. Use Cases
+------------
+- **Performance Optimization:** Offload read traffic from the primary instance to improve overall performance.
+- **Cross-Region Resilience:** Deploy read replicas in other regions for better global availability and to reduce latency for geographically dispersed users.
+- **Disaster Recovery:** Quickly restore operations by promoting a read replica in the event of a primary instance failure (provided data corruption is not a factor).
+
+7. Comparison Table: Attributes of RDS Read Replicas
+-----------------------------------------------------
+
+| Aspect           | Description                                                      | Key Considerations                                            |
+|------------------|------------------------------------------------------------------|---------------------------------------------------------------|
+| Read-Only        | Operate only for read operations until promoted                  | Cannot handle writes unless manually promoted                 |
+| Replication Type | Asynchronous replication from the primary                        | Potential replication lag; increases with chained replicas      |
+| Endpoint         | Each replica has its own unique endpoint                           | Applications must be adjusted to use these endpoints           |
+| Use Cases        | Enhance read scalability, global access, and disaster recovery     | Not suited for write operations or recovering from data corruption|
+| Failover         | Requires manual promotion to become primary                        | No automatic failover capability                                |
+| RPO/RTO          | Near-zero RPO and low RTO in failure scenarios                     | Effective for failures but not for handling data corruption      |
+
+8. Conclusion
+-------------
+- RDS read replicas are vital for scaling read operations and bolstering disaster recovery strategies.
+- They require careful management, with attention to replication lag, manual promotion processes, and application-level configuration.
+- When used appropriately, read replicas offer significant performance and resilience benefits, especially in global or high-read environments.

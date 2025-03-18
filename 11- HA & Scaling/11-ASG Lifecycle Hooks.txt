@@ -1,0 +1,49 @@
+==============================================
+11-ASG Lifecycle Hooks
+==============================================
+
+1. Introduction
+---------------
+- Lifecycle hooks enable you to insert custom processing steps during key transitions in an Auto Scaling Group (ASG) lifecycle.
+- They allow custom actions to be performed during both instance launch and termination events, ensuring that necessary tasks (like data loading, backups, or cleanup) are completed before the instance fully transitions.
+
+2. How Lifecycle Hooks Work
+---------------------------
+- **Instance Launch Flow:**
+  - **Normal Flow:**  
+    - Instance transitions directly from *Pending* to *In Service*.
+  - **With Lifecycle Hook:**  
+    - Instance moves from *Pending* to *Pending:Wait*, pausing the launch process.
+    - During the wait period, you can perform custom actions.
+    - Once these actions are complete, you call a *CompleteLifecycleAction* to move the instance from *Pending:Wait* → *Pending:Proceed* → *In Service*.
+- **Instance Termination Flow:**
+  - **Normal Flow:**  
+    - Instance transitions directly from *Terminating* to *Terminated*.
+  - **With Lifecycle Hook:**  
+    - Instance enters a *Terminating:Wait* state.
+    - This pause allows you to perform tasks such as log backup or data cleanup.
+    - The process continues either when you explicitly complete the lifecycle action or when a timeout (default 3600 seconds) expires, transitioning the instance from *Terminating:Wait* → *Terminating:Proceed* → *Terminated*.
+
+3. Integration & Customization
+-------------------------------
+- **Notification & Automation:**
+  - Lifecycle hooks can be integrated with SNS or EventBridge to trigger notifications or automated workflows.
+  - This enables event-driven processing during instance launch or termination.
+- **Timeout Behavior:**
+  - If no action is taken within the configured timeout, the ASG will either proceed or abandon the action based on your settings.
+- **Use Cases:**
+  - During launch: Perform initialization tasks (e.g., load or index critical data).
+  - During termination: Execute cleanup tasks (e.g., backup logs, deregister from services).
+
+4. Lifecycle Hook State Transitions
+-------------------------------------
+
+| Transition Phase  | Without Lifecycle Hook            | With Lifecycle Hook                                      |
+|-------------------|-----------------------------------|----------------------------------------------------------|
+| **Launch Flow**   | Pending → In Service              | Pending → Pending:Wait → (Complete action) → Pending:Proceed → In Service |
+| **Termination Flow** | Terminating → Terminated      | Terminating → Terminating:Wait → (Complete/Timeout) → Terminating:Proceed → Terminated |
+
+5. Conclusion
+-------------
+- Lifecycle hooks provide a controlled pause during ASG scaling actions, allowing you to run custom operations before an instance fully launches or terminates.
+- They enhance your ability to manage complex environments by ensuring critical processes complete, thereby improving the overall resilience and efficiency of your architecture.
