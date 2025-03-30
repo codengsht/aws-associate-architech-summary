@@ -1,0 +1,54 @@
+==========================
+13-Cloudfront and SSL/TLS
+==========================
+
+1. Default Domain & Custom Domains
+------------------------------------
+- Each CloudFront distribution receives a default domain name (a random string ending in cloudfront.net) secured with a default SSL certificate.
+- For custom domain names (via Alternate Domain Names), you must supply a matching SSL certificate.
+
+2. SSL Certificate Requirements
+-------------------------------
+- Certificates must be publicly trusted (self-signed certificates are not accepted).
+- To use a custom domain with HTTPS, you need an SSL certificate (typically managed via AWS Certificate Manager, ACM).
+- **Regional Constraint:**  
+  - For CloudFront, ACM certificates must be issued in US East (N. Virginia), regardless of where your distribution’s content originates.
+- For origins (e.g., an Application Load Balancer or custom origin), a valid publicly trusted certificate matching the origin’s DNS name is required.
+
+3. Viewer Protocol Policy & Origin Protocol
+---------------------------------------------
+- **Viewer Protocol Policy:**  
+  - Controls how end users connect to CloudFront (allowing HTTP and HTTPS, redirecting HTTP to HTTPS, or enforcing HTTPS only).
+- **Origin Protocol Policy:**  
+  - Controls the connection between CloudFront and the origin server.
+  - Both viewer and origin connections require valid SSL certificates and proper configuration to ensure secure data transfer.
+
+4. SNI vs. Dedicated IP Addresses
+-----------------------------------
+- **SNI (Server Name Indication):**  
+  - Allows multiple domains to share a single IP by sending the hostname during the TLS handshake.
+  - Supported by modern browsers and available at no extra cost.
+- **Dedicated IP Addresses:**  
+  - Required for older browsers that do not support SNI.
+  - Comes at an additional cost (e.g., approximately $600/month per distribution).
+
+5. DNS, Custom Domain Setup, and Security
+-------------------------------------------
+- Custom domain names must point to the CloudFront distribution via DNS (using Route 53 or another provider).
+- The SSL certificate must match the custom domain name.
+- CloudFront leverages ACM for certificate management, ensuring certificates are automatically renewed (if issued by ACM).
+
+
+
+
+
+6. Key Exam Points
+------------------
+- **Certificate Deployment:**  
+  - CloudFront always uses ACM certificates from US East (N. Virginia), even if your content is hosted in another region.
+- **Public Trust:**  
+  - Both viewer and origin protocols must use publicly trusted certificates.
+- **SNI vs. Dedicated IP:**  
+  - Understand that SNI is free and suitable for modern browsers, while dedicated IP addresses incur extra cost for legacy support.
+- **Origin Considerations:**  
+  - S3 origins manage SSL internally and do not require custom certificates; custom origins and ALBs do require proper SSL setup.

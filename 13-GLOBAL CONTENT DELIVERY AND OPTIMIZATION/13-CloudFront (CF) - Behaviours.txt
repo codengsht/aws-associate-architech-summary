@@ -1,0 +1,62 @@
+========================================
+13-CloudFront (CF) - Behaviours
+========================================
+
+1. Overview
+-----------
+- **Distributions vs. Behaviors:**  
+  - A **distribution** is the main configuration unit for CloudFront, defining global settings such as price class, alternate domain names, SSL certificates, and WAF integration.  
+  - **Behaviors** are sub-configurations within a distribution that determine how specific requests (based on path patterns) are handled.
+
+2. Distribution-Level Settings
+------------------------------
+- **Price Class:**  
+  - Determines which edge locations are used (e.g., only US, Canada, Europe vs. all regions) impacting cost and performance.
+- **Alternate Domain Names (CNAMEs):**  
+  - Allows you to use your own domain instead of the default *.cloudfront.net domain.
+- **SSL Certificate Settings:**  
+  - Choose between default or custom SSL certificates.  
+  - Options include selecting SNI and non-SNI certificates along with security policies.
+- **WAF Integration:**  
+  - Associate a Web ACL from AWS WAF with the distribution for enhanced security.
+- **Logging and HTTP Versions:**  
+  - Enable logging and configure supported HTTP protocols at the distribution level.
+
+3. Behavior-Level Settings
+--------------------------
+- **Path Pattern Matching:**  
+  - Behaviors are associated with specific URL path patterns.  
+  - The default behavior (wildcard *) handles all requests not matched by more specific behaviors.
+- **Origin Selection:**  
+  - Each behavior is linked to an origin (or origin group) which provides the content.
+- **Viewer Protocol Policy:**  
+  - Define whether viewers must use HTTP, HTTPS, or both.
+- **Allowed HTTP Methods:**  
+  - Specify which HTTP methods (GET, POST, etc.) are allowed for requests matching the behavior.
+- **Caching Settings:**  
+  - **Legacy Caching vs. New Cache Policies:**  
+    - Configure cache TTL, header forwarding, query strings, and cookies on a per-behavior basis.
+  - **Origin Request Policies:**  
+    - Control which parts of the request (headers, query strings, cookies) are passed to the origin.
+- **Field-Level Encryption:**  
+  - Optionally enable encryption for specific fields in the viewer request.
+- **Restrict Viewer Access:**  
+  - Set behaviors as restricted (private) to require signed URLs or signed cookies.
+  - **Trusted Key Groups or Trusted Signers:**  
+    - Define which key groups or signers are authorized to grant access.
+- **Compression and Lambda@Edge:**  
+  - Configure automatic compression of objects.
+  - Associate Lambda@Edge functions to customize request/response processing at the edge.
+
+4. Key Exam Points
+-------------------
+- **Separation of Concerns:**  
+  - Understand that global settings (like price class, WAF, alternate domains, and SSL) are set at the distribution level, while granular delivery controls (like caching, viewer access, and protocol policies) are set per behavior.
+- **Viewer Access Restriction:**  
+  - Restricting viewer access (via signed URLs/signed cookies) is configured at the behavior level.
+- **Path Pattern Matching:**  
+  - Behaviors use path patterns to determine which settings apply to which requests.
+- **Caching & Origin Request Settings:**  
+  - Caching controls and origin request policies are behavior-specific, allowing different content types to be delivered differently within the same distribution.
+- **Integration with Lambda@Edge:**  
+  - Behaviors can be enhanced with custom functions for advanced request/response modifications.

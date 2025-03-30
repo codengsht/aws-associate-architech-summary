@@ -1,0 +1,44 @@
+=================
+14-VPC Flow Logs
+=================
+
+1. Overview
+-----------
+- VPC Flow Logs capture metadata about IP traffic within a VPC.
+- They do NOT capture packet contents; for content capture, a packet sniffer is required.
+- Useful for monitoring, security analysis, and troubleshooting network issues.
+
+2. Captured Data
+----------------
+- **Metadata Includes:**
+  - Source and destination IP addresses.
+  - Source and destination port numbers.
+  - Protocol number (e.g., ICMP=1, TCP=6, UDP=17).
+  - Packet size, timestamps, and action (ACCEPT or REJECT).
+  
+3. Levels of Logging
+--------------------
+- **VPC-Level:**  
+  - Captures data from all network interfaces across all subnets in the VPC.
+- **Subnet-Level:**  
+  - Captures data from every network interface within a specific subnet.
+- **ENI-Level:**  
+  - Captures data for a specific Elastic Network Interface only.
+
+4. Timing and Destinations
+---------------------------
+- **Delay:**  
+  - Flow logs are not real-time; expect a delay before the data is available.
+- **Destinations:**  
+  - Logs can be sent to Amazon CloudWatch Logs for integrated monitoring.
+  - Alternatively, logs can be delivered to Amazon S3, which allows direct file access and querying (e.g., using Athena).
+
+5. Important Considerations
+---------------------------
+- **Security Groups vs. Network ACLs:**
+  - Security groups are stateful; typically one log entry covers both inbound and outbound traffic.
+  - Network ACLs are stateless; separate log entries may be generated for inbound and outbound flows.
+- **Excluded Traffic:**  
+  - Certain traffic, such as requests to the EC2 metadata service and communications with the Amazon Windows license server, are not captured.
+- **Usage:**  
+  - Ideal for retrospective analysis of network traffic and diagnosing connectivity or security issues.

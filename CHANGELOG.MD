@@ -1,5 +1,14 @@
 # Changelog 
 
+## 0.0.7
+- 12-SERVERLESS AND APPLICATION SERVICES lectures summarized 
+- 13-GLOBAL CONTENT DELIVERY AND OPTIMIZATION lectures summarized 
+- 14-ADVANCED VPC Networking lectures summarized 
+- 7-Bootstrapping EC2 using User Data summary fixed
+-  ------- 12-SERVERLESS AND APPLICATION SERVICES  -------
+-  ------- 13-GLOBAL CONTENT DELIVERY AND OPTIMIZATION  -------
+-  ------- 14-ADVANCED VPC Networking  -------
+
 ## 0.0.6
 - RDS lectures added
 - EFS lectures added

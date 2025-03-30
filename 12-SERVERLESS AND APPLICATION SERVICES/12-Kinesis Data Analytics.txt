@@ -1,0 +1,77 @@
+==========================
+12-Kinesis Data Analytics
+==========================
+
+1. Introduction
+---------------
+- Kinesis Data Analytics is a real time data processing service that enables you to run SQL queries on streaming data.
+- It is part of the broader Kinesis family, which includes Kinesis Data Streams (for high-scale ingestion) and Kinesis Data Firehose (for near real time delivery).
+- This service is ideal for scenarios requiring immediate, complex data manipulation using SQL.
+
+2. Positioning Within the Kinesis Family
+------------------------------------------
+- **Kinesis Data Streams:**  
+  - Designed for large-scale data ingestion with a rolling data retention window.
+  - Provides real time access to data for consumers.
+  
+- **Kinesis Data Firehose:**  
+  - Buffers and delivers data in near real time (e.g., ~60 seconds latency).
+  - Supports simple transformations via Lambda.
+  
+- **Kinesis Data Analytics:**  
+  - Processes streaming data in real time using SQL.
+  - Can ingest data from Data Streams or Firehose.
+  - Offers the ability to join streaming data with static reference data (from S3) for enrichment.
+
+3. Core Architecture & Workflow
+---------------------------------
+- **Inputs:**
+  - Ingests streaming data from either Kinesis Data Streams or Kinesis Data Firehose.
+  
+- **In-Application Components:**
+  - **Input Streams:**  
+    - Virtual tables that mirror external data streams.
+  - **Reference Data:**  
+    - Optional static tables sourced from S3 to enrich streaming data.
+  - **SQL Processing Engine:**  
+    - Runs real time SQL queries on the input streams (and joins with reference data if needed).
+  - **Output Streams:**  
+    - Virtual tables where query results are sent; mapped to external destinations.
+  - **Error Streams:**  
+    - Captures any errors from SQL query processing.
+
+- **Outputs:**
+  - Results can be delivered to Kinesis Data Streams (preserving real time delivery) or to Kinesis Data Firehose (resulting in near real time delivery).
+
+
+
+4. Key Features & Considerations
+----------------------------------
+- **Real Time Processing:**  
+  - Enables immediate query processing on streaming data.
+  - Maintains true real time performance if outputs are directed to Kinesis Data Streams or Lambda.
+  
+- **SQL-Based Transformation:**  
+  - Use standard SQL to filter, aggregate, and transform data.
+  - Supports complex processing compared to simple Lambda-based transformations in Firehose.
+  
+- **Cost Model:**  
+  - You pay based on the volume of data processed.
+  - It is not a low-cost option; best used for scenarios that justify real time, complex stream processing.
+
+5. Use Cases
+------------
+- Real time analytics and dashboards (e.g., time series data, e-sports leaderboards).
+- Real time monitoring and alerting (e.g., security metrics, IoT sensor data).
+- Enriching streaming data by joining with static reference data stored in S3.
+- Scenarios where complex SQL queries on streaming data are needed.
+
+6. When to Choose Kinesis Data Analytics
+------------------------------------------
+- Use Kinesis Data Analytics when you need:
+  - Immediate, real time processing of streaming data.
+  - Complex data manipulation that goes beyond simple transformations.
+  - The ability to integrate streaming data with static datasets for enrichment.
+- Avoid it when:
+  - Near real time processing (with slight delays) is acceptable, as Kinesis Data Firehose may suffice.
+  - The workload does not justify the cost of real time SQL processing.

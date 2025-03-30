@@ -1,0 +1,58 @@
+========================================
+12-CloudWatchEvents and EventBridge
+========================================
+
+1. Introduction
+---------------
+- The lesson focuses on CloudWatch Events and EventBridge, explaining how they deliver a near real-time stream of system events.
+- These events capture changes in AWS services (e.g., EC2 instance state changes) and provide visibility into system activities.
+
+2. Overview of Services
+------------------------
+- **CloudWatch Events:**
+  - Provides real-time event streams from AWS services.
+  - Captures events such as instance termination, start, or stop.
+  - Uses a single, implicit default event bus per AWS account (not directly visible in the UI).
+
+- **EventBridge:**
+  - An evolution of CloudWatch Events with a superset of functionality.
+  - Supports events from AWS services, third-party sources, and custom applications.
+  - Recommended for new deployments due to its enhanced features and flexibility.
+
+3. Core Components and Architecture
+-------------------------------------
+- **Event Bus:**
+  - Both services operate using an event bus—a stream where events from supported sources are collected.
+  - CloudWatch Events uses one default event bus, while EventBridge allows creation of additional custom event buses.
+  
+- **Rules:**
+  - Rules are defined to pattern match events on the event bus.
+  - **Pattern Matching Rules:** Trigger when incoming events match specific criteria.
+  - **Scheduled Rules:** Use cron-like expressions to trigger at designated times.
+  - When a rule matches an event, it routes the event to one or more specified targets (e.g., Lambda functions).
+
+4. Use Cases and Functionality
+------------------------------
+- **Event Handling:**
+  - Events include details like instance state changes, timestamps, and other metadata.
+  - Targets (such as Lambda functions) consume event data to perform tasks.
+  
+- **Interoperability and Migration:**
+  - Events created by CloudWatch Events and EventBridge are interoperable.
+  - AWS encourages migration to EventBridge for new projects because of its extended capabilities.
+
+
+
+
+5. Comparison Table: CloudWatch Events vs. EventBridge
+-------------------------------------------------------
+| Service           | Key Features                                                   | Additional Capabilities                | Best Practice for New Deployments        |
+|-------------------|----------------------------------------------------------------|----------------------------------------|------------------------------------------|
+| CloudWatch Events | Real-time event stream; single implicit event bus              | Limited to AWS service events          | Suitable for legacy setups               |
+| EventBridge       | Enhanced event routing; supports AWS, third-party, and custom events; flexible event bus management | Expanded integration and feature set | Recommended for new deployments          |
+
+6. Conclusion
+-------------
+- Both CloudWatch Events and EventBridge provide mechanisms to capture and route system events.
+- EventBridge offers additional features and supports a broader range of event sources, making it the preferred choice for new solutions.
+- A solid understanding of these services is crucial for designing efficient, event-driven architectures in AWS.

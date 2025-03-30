@@ -1,0 +1,59 @@
+========================================
+12-Simple Notification Service
+========================================
+
+1. Introduction
+---------------
+- SNS is a highly available, durable, and secure pub/sub messaging service on AWS.
+- It uses public endpoints, making it accessible from anywhere with network connectivity.
+- SNS is a fundamental component in many AWS architectures, supporting various AWS services and external integrations.
+
+2. Core Concepts
+----------------
+- **SNS Topic:**  
+  - The base entity where messages are published.
+  - Topics control permissions and configuration.
+- **Publishers:**  
+  - Entities (applications or services) that send messages to an SNS topic.
+- **Subscribers:**  
+  - Endpoints that receive messages from an SNS topic.
+  - Subscriber types include HTTP/HTTPS endpoints, email addresses, SQS queues, mobile push notifications, and AWS Lambda functions.
+
+3. Key Features
+---------------
+- **Message Payload:**  
+  - Supports messages up to 256 KB in size (designed for notifications, not large binary files).
+- **Pub/Sub Delivery:**  
+  - All subscribers receive messages by default (filters can be applied to restrict delivery).
+- **Fan-Out Architecture:**  
+  - A single SNS topic can fan out messages to multiple SQS queues or other subscribers.
+  - Enables parallel processing of messages across different workloads.
+- **Delivery Status & Retry:**  
+  - Offers delivery status for certain subscriber types (HTTP/HTTPS, SQS, etc.).
+  - Supports automatic retry mechanisms for reliable message delivery.
+- **Security & Compliance:**  
+  - Supports server-side encryption (SSE) for data at rest.
+  - Uses topic policies (similar to S3 bucket policies) to manage cross-account access.
+
+4. Architectural Overview
+-------------------------
+- SNS is a public AWS service operating from the AWS public zone.
+- It integrates with AWS products (like CloudWatch alarms, CloudFormation, and Auto Scaling) to trigger notifications.
+- SNS topics serve as central hubs for routing messages between publishers and subscribers.
+- Custom event routing and filtering ensure that messages are delivered only to relevant subscribers.
+
+5. Subscriber Types Comparison
+------------------------------
+| Subscriber Type              | Description                                              | Use Case Example                          |
+|------------------------------|----------------------------------------------------------|-------------------------------------------|
+| HTTP/HTTPS Endpoints         | Receives messages via webhooks                           | Triggering web services                   |
+| Email                        | Sends notifications via email                            | Alert notifications                       |
+| SQS Queue                    | Enqueues messages for asynchronous processing            | Decoupled backend processing              |
+| Mobile Push Notifications    | Delivers messages as push notifications or SMS           | Mobile app alerts                         |
+| AWS Lambda                   | Invokes a function with the message payload              | Serverless event processing               |
+
+6. Conclusion
+-------------
+- SNS is essential for building loosely coupled, scalable architectures on AWS.
+- Its integration with multiple subscriber types and managed services makes it a versatile tool for both internal and external communications.
+- A thorough understanding of SNS is crucial for designing robust, event-driven systems that efficiently handle notifications and message delivery.

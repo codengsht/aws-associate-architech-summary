@@ -1,0 +1,46 @@
+========================================
+13-CloudFront - TTL and Invalidations
+========================================
+
+1. Overview
+-----------
+- CloudFront caches objects at edge locations to improve performance by reducing latency.
+- Two key features govern cache behavior:
+  - TTL (Time To Live): Determines how long an object is considered fresh.
+  - Invalidation: Forces immediate expiration of cached objects.
+
+2. TTL (Time To Live)
+---------------------
+- **Default TTL:**
+  - Objects are cached with a default TTL of 24 hours (configurable at the behavior level).
+- **Per-Object TTL Settings:**
+  - Can be specified using HTTP headers:
+    - **Cache-Control: max-age** (in seconds)
+    - **Cache-Control: s-maxage** (in seconds)
+    - **Expires header:** Specifies an absolute expiry date/time.
+  - Per-object TTL values are bounded by the minimum and maximum TTL settings configured in the behavior.
+- **Cache Hit vs. Cache Miss:**
+  - **Cache Hit:** If an object is cached and within its TTL, it is served directly from the edge.
+  - **Cache Miss:** If the object has expired or isn’t cached, CloudFront fetches it from the origin.
+    - On a cache miss, if the origin responds with a 304 (Not Modified), the existing cached object is marked current again.
+
+3. CloudFront Invalidation
+---------------------------
+- **Purpose:**
+  - Invalidation forces CloudFront to immediately expire cached objects regardless of their TTL.
+  - Essential when updated content at the origin needs to be reflected without waiting for TTL expiry.
+- **How It Works:**
+  - Invalidation requests are made by specifying path patterns (e.g., `/images/whiskers.jpg`, `/images/whisk*`, or `/*` for all objects).
+  - Once invalidated, subsequent requests trigger a fetch from the origin to obtain the latest version.
+- **Cost and Best Practices:**
+  - Invalidation requests incur a cost, so they should be used sparingly (e.g., to correct errors).
+  - **Version File Names:**  
+    - Instead of frequent invalidations, update file names (e.g., `whiskers_v1.jpg` to `whiskers_v2.jpg`).
+    - This approach bypasses stale cache issues, improves logging, and reduces invalidation costs.
+    - Note: Version file names differ from S3 object versioning; they are distinct names for different content versions.
+
+4. Conclusion
+-------------
+- Properly configuring TTL ensures that cached objects provide optimal performance by minimizing origin fetches.
+- Invalidation is a powerful tool to immediately update content across all edge locations but should be balanced against cost.
+- Using version file names is a recommended best practice to manage content updates without relying on frequent invalidations.

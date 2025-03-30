@@ -1,0 +1,72 @@
+========================================
+12-Architecture Deep Dive - PART 1 & 2
+========================================
+
+1. Introduction
+---------------
+- This lesson explains event driven architecture (EDA) and compares it with other architectural models.
+- Understanding these architectures is essential for solutions architects to design systems that meet business requirements.
+
+2. Overview of Architectures
+----------------------------
+- **Monolithic Architecture:**  
+  - A single, integrated system containing all components (upload, processing, storage).
+  - Characteristics: Tightly coupled, synchronous operations, continuous resource consumption.
+  - Drawbacks: Failure in one component affects the entire system; scaling requires vertical increases; high cost due to always-on resources.
+
+- **Tiered Architecture:**  
+  - Breaks the system into separate layers (tiers) for upload, processing, and management.
+  - Allows vertical scaling of individual tiers.
+  - Drawbacks: Tiers remain coupled through synchronous communication; cannot scale down to zero, which limits cost efficiency.
+
+- **Queue-Based Decoupled Architecture:**  
+  - Introduces a message queue between tiers to decouple communication.
+  - In the example, the upload component stores the video in S3 and adds a message to a queue instead of directly calling the processing tier.
+  - Benefits: Enables asynchronous processing, independent scaling, and even scaling to zero when idle.
+  - Mechanism: An auto scaling group adjusts the number of processing instances based on the queue length.
+
+- **Event-Driven (Microservices) Architecture:**  
+  - Uses microservices where components produce and consume events.
+  - Features an event router/event bus that directs events from producers (e.g., upload service) to consumers (e.g., processing service).
+  - Benefits: Resources are allocated on demand, leading to high scalability and cost efficiency; components operate independently.
+
+3. Key Concepts
+---------------
+- **Asynchronous Communication:**  
+  - Components process events only when they occur rather than continuously polling.
+  
+- **Decoupling:**  
+  - Using queues and event routers isolates components, preventing cascading failures and allowing independent scaling.
+  
+- **Resource Efficiency:**  
+  - Mature event-driven systems consume resources only while processing events, reducing idle costs.
+
+4. Exam Power-Up Points
+------------------------
+- **Monolithic Architecture:**  
+  - Understand its limitations: tight coupling, synchronous operations, and constant resource usage.
+  
+- **Tiered Architecture:**  
+  - Know that while vertical scaling is possible, synchronous communication means components remain interdependent.
+  
+- **Queue-Based Decoupled Architecture:**  
+  - Remember that introducing queues decouples components, enabling asynchronous processing and dynamic scaling (even to zero).
+  
+- **Event-Driven Architecture:**  
+  - Focus on the role of the event router/event bus that routes events, ensuring resources are used only when needed.
+- These distinctions and their trade-offs are critical exam topics for designing resilient, scalable systems.
+
+5. Architecture Comparison Table
+--------------------------------
+| Architecture                | Characteristics                                          | Advantages                                             | Disadvantages                                                  |
+|-----------------------------|----------------------------------------------------------|--------------------------------------------------------|----------------------------------------------------------------|
+| Monolithic                  | Single codebase; tightly coupled components              | Simple deployment                                      | Fails as a whole; limited scaling; always consuming resources    |
+| Tiered                      | Separated layers with synchronous communication          | Independent vertical scaling of tiers                  | Still coupled; cannot scale to zero; potential cascading failures  |
+| Queue-Based Decoupled       | Uses queues for asynchronous, decoupled communication    | Enables asynchronous processing; scales independently  | Requires managing queues; introduces eventual consistency       |
+| Event-Driven (Microservices)| Microservices with event router/event bus for events     | Highly scalable; resource-efficient; flexible design   | Increased architectural complexity; requires robust event management |
+
+6. Conclusion
+-------------
+- Event driven architectures efficiently handle operations by processing events as they occur.
+- Decoupling via queues and event routers reduces interdependencies and resource usage.
+- A deep understanding of these models is essential for designing scalable, cost-effective solutions.

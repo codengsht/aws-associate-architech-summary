@@ -1,0 +1,63 @@
+========================================
+12-AWS Lambda - PART 3
+========================================
+
+1. Introduction
+---------------
+- This lesson covers advanced topics related to AWS Lambda including invocation methods, versions, and startup times.
+- Understanding these concepts is essential for designing and troubleshooting Lambda functions, and they are frequently tested on the exam.
+
+2. Lambda Invocation Methods
+-----------------------------
+- **Synchronous Invocation:**
+  - A client (via CLI, API, or API Gateway) invokes the Lambda function and waits for a response.
+  - The caller handles errors and retries, as the function executes once and returns success or failure immediately.
+
+- **Asynchronous Invocation:**
+  - AWS services (e.g., S3 events) trigger Lambda functions without waiting for a response.
+  - The caller “forgets” about the execution after sending the event.
+  - Automatic retries are configured (typically 0–2 times) and failed events can be sent to a dead-letter queue.
+  - *Key Requirement:* The function must be idempotent—its outcome remains the same regardless of how many times it is executed.
+
+- **Event Source Mapping:**
+  - Used for sources that require polling (e.g., Kinesis streams, DynamoDB streams, SQS).
+  - A hidden component polls the data source, batches events, and sends them to Lambda.
+  - The Lambda function processes batches of events, and proper permissions are needed since the execution role is used to retrieve data from the source.
+
+- **Invocation Methods Comparison Table:**
+
+| Invocation Method     | Characteristics                                               | Use Cases                                      | Key Considerations                                                     |
+|-----------------------|---------------------------------------------------------------|------------------------------------------------|----------------------------------------------------------------------|
+| Synchronous           | Caller waits for response; immediate error handling           | Direct CLI/API calls; API Gateway integrations | Client must manage retries; errors handled at the caller             |
+| Asynchronous          | Caller does not wait; event-driven; automatic retries          | S3 events, other AWS service triggers           | Function must be idempotent; failed events can go to a dead-letter queue|
+| Event Source Mapping  | Polls data sources; processes batches of events                | Kinesis/DynamoDB streams, SQS processing          | Execution role must have permissions to access the data source; batch size management is critical |
+
+3. Lambda Versions and Aliases
+-------------------------------
+- **Versions:**
+  - A version includes the Lambda code and its configuration (environment variables, resource settings, etc.).
+  - Published versions are immutable and have unique ARNs.
+- **Aliases:**
+  - Aliases (e.g., Dev, Stage, Prod) point to specific function versions.
+  - They are mutable, allowing flexible management of deployments and traffic routing.
+
+4. Lambda Startup Times and Performance Optimization
+------------------------------------------------------
+- **Cold Start:**
+  - Occurs when an execution context is created (provisioning hardware, downloading runtime and deployment package).
+  - Can add hundreds of milliseconds of latency, especially noticeable in interactive use cases.
+- **Warm Start:**
+  - When an existing execution context is reused for subsequent invocations, resulting in much lower latency.
+- **Provisioned Concurrency:**
+  - Allows pre-provisioning of execution contexts to mitigate cold start delays during high-load periods.
+- **Optimization Techniques:**
+  - Declare resources (like database connections) outside of the handler to enable reuse across invocations.
+  - Ensure functions can operate correctly whether starting fresh (cold) or reusing an existing context (warm).
+
+5. Exam Power-Up Points
+------------------------
+- **Invocation Methods:** Know the differences between synchronous, asynchronous, and event source mapping invocations, including their error handling and retry behaviors.
+- **Idempotency:** Understand why idempotent function design is crucial for asynchronous invocations.
+- **Permissions:** For event source mapping, the Lambda execution role must have access permissions for the data source.
+- **Versions & Aliases:** Be familiar with how Lambda versions are immutable and how aliases facilitate deployment management.
+- **Startup Times:** Recognize the impact of cold vs. warm starts and how provisioned concurrency and coding optimizations can improve performance.

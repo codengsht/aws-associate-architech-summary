@@ -1,0 +1,60 @@
+================
+12-AWS Glue 101
+================
+
+1. Introduction
+---------------
+- AWS Glue is a serverless ETL (Extract, Transform, Load) service that simplifies moving and transforming data between various sources and destinations.
+- It is fully managed by AWS, meaning you do not need to provision or manage any underlying compute resources.
+
+2. Core Features
+----------------
+- **ETL Functionality:**  
+  - Extracts data from sources, transforms it using user-defined scripts (typically in Python or Scala), and loads it into target data stores.
+- **Serverless Management:**  
+  - AWS provisions and manages the compute resources, so you pay only for what you use.
+- **Data Catalog:**  
+  - A centralized metadata repository that stores information about data sources (schemas, structure, etc.) across your organization.
+  - Helps eliminate data silos by making metadata available to various AWS analytics services.
+
+3. Supported Data Sources and Targets
+---------------------------------------
+- **Data Sources:**  
+  - Amazon S3, Amazon RDS, DynamoDB, JDBC-compatible databases (including Amazon Redshift), Kinesis Data Streams, Apache Kafka.
+- **Data Targets:**  
+  - Amazon S3, Amazon RDS, and any JDBC-compatible databases.
+
+4. AWS Glue Data Catalog
+-------------------------
+- **Purpose:**  
+  - Stores persistent metadata about data sources within a region, making it accessible across the organization.
+- **Data Discovery:**  
+  - Uses crawlers to scan data stores, infer schema details, and populate the Data Catalog.
+- **Benefits:**  
+  - Improves data visibility and accessibility for services like Athena, Redshift Spectrum, EMR, and AWS Lake Formation.
+  - Centralizes metadata to avoid isolated data silos within an organization.
+
+5. Glue Jobs (ETL Workflows)
+----------------------------
+- **Definition:**  
+  - Glue jobs are ETL tasks that extract data from a source, perform transformations, and load the data into a destination.
+- **Execution:**  
+  - Jobs can be triggered manually, via scheduled events, or event-driven (e.g., through EventBridge).
+- **Advantages:**  
+  - Being serverless, Glue jobs scale automatically and are cost-effective, as you only pay for the processing time used.
+- **Use Cases:**  
+  - Data restructuring, data enrichment, and moving data between various databases or data lakes without the overhead of managing infrastructure.
+
+6. Comparison: AWS Glue vs. AWS Data Pipeline
+-----------------------------------------------
+| Aspect               | AWS Glue                                 | AWS Data Pipeline                           |
+|----------------------|------------------------------------------|---------------------------------------------|
+| Management           | Fully serverless, managed by AWS         | Requires customer-managed compute (e.g., EMR clusters)  |
+| Cost Efficiency      | Pay-as-you-go, cost-effective for ETL tasks | Higher operational overhead due to self-managed infrastructure |
+| Use Case             | Ad hoc ETL, centralized data catalog     | More complex workflows needing custom compute setups  |
+
+7. Conclusion
+-------------
+- AWS Glue offers a modern, serverless solution for ETL processes by combining robust data transformation capabilities with a centralized Data Catalog.
+- It simplifies the integration and analysis of data across multiple AWS services, making it a preferred choice for cost-effective and scalable data workflows.
+- For exam scenarios, focus on its key benefits: serverless ETL, centralized metadata management, and its contrast with AWS Data Pipeline for custom compute requirements.

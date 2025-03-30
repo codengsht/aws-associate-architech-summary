@@ -1,0 +1,58 @@
+========================================
+14-VPC Endpoints (Gateway)
+========================================
+
+1. Overview
+-----------
+- **Purpose:**  
+  - Provide private connectivity from within a VPC to supported AWS services (currently S3 and DynamoDB) without the need for public IP addresses, NAT gateways, or Internet gateways.
+- **Key Benefit:**  
+  - Allow private instances to access public services securely and privately.
+
+2. Key Concepts
+---------------
+- **Private Access:**  
+  - Enables instances with private IP addresses to communicate with AWS services without exposing them to the public Internet.
+- **Logical Gateway Object:**  
+  - A gateway endpoint is a VPC-level construct, not tied to a specific subnet or Availability Zone.
+- **Prefix List:**  
+  - When associated with one or more subnets, a prefix list (representing the IP ranges of the target service) is added to the subnet route tables, directing traffic to the gateway endpoint.
+
+3. Architecture & Operation
+----------------------------
+- **How It Works:**  
+  - Traffic destined for the supported service (e.g., S3) is routed via the gateway endpoint as defined by the prefix list in the route table.
+  - This effectively creates a “tunnel” for private communication between VPC resources and the AWS service.
+- **High Availability:**  
+  - Gateway endpoints are highly available across all Availability Zones within a region.
+- **Regional Limitation:**  
+  - They only provide access to AWS services within the same region.
+
+4. Configuration
+----------------
+- **Route Table Integration:**  
+  - When you create a gateway endpoint, you specify one or more subnets. AWS automatically updates the route tables for those subnets by adding a route (destination ::/0 for IPv6 or 0.0.0.0/0 for IPv4 when applicable) that targets the endpoint’s prefix list.
+- **Endpoint Policies:**  
+  - You can attach an endpoint policy to restrict which operations or which S3 buckets/DynamoDB tables the endpoint can access.
+  - This is useful for enforcing strict access control in highly secure environments.
+
+
+
+
+
+
+5. Use Cases
+------------
+- **Private-Only VPC Access:**  
+  - Allow private instances to securely access S3 (or DynamoDB) without exposing them to the Internet.
+- **Enhanced Security:**  
+  - Combine with bucket policies to ensure that only traffic via the specific gateway endpoint is accepted, making your S3 buckets effectively private.
+
+6. Exam Key Points
+------------------
+- Gateway endpoints are VPC-level objects used for private access to supported AWS services.
+- They are implemented by adding prefix list entries to the route tables of associated subnets.
+- They are highly available and operate across all Availability Zones in the region.
+- They support endpoint policies for granular access control.
+- They are limited to services in the same region and cannot be used for cross-region access.
+- They differ from interface endpoints (covered separately) in terms of how they are deployed and their use cases.

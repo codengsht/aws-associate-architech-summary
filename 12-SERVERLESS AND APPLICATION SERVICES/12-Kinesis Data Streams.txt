@@ -1,0 +1,59 @@
+=======================
+12-Kinesis Data Streams
+=======================
+
+1. Introduction
+---------------
+- Kinesis Data Streams is a fully managed, scalable streaming service designed for high-throughput data ingestion.
+- It is often confused with SQS, but the two serve different use cases: Kinesis is built for continuous, high-volume data ingestion, while SQS is geared toward decoupling application components with asynchronous messaging.
+
+2. Core Concepts and Features
+------------------------------
+- **Data Ingestion & Streaming:**
+  - Producers (e.g., EC2 instances, on-premises servers, mobile devices, IoT sensors) push data into a stream.
+  - The stream is the primary entity that collects and holds incoming data.
+  
+- **Persistence:**
+  - Default rolling data retention window is 24 hours.
+  - The retention period can be increased (up to 365 days for an additional cost) for long-term data storage.
+
+- **Multiple Consumers:**
+  - Multiple consumers can read from the same stream, accessing data with various granularities (per second, per minute, per hour).
+
+3. Architecture and Scaling
+---------------------------
+- **Shard Architecture:**
+  - A stream is divided into shards; each shard provides:
+    - **Ingestion Capacity:** 1 MB per second.
+    - **Consumption Capacity:** 2 MB per second.
+  - As throughput increases, additional shards are added, with performance scaling linearly with the number of shards.
+  
+- **Data Records:**
+  - Data is stored in records, with each record having a maximum size of 1 MB.
+  
+- **Related Service – Kinesis Data Firehose:**
+  - Kinesis Data Firehose connects to a stream and automatically delivers data to other AWS services (e.g., S3, EMR) for further processing or long-term storage.
+
+4. Use Cases
+------------
+- Real-time analytics and monitoring.
+- Application clickstreams or mobile clickstreams.
+- IoT sensor data ingestion.
+- Any scenario requiring high-scale, near real-time data processing.
+
+5. Comparison: Kinesis Data Streams vs. SQS
+--------------------------------------------
+| Aspect                    | Kinesis Data Streams                                        | SQS                                     |
+|---------------------------|-------------------------------------------------------------|-----------------------------------------|
+| Primary Purpose           | High-throughput data ingestion and real-time analytics      | Decoupling components; asynchronous messaging |
+| Message Persistence       | Rolling window retention (default 24 hours, extendable)       | No persistence; messages are deleted after processing |
+| Data Throughput           | Designed for high-volume, continuous data streams           | Typically low-volume; single or small group of producers |
+| Consumers                 | Multiple consumers can read at different rates               | Generally one or a few consumers per queue  |
+| Ordering                  | Maintains order within a shard                              | No inherent ordering (unless using FIFO queues) |
+| Scaling                   | Scales linearly by adding shards                           | Scales based on number of requests and workers   |
+
+6. Conclusion
+-------------
+- AWS Kinesis Data Streams is ideal for scenarios requiring high-scale, real-time data ingestion and processing.
+- Its shard-based architecture enables linear scaling and flexible data retention, making it well suited for analytics, monitoring, and processing of massive data streams.
+- When choosing between Kinesis and SQS on the exam, consider whether the use case involves high-throughput data ingestion (Kinesis) or decoupled, asynchronous communication between application components (SQS).
