@@ -2,72 +2,24 @@
 12-SQS Standard vs FIFO Queues
 ========================================
 
-1. Introduction
----------------
-- SQS is a fully managed message queue service provided by AWS.
-- It is a public service accessible via AWS public endpoints (and from VPCs with proper connectivity).
-- Designed for high availability, durability, and performance within an AWS region.
+1. Overview:
+   - **Standard Queues:** 
+     - Think of these as multilane highways.
+     - Designed for high throughput and decoupling application components.
+   - **FIFO Queues:** 
+     - Think of these as single-lane highways.
+     - Designed for preserving strict ordering and exactly-once processing.
 
-2. Types of Queues
-------------------
-- **Standard Queues:**
-  - Provide at-least-once delivery.
-  - Do not guarantee message order.
-  - Scale nearly infinitely (multilane highway analogy).
-  
-- **FIFO Queues:**
-  - Guarantee exactly-once processing and maintain strict first-in-first-out order.
-  - Limited performance (3000 messages per second with batching; 300 messages per second without batching).
-  - Best suited for applications where message order is critical.
+2. Performance:
+   - **Standard Queues:**
+     - Scale virtually without throughput limitations.
+     - Provide high transaction rates, handling a near-infinite number of messages.
+   - **FIFO Queues:**
+     - Limited throughput: approximately 300 messages per second without batching; up to 3000 messages per second with batching.
+     - (Note: High-throughput mode is available in preview for FIFO queues.)
 
-| Queue Type | Delivery Guarantee | Ordering Guarantee          | Performance Limits                                             |
-|------------|--------------------|-----------------------------|---------------------------------------------------------------|
-| Standard   | At least once      | No guarantee                | Scales nearly infinitely; ideal for high-volume workloads      |
-| FIFO       | Exactly once       | Strict first-in-first-out   | Up to 3000 msg/sec with batching; 300 msg/sec without batching   |
-
-3. Message Handling
--------------------
-- **Message Size:**  
-  - Up to 256 KB per message. For larger payloads, store data in S3 and send a reference.
-- **Visibility Timeout:**  
-  - When a message is polled, it becomes invisible for a set period (visibility timeout) to allow processing.
-  - If not deleted within the timeout, the message reappears for processing by another client.
-- **Dead-Letter Queues:**  
-  - Used to isolate messages that fail to process after a configurable number of attempts.
-
-4. Polling Methods
-------------------
-- **Short Polling:**
-  - Returns immediately with zero or more messages.
-  - Each poll is a separate request even if no messages are available (less cost effective).
-- **Long Polling:**
-  - Waits up to 20 seconds for messages to arrive.
-  - Reduces the number of empty responses, saving costs and lowering request rates.
-  - Recommended for efficient message retrieval.
-
-5. Worker Pool & Fan-Out Architectures
-----------------------------------------
-- **Worker Pool:**
-  - Worker instances (e.g., in an Auto Scaling group) poll the queue for messages.
-  - Workers process tasks (e.g., download a master video from S3, transcode it, and store results) and then delete the message.
-  - Auto Scaling groups can scale out based on queue length, and scale in as the workload decreases.
-  
-- **Fan-Out Architecture:**
-  - A single event (e.g., master video upload) can be published to an SNS topic.
-  - Multiple SQS queues subscribed to the SNS topic allow different processing workflows (e.g., transcoding into various resolutions) to scale independently.
-
-6. Security & Encryption
--------------------------
-- **Encryption at Rest:**
-  - SQS supports server-side encryption (SSE) using AWS KMS.
-- **Encryption in Transit:**
-  - Data is encrypted in transit by default.
-- **Access Control:**
-  - Managed via IAM policies and SQS (queue) policies.
-  - Policies can restrict access to the queue for the same account or external accounts.
-
-7. Conclusion
--------------
-- SQS decouples application components, allowing them to scale independently.
-- Its design supports fault tolerance, cost efficiency (via long polling), and flexible integration into various architectures.
-- Understanding SQS concepts—especially visibility timeout, polling methods, and the differences between Standard and FIFO queues—is critical for designing robust AWS applications.
+3. Message Ordering:
+   - **Standard Queues:**
+     - Best-effort ordering; messages may be delivered out of order.
+   - **FIFO Queues:**
+     - Guarantee strict first-in, first-out
