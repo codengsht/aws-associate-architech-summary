@@ -159,7 +159,7 @@ I want you to:
 
 Summarize the key points of the lecture, focusing on the main topics discussed, essential details, and any conclusions drawn. Organize the summary in a structured format with headings for each major section. Especially note exam power ups points. 
 
-Additional to summary, ceate tables where deemed appropriate if there is a comparison or etc.. 
+Additional to summary, if creating tables more explainatory for instance the is a comparison or etc.. create tables. 
 For the table follow this structure:
 If create a table formatted with pipes (|) and dashes (-), adjust the alignment of the table as follows:
 	1.	Identify the Columns:

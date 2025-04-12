@@ -1,0 +1,75 @@
+========================
+12-AWS Lambda - PART1
+========================
+
+1. Introduction
+---------------
+- The lecture explains what event driven architecture is and why it matters for solutions architects.
+- It emphasizes the need to understand various system architectures in order to design solutions that meet specific business requirements.
+
+2. Overview of Architectures
+----------------------------
+- **Monolithic Architecture:**
+  - A single, unified system where all components (upload, processing, storage) are bundled together.
+  - Components are tightly coupled and always running.
+  
+- **Tiered Architecture:**
+  - The application is divided into layers (tiers) such as upload, processing, and storage.
+  - Tiers communicate synchronously, meaning if one fails, others may be affected.
+  - Each tier can be scaled vertically but remains interdependent.
+  
+- **Queue-Based Decoupled Architecture:**
+  - Introduces queues between components to decouple them.
+  - For example, after a video upload, a message is placed on a queue instead of directly invoking processing.
+  - This allows asynchronous processing and independent scaling (including scaling down to zero when idle).
+  
+- **Event-Driven (Microservices) Architecture:**
+  - Utilizes microservices that both produce and consume events.
+  - An event router (or event bus) directs events from producers (e.g., upload service) to consumers (e.g., processing service).
+  - This design activates resources only when needed, enhancing scalability and resource efficiency.
+
+3. Detailed Discussion
+----------------------
+- **Monolithic Architecture:**
+  - *Characteristics:* Single codebase; all functions (upload, processing, storage) operate together.
+  - *Advantages:* Simplified deployment.
+  - *Disadvantages:* Tightly coupled (failure in one component affects the whole system); limited scaling options (vertical scaling only); always consumes resources regardless of load.
+  
+- **Tiered Architecture:**
+  - *Characteristics:* Separated application tiers that communicate synchronously.
+  - *Advantages:* Each tier can be scaled vertically on its own.
+  - *Disadvantages:* Continued coupling between tiers; cannot scale to zero; synchronous communication may lead to cascading failures if one tier underperforms.
+  
+- **Queue-Based Decoupled Architecture:**
+  - *Characteristics:* Uses queues to decouple communication between components (e.g., upload and processing).
+  - *Advantages:* Enables horizontal scaling and even scaling to zero when idle; improves system availability by decoupling dependencies.
+  - *Disadvantages:* Requires managing additional queue infrastructure; introduces eventual consistency.
+  
+- **Event-Driven (Microservices) Architecture:**
+  - *Characteristics:* Small, self-contained microservices that produce and consume events; an event router/event bus manages event flow.
+  - *Advantages:* Highly scalable and resource efficient; decoupled and asynchronous, meaning resources are used only when events occur.
+  - *Disadvantages:* Increased architectural complexity; requires robust event routing and management mechanisms.
+
+4. Exam Power-Up Points
+------------------------
+- Understand the key differences among monolithic, tiered, queue-based decoupled, and event-driven architectures.
+- **Monolithic:** Know its drawbacks—tight coupling, synchronous operations, and constant resource usage.
+- **Tiered:** Recognize that although tiers allow for independent vertical scaling, they remain dependent due to synchronous communication.
+- **Queue-Based Decoupled:** Remember that decoupling via queues enables asynchronous processing and dynamic scaling, even down to zero.
+- **Event-Driven (Microservices):** Focus on the role of an event router/event bus in efficiently directing events, leading to on-demand resource utilization.
+- These points are often tested in exams to evaluate your understanding of scalable and resilient system design.
+
+5. Architecture Comparison Table
+--------------------------------
+| Architecture                   | Characteristics                                                                                         | Advantages                                                             | Disadvantages                                                               |
+|--------------------------------|---------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| Monolithic                     | Single codebase; tightly coupled components (upload, processing, store/manage)                          | Simple deployment                                                      | Fails together; difficult scaling (vertical only); always running, resource heavy |
+| Tiered                         | Separated tiers (upload, processing, store/manage) with synchronous communication                        | Independent vertical scaling for tiers                                 | Still coupled; cannot scale down to zero; synchronous dependency may cause cascading failures |
+| Queue-based Decoupled          | Uses queues to decouple upload and processing; asynchronous communication                                | Decoupled scaling; can scale horizontally; processing tier can scale to zero | Requires management of queues; eventual consistency                         |
+| Event-driven (Microservices)   | Microservices produce and consume events; uses an event router/event bus                                 | Highly scalable; resource efficient; decoupled; asynchronous             | Can be complex; requires robust event routing and management                 |
+
+6. Conclusion
+-------------
+- The lecture outlines an evolution from monolithic systems to modern, event-driven architectures.
+- It highlights how decoupling components—through tiers, queues, or microservices—improves scalability, resilience, and cost efficiency.
+- A deep understanding of these architectures is crucial for designing solutions that are both flexible and capable of meeting dynamic business requirements.

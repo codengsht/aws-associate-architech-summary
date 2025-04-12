@@ -1,0 +1,42 @@
+========================================
+14-Egress-Only Internet gateway
+========================================
+
+1. Overview
+-----------
+- An egress-only internet gateway is used exclusively for IPv6 traffic in a VPC.
+- It allows IPv6-enabled instances to initiate outbound connections to the Internet and receive response traffic.
+- It blocks any unsolicited inbound traffic from the Internet.
+
+2. IPv4 vs. IPv6 Context
+------------------------
+- **IPv4:**  
+  - Private IPv4 addresses require a NAT gateway for outbound Internet access.
+- **IPv6:**  
+  - All IPv6 addresses in AWS are publicly routable.
+  - An egress-only internet gateway provides a mechanism similar to a NAT gateway for IPv6, enabling outbound connectivity while preventing inbound connections.
+
+3. Key Functionality
+--------------------
+- **Outbound-Only Access:**  
+  - Permits instances to connect out and receive responses.
+- **Security:**  
+  - Prevents external systems from initiating connections to your IPv6-enabled instances.
+- **High Availability:**  
+  - Like standard internet gateways, egress-only gateways are highly available and scale automatically.
+
+4. Configuration
+----------------
+- **Creation & Attachment:**  
+  - Create the egress-only internet gateway and attach it to your VPC.
+- **Routing:**  
+  - Update the subnet route tables for IPv6 by adding a default route (destination ::/0) that points to the egress-only internet gateway.
+- **Use Case:**  
+  - Ideal for workloads that require IPv6 connectivity for outbound requests (e.g., software updates, external API calls) without exposing instances to inbound Internet traffic.
+
+5. Key Exam Points
+------------------
+- Understand that egress-only internet gateways are specific to IPv6.
+- Know that they allow outbound traffic while blocking unsolicited inbound connections.
+- Recognize that configuration involves attaching the gateway to the VPC and setting the appropriate IPv6 default route (::/0) in the route table.
+- Remember: For IPv6 in AWS, if you need NAT-like functionality (outbound-only), you use an egress-only internet gateway.

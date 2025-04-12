@@ -1,0 +1,55 @@
+=========================
+12-Kinesis Data Firehose
+=========================
+
+1. Introduction
+---------------
+- Kinesis Data Firehose is part of the Kinesis family designed to deliver streaming data to various AWS destinations.
+- Unlike Kinesis Data Streams, Firehose is a near real-time service with built-in buffering, not a true real-time processing tool.
+
+2. Core Features & Functionality
+----------------------------------
+- **Data Ingestion & Delivery:**
+  - Accepts data from producers directly or via Kinesis Data Streams.
+  - Buffers incoming data until either a threshold of 1 MB or a time limit (default 60 seconds) is met before delivery.
+  - Provides near real-time delivery (latency around 60 seconds), not sub-second real time.
+
+- **Data Transformation:**
+  - Supports on-the-fly data transformation using AWS Lambda.
+  - Transformation can add extra latency; users can optionally back up the unmodified data.
+
+- **Cost Model:**
+  - Operates on a pay-as-you-go pricing model based on the data volume processed.
+
+3. Supported Destinations
+-------------------------
+- Firehose can deliver data directly to:
+  - **Amazon S3:** For persistent, long-term storage.
+  - **Amazon Redshift:** Delivered via an intermediate S3 bucket and copy command.
+  - **Amazon Elasticsearch Service:** For search and analytics.
+  - **Splunk:** For log analysis and monitoring.
+  - **HTTP Endpoints:** To integrate with third-party services.
+
+| Destination Type   | Notes                                                         |
+|--------------------|---------------------------------------------------------------|
+| Amazon S3          | Primary storage destination; persists data beyond streaming window |
+| Amazon Redshift    | Data is first buffered in S3, then copied into Redshift        |
+| Amazon Elasticsearch| For real-time search and analytics                           |
+| Splunk             | Direct integration for log and event analysis                |
+| HTTP Endpoints     | Enables integration with external systems via webhooks        |
+
+4. Use Cases & Considerations
+-----------------------------
+- **Ideal for:**
+  - Persisting streaming data beyond the transient window of Kinesis Data Streams.
+  - Loading data into data lakes, warehouses, or analytics platforms.
+  - Scenarios where a slight delay (near real time) is acceptable.
+- **Key Consideration:**
+  - Firehose is not suitable when true real-time processing (e.g., sub-200ms latency) is required.
+  - Choose Kinesis Data Streams if immediate data availability is critical, then process with Lambda as needed.
+
+5. Conclusion
+-------------
+- Kinesis Data Firehose simplifies the process of capturing and delivering large volumes of streaming data to various AWS services.
+- Its near real-time buffering and automatic scaling make it a cost-effective solution for data persistence and analytics.
+- Remember: It trades off real-time immediacy for ease of use and managed delivery, making it ideal for many batch-oriented and analytics applications.

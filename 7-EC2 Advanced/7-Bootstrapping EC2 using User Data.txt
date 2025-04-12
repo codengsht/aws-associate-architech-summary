@@ -1,62 +1,75 @@
 ==============================================
-6-Elastic Kubernetes Service (EKS) 101
+7-Bootstrapping EC2 using User Data
 ==============================================
 
-Overview:
-- Provides a high-level introduction to AWS’s managed Kubernetes service (EKS).
-- Assumes prior basic knowledge of Kubernetes from an earlier lesson.
-- Emphasizes that further detailed videos and demos will follow for deeper understanding.
+1. Introduction
+---------------
+- The lecture introduces EC2 bootstrapping as a key feature in advanced EC2 operations.
+- Focus is placed on automating instance configuration at launch, which is crucial for efficient solutions architecture.
 
-EKS Definition & Purpose:
-- EKS is AWS’s managed implementation of Kubernetes.
-- It leverages the native Kubernetes system, extended to integrate seamlessly within AWS.
-- Designed to be cloud agnostic, supporting multi-cloud or hybrid scenarios without vendor lock-in.
+2. What is EC2 Bootstrapping?
+-----------------------------
+- Bootstrapping allows scripts or configuration steps to run when an EC2 instance is first launched.
+- It transitions an instance from its default state (as provided by an AMI) into a preconfigured, service-ready state.
+- The process is not unique to EC2; it’s a general automation term used to let systems self-configure.
 
-Deployment & Integration:
-- EKS can be deployed in multiple modes:
-  - Within AWS itself (standard deployment).
-  - On AWS Outposts (a mini version of AWS on-premises).
-  - In hybrid scenarios via “EKS Anywhere,” allowing clusters on-premises or other environments.
-- The Kubernetes control plane is fully managed by AWS, scaling automatically across multiple availability zones.
-- Integrates with other AWS services such as:
-  - Elastic Container Registry (ECR) for container images.
-  - Elastic Load Balancing for traffic distribution.
-  - IAM for security and access management.
-  - VPCs for networking.
-  - ETCD is used as the key-value store, managed and distributed by AWS.
+3. How Bootstrapping Works in EC2
+---------------------------------
+- **User Data Injection:**  
+  - Bootstrapping is enabled through EC2 user data, which is passed to the instance in a similar manner as metadata.
+  - The metadata IP (169.254.169.254) is used to access this data.
+- **Execution Process:**  
+  - The instance’s operating system executes the provided user data as a script at launch.
+  - It runs only once during the initial launch; any changes made afterward (even if the instance is restarted) are not executed again.
+- **Role of the Operating System:**  
+  - EC2 itself does not interpret or validate the user data. The responsibility to correctly process and execute it lies entirely with the instance’s OS.
 
-Node Management Options:
-- EKS supports three approaches for managing worker nodes:
-  - **Self Managed Nodes:** 
-    - User provisions and manages EC2 instances.
-    - Standard EC2 pricing applies.
-  - **Managed Node Groups:** 
-    - AWS handles provisioning and lifecycle management of EC2 instances.
-    - Simplifies operations and scaling.
-  - **Fargate:**
-    - Runs pods without the need to manage underlying EC2 instances.
-    - Offers a serverless experience without worrying about instance types or scaling.
+4. Important Considerations and Limitations
+--------------------------------------------
+- **One-Time Execution:**  
+  - User data is executed only during the initial launch of the instance.
+- **Data Opaqueness:**  
+  - EC2 treats user data as an opaque block without validating its content.
+- **Security Concerns:**  
+  - User data is not secure; it should not be used to pass long-term credentials.
+- **Size Limitation:**  
+  - The user data is limited to 16 KB. For larger configurations, the script must download additional data.
+- **Post-Launch Modification:**  
+  - Although user data can be modified after shutdown, modifications do not trigger re-execution.
 
-Comparison of Node Management Options:
-| Node Type           | Provisioning               | Management                 | Notes                                                        |
-|---------------------|----------------------------|----------------------------|--------------------------------------------------------------|
-| Self Managed Nodes  | User-provisioned EC2       | User-managed lifecycle     | Standard EC2 pricing; requires manual management             |
-| Managed Node Groups | AWS-provisioned EC2        | AWS-managed lifecycle      | Simplifies management and scaling                            |
-| Fargate             | No instance provisioning   | Fully managed serverless   | No need to select instance type; optimized for pod running     |
+5. Boot Time to Service Time Metric
+-------------------------------------
+- **Definition:**  
+  - This metric measures how quickly an instance is ready for service after launch.
+- **Factors Influencing the Metric:**  
+  - Time taken for provisioning, software installations, and configuration updates.
+- **Impact of Bootstrapping:**  
+  - Automating post-launch configuration through bootstrapping reduces the time required to bring an instance into service.
+  - Manual configurations can significantly delay service readiness.
 
-Storage & Persistence:
-- By default, Kubernetes storage is ephemeral.
-- Persistent storage for EKS can be provisioned using AWS services like EBS, EFS, and FSx.
+6. Best Practices and Exam Power-Ups Points
+---------------------------------------------
+- **Exam-Focused Reminders:**  
+  - Remember that user data is executed only once at launch and is used solely for initial configuration.
+  - Understand the implications of misconfigured user data, which can lead to a running instance that isn’t properly configured.
+  - Be aware of security best practices—avoid passing sensitive long-term credentials via user data.
+- **Optimizing Instance Setup:**  
+  - **AMI Baking vs. Bootstrapping:**  
+    - AMI Baking preloads heavy installation tasks into an AMI, reducing the post-launch configuration time.
+    - Bootstrapping provides flexibility for final configuration steps.
+  - **Combined Approach:**  
+    - The optimal strategy often involves baking the 90% of time-intensive installations into the AMI and using bootstrapping for the remaining 10% of configurations.
 
-EKS Architecture Overview:
-- Typically involves two VPCs:
-  - An AWS-managed VPC hosting the EKS control plane across multiple availability zones.
-  - A customer-managed VPC hosting the worker nodes.
-- Communication between the control plane and worker nodes occurs via:
-  - Elastic Network Interfaces (ENIs) injected into the customer VPC.
-  - Optionally, a public control plane endpoint for administrative access.
-- Ingress configurations in the customer VPC facilitate consumption of EKS services.
+7. Comparison of Configuration Methods
+----------------------------------------
+| Method             | Advantages                                                           | Disadvantages                                                    | Usage                                                                   |
+|--------------------|----------------------------------------------------------------------|------------------------------------------------------------------|-------------------------------------------------------------------------|
+| AMI Baking         | Pre-configured with heavy installation tasks, reduces post-launch time | Less flexible; configurations are baked into the image           | For tasks that are time intensive and rarely change                     |
+| Bootstrapping      | Flexible post-launch configuration automation                        | Executed only once; risk of misconfiguration and security concerns | For post-launch configuration and final setup                           |
+| Combined Approach  | Optimizes boot time and flexibility by combining both methods        | Increased complexity in management                               | Bake heavy tasks into the AMI and use bootstrapping for final configuration|
 
-Conclusion:
-- The session provides a concise, high-level overview of EKS’s core components and deployment strategies.
-- Further in-depth sessions and demos will expand on these concepts to provide hands-on experience with EKS.
+8. Conclusion
+-------------
+- EC2 bootstrapping is a powerful tool for automating instance configuration.
+- Understanding its mechanisms, limitations, and best practices is essential for efficient cloud architecture.
+- The lecture prepares you for practical demonstrations and emphasizes key points that are frequently tested in exams.

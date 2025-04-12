@@ -1,0 +1,62 @@
+=================
+12-Amazon MQ 101
+=================
+
+1. Introduction
+---------------
+- Amazon MQ is a managed message broker service based on Apache ActiveMQ.
+- It supports industry-standard protocols such as JMS, AMQP, MQTT, OpenWire, and STOMP.
+- It offers both queue and topic-based messaging, bridging the gap between traditional on-premises systems and AWS cloud messaging.
+
+2. Positioning & Comparison with SNS/SQS
+-----------------------------------------
+- **SNS (Simple Notification Service):**
+  - Provides one-to-many messaging via topics.
+  - Operates as a public AWS service.
+- **SQS (Simple Queue Service):**
+  - Provides one-to-one messaging via queues.
+  - Operates as a public AWS service.
+- **Amazon MQ:**
+  - Uses open standards to support both queues and topics within a single broker.
+  - Ideal for migrating existing on-premises messaging systems without changing applications.
+  - Runs within a VPC and requires private networking (e.g., VPN or Direct Connect) for access.
+
+3. Core Features
+----------------
+- **Protocol Support:**
+  - Supports JMS, AMQP, MQTT, OpenWire, and STOMP.
+- **Messaging Models:**
+  - Provides both one-to-one (queues) and one-to-many (topics) messaging in one solution.
+- **Managed Service:**
+  - AWS manages the underlying ActiveMQ broker servers.
+  - Can be deployed as a single broker for development or as a highly available pair (primary/standby) across multiple Availability Zones for production.
+
+4. Deployment & Architecture
+-----------------------------
+- **On-Premises Integration:**
+  - Suitable for organizations with existing on-premises messaging systems looking to migrate to AWS with minimal changes.
+  - Enables hybrid deployments where on-premises systems coexist with AWS-managed brokers.
+- **VPC-Based Deployment:**
+  - Unlike SNS and SQS, Amazon MQ runs within a VPC.
+  - Requires a private network connection (VPN or Direct Connect) between on-premises environments and AWS.
+- **Integration Limitations:**
+  - Amazon MQ lacks native integration with some AWS services (e.g., logging, permissions, and encryption) compared to SNS/SQS.
+
+
+5. Key Considerations for the Exam
+------------------------------------
+- **When to Choose Amazon MQ:**
+  - When migrating an existing messaging system that relies on industry-standard protocols (JMS, AMQP, etc.) without requiring application rework.
+  - For scenarios needing both queues and topics in a hybrid (on-premises and cloud) environment.
+- **When to Use SNS/SQS Instead:**
+  - For new implementations that need seamless AWS integration (e.g., native support for AWS logging, encryption, and API-based interactions).
+- **Networking Requirements:**
+  - Amazon MQ operates within a VPC; ensure proper private connectivity (VPN or Direct Connect) for access.
+  
+6. Conclusion
+-------------
+- Amazon MQ is best suited for organizations looking to migrate or integrate legacy messaging systems with AWS using standard protocols.
+- It fills a niche where SNS and SQS might not suffice due to protocol or integration constraints.
+- For exam scenarios, remember:
+  - Use SNS/SQS for native AWS integrations and when public endpoints are required.
+  - Use Amazon MQ for hybrid, standards-based messaging that leverages existing on-premises systems.

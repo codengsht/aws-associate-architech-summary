@@ -1,0 +1,68 @@
+========================================
+12-Serverless Architecture
+========================================
+
+1. Introduction
+---------------
+- This lesson introduces the concept of servous architecture—a software architectural model common in AWS.
+- The focus is on minimizing self-managed compute resources by leveraging managed services and event-driven, stateless functions.
+
+2. Overview of Servous Architecture
+-------------------------------------
+- **Definition:**
+  - Servous architecture decomposes an application into many small, specialized functions.
+  - It emphasizes using managed services instead of self-managed servers.
+- **Key Inspiration:**
+  - Combines principles from microservices and event-driven architectures.
+  - Aims to eliminate the overhead and risks associated with managing traditional servers.
+
+3. Key Principles of Servous Architecture
+-------------------------------------------
+- **Stateless & Ephemeral Functions:**
+  - Functions run in clean, temporary environments.
+  - They retrieve needed data at runtime, perform their task, and then terminate.
+- **Event-Driven Execution:**
+  - Functions execute only in response to events, ensuring that no compute resources are used when idle.
+- **Consumption-Based Cost Model:**
+  - Billing is based on execution time, reducing costs by consuming compute only when needed.
+- **Use of Managed Services:**
+  - Instead of building custom solutions, servous architecture leverages AWS services such as:
+    - S3 for persistent object storage.
+    - DynamoDB for data storage.
+    - Cognito (with third-party identity providers) for authentication.
+    - Elastic Transcoder for media processing.
+  - This approach minimizes management overhead and risk.
+
+4. Example: Petu Application Architecture
+-------------------------------------------
+- **Client-Side Interaction:**
+  - A user (Julie) accesses a static website hosted on S3.
+  - The website delivers HTML and JavaScript, which run in the user's browser—no self-managed compute is required.
+- **Authentication:**
+  - The application uses third-party identity providers (e.g., Google) for user authentication.
+  - AWS Cognito swaps the third-party identity token for temporary AWS credentials.
+- **Video Upload & Processing:**
+  - Julie uploads a video to an S3 bucket.
+  - The upload triggers an event that invokes a Lambda function to process the video.
+  - The Lambda function initiates jobs in the Elastic Transcoder to generate various video sizes.
+  - Processed videos are saved in a designated S3 bucket, and metadata is stored in DynamoDB.
+- **Content Delivery:**
+  - Another Lambda function retrieves video data from DynamoDB and returns URLs for display.
+- **Managed Services Only:**
+  - Throughout the process, the architecture relies on managed services—there are no self-managed servers or databases.
+
+5. Architecture Comparison Table
+----------------------------------
+| Component       | Traditional Server-Based Architecture       | Servous Architecture                                 |
+|-----------------|---------------------------------------------|------------------------------------------------------|
+| Compute         | Self-managed servers (e.g., EC2)            | Managed services (e.g., Lambda functions)            |
+| Storage         | Self-managed file systems/databases         | Managed services (e.g., S3, DynamoDB)                |
+| Authentication  | Custom/in-house identity management         | Third-party identity providers + Cognito             |
+| Processing      | Always-on, continuously running resources   | Event-driven, on-demand execution                    |
+| Cost & Overhead | High, due to continuous resource usage      | Low, with consumption-based billing                  |
+
+6. Conclusion
+-------------
+- Servous architecture minimizes the management of servers by using small, stateless, event-driven functions.
+- It leverages managed services to build scalable, cost-efficient applications.
+- The Petu application example illustrates how various AWS services integrate to form a fully consumption-based, serverless solution.

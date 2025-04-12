@@ -1,0 +1,78 @@
+========================================
+12-AWS Lambda - PART 2
+========================================
+
+1. Introduction
+---------------
+- This lecture covers advanced topics in AWS Lambda including networking modes, permissions, and monitoring.
+- Emphasis is placed on understanding the architecture and configuration differences, which are critical for exam success.
+
+2. Lambda Networking
+---------------------
+- **Two Networking Modes:**
+  - **Public Networking (Default):**
+    - Lambda functions run in a public AWS environment.
+    - They have direct access to public AWS services (e.g., SQS, DynamoDB, RDS) provided proper authentication and authorization.
+    - Benefits include best performance due to shared hardware and no customer-specific networking configuration.
+    - Limitation: Cannot access private VPC resources unless those services have public addressing.
+  
+  - **VPC Networking:**
+    - Lambda functions can be configured to run inside a VPC.
+    - They obey standard VPC rules (security groups, network ACLs, routing) and can access other VPC resources.
+    - By default, VPC-based functions do not have direct access to the internet or public AWS services.
+      - To enable such access, you must configure VPC endpoints (e.g., gateway endpoints) or attach an internet gateway via a NAT or similar mechanism.
+    - **ENI (Elastic Network Interface) Details:**
+      - Historically, an ENI was created per function invocation, causing performance delays.
+      - The new model creates one ENI per unique combination of subnets and security groups, significantly reducing startup latency.
+
+- **Networking Comparison Table:**
+
+| Networking Mode | Characteristics                                                    | Access                                                | Performance                                            |
+|-----------------|--------------------------------------------------------------------|-------------------------------------------------------|--------------------------------------------------------|
+| Public          | Default mode; runs on shared AWS infrastructure                    | Direct access to public AWS services                  | Optimal performance; minimal networking overhead       |
+| VPC             | Configured within a VPC; follows VPC security and routing rules      | Can access private resources; needs endpoints for public access | Initially had ENI overhead; new model minimizes delays   |
+
+3. Lambda Permissions
+----------------------
+- **Execution Role:**
+  - An IAM role assumed by the Lambda function at runtime.
+  - Grants permissions for the function to interact with other AWS services (e.g., S3, DynamoDB, CloudWatch Logs).
+  - A prebuilt policy exists to ensure the function can log output to CloudWatch Logs.
+
+- **Resource Policy:**
+  - Controls who or what can invoke the Lambda function.
+  - Functions similarly to an S3 bucket policy.
+  - Configurable via CLI/SDK (not through the console UI), and can allow external AWS accounts or services to trigger the function.
+
+- **Permissions Comparison Table:**
+
+| Permissions Aspect | Description                                                                                   | Key Points                                                             |
+|--------------------|-----------------------------------------------------------------------------------------------|------------------------------------------------------------------------|
+| Execution Role     | IAM role assumed by the Lambda function during execution; grants AWS service access.           | Must include CloudWatch Logs permissions; typically set via a prebuilt policy. |
+| Resource Policy    | Policy attached to the Lambda function that controls invocation rights.                       | Managed via CLI/SDK; similar to S3 bucket policies; defines who can trigger the function. |
+
+4. Lambda Monitoring and Logging
+----------------------------------
+- **CloudWatch Logs:**
+  - Captures all log output from Lambda executions, including error messages and execution details.
+  - Essential for troubleshooting functions that aren’t producing expected logs (often due to missing permissions in the execution role).
+
+- **CloudWatch Metrics:**
+  - Stores key performance metrics (invocation counts, success/failure rates, latency, and retries).
+  
+- **AWS X-Ray:**
+  - Provides distributed tracing capabilities.
+  - Useful for tracking the execution path across services, though it may feature only lightly on the exam.
+  - Remember: Terms like “X-Ray” and “distributed tracing” could be exam focal points.
+
+5. Exam Power-Up Points
+------------------------
+- Understand the two Lambda networking modes:
+  - **Public Networking:** Default, high performance, direct public access.
+  - **VPC Networking:** Requires VPC configuration (subnets, security groups, endpoints) and behaves like any other VPC resource.
+- Be aware of the evolution in ENI management that now minimizes performance delays for VPC-based functions.
+- Remember the dual aspects of Lambda permissions:
+  - **Execution Role:** Governs what AWS services the function can access.
+  - **Resource Policy:** Controls who can invoke the function.
+- Ensure that Lambda functions have the necessary permissions to log to CloudWatch Logs to aid in troubleshooting.
+- Note the distinction between logging (CloudWatch Logs) and metrics (CloudWatch Metrics) as well as the additional tracing functionality provided by AWS X-Ray.

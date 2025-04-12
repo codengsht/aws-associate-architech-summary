@@ -1,0 +1,82 @@
+==========================
+12-API Gateway 101
+==========================
+
+1. Introduction
+---------------
+- API Gateway is a fully managed service that enables you to create, publish, secure, and monitor APIs.
+- It serves as the entry point for client applications to communicate with your backend services, whether hosted on AWS, on-premises, or both.
+- It supports multiple API types including HTTP, REST, and WebSocket.
+
+2. Core Functionality & Architecture
+--------------------------------------
+- **API Gateway as an Intermediary:**
+  - Acts as a front door for applications by handling requests and routing them to the appropriate backend integrations.
+  - Manages critical functions such as authorization, validation, transformation, throttling, and caching.
+
+- **Three Phases of API Interaction:**
+  - **Request Phase:**  
+    - Authenticates, validates, and transforms the incoming client request.
+  - **Integration Phase:**  
+    - Routes the transformed request to backend services such as HTTP endpoints, Lambda functions, or AWS services (e.g., DynamoDB, SNS, Step Functions).
+  - **Response Phase:**  
+    - Processes and transforms the backend response before sending it back to the client.
+- **Integration with CloudWatch:**
+  - API Gateway logs metrics and request/response data to CloudWatch, aiding in monitoring and troubleshooting.
+
+3. Authentication & Authorization
+-----------------------------------
+- **Cognito User Pools:**  
+  - Native integration for managing user authentication and token validation.
+- **Custom Lambda Authorizers (formerly “custom authorizers”):**  
+  - Validate bearer tokens or credentials using a Lambda function to return an IAM policy.
+- **Other Methods:**
+  - APIs can also be configured to accept credentials in headers or be completely open.
+
+4. Endpoint Types
+-----------------
+- **Edge Optimized:**  
+  - Uses Amazon CloudFront to route requests from the nearest point of presence, ideal for global clients.
+- **Regional:**  
+  - Best for clients within the same region; avoids additional CloudFront latency.
+- **Private:**  
+  - Accessible only from within a VPC via an interface endpoint, ensuring complete isolation.
+
+5. API Gateway Stages & Deployments
+-------------------------------------
+- **Stages:**  
+  - API configurations are deployed to stages (e.g., prod, dev, test) with unique endpoint URLs.
+- **Versioning & Canary Deployments:**  
+  - Supports deploying multiple versions of an API configuration.
+  - Canary deployments allow traffic splitting between a stable base stage and a new canary version to gradually roll out changes or test new functionality.
+- **Rollbacks:**  
+  - Easily revert to previous versions if issues arise during deployment.
+
+6. Error Handling & Status Codes
+----------------------------------
+- **400 Series (Client Errors):**
+  - **400:** Generic client-side error (e.g., malformed request).
+  - **403:** Access denied (authorization issues or WAF filtering).
+  - **429:** Throttling error when request rates exceed limits.
+- **500 Series (Server Errors):**
+  - **502:** Bad Gateway, indicating invalid responses from the backend.
+  - **503:** Service Unavailable, suggesting backend service outages.
+  - **504:** Integration timeout – typically occurs if a backend service (such as a Lambda function) takes longer than 29 seconds to respond.
+
+7. Caching
+----------
+- **Configuration Per Stage:**  
+  - Caching is set up at the API stage level.
+- **Cache Specifications:**
+  - Cache size ranges from 500 MB to 237 GB.
+  - Default time-to-live (TTL) is 300 seconds (configurable up to 3600 seconds, or disabled by setting to zero).
+  - Optionally, caching can be encrypted.
+- **Benefits:**
+  - Reduces load on backend integrations by serving repeated requests from cache.
+  - Lowers latency and overall operational costs.
+
+8. Conclusion
+-------------
+- API Gateway is an essential component for building scalable, secure, and efficient APIs in AWS.
+- It bridges client applications and backend services, offering robust features for authentication, request processing, endpoint configuration, error handling, and caching.
+- A deep understanding of API Gateway’s architecture and configuration is vital for designing modern, cloud-native applications.

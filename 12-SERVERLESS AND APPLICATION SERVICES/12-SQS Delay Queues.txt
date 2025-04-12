@@ -1,0 +1,65 @@
+======================
+12-SQS Delay Queues
+======================
+
+1. Introduction
+---------------
+- Delay Queues are an SQS feature that postpone the delivery of messages to consumers.
+- Unlike Visibility Timeout—which hides a message after it’s received—Delay Queues keep messages invisible right after they are added to the queue.
+
+2. SQS Message Processing Recap
+-------------------------------
+- **Message Lifecycle:**
+  - A message is sent to the queue using the SendMessage operation.
+  - Normally, it is immediately visible to consumers.
+  - When a consumer calls ReceiveMessage, the message is returned and then hidden for a period (the Visibility Timeout) to allow processing.
+  - If processing succeeds, the message is explicitly deleted. Otherwise, it reappears after the Visibility Timeout expires.
+- **Visibility Timeout:**
+  - **Default:** 30 seconds.
+  - **Range:** 0 seconds to 12 hours.
+  - Purpose: To enable automatic reprocessing of messages in case of processing failures.
+
+3. Delay Queues
+----------------
+- **Definition:**
+  - A Delay Queue delays the visibility of messages right after they are added.
+  - During the configured delay period, messages remain invisible to consumers.
+- **Configuration:**
+  - **Delay Seconds (Queue Level):**  
+    - Default is 0 seconds; set to a non-zero value to enable delay.
+    - **Maximum:** 15 minutes.
+  - **Message Timers (Per Message):**  
+    - Can also set a delay on individual messages (0 to 15 minutes).
+    - Not supported on FIFO (5 OQ) queues.
+- **Use Cases:**
+  - Intentionally delaying processing (e.g., waiting for prerequisite tasks to complete).
+  - Adding a buffer time between an action and its subsequent processing.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. Comparison: Delay Queues vs. Visibility Timeout
+----------------------------------------------------
+| Feature               | Delay Queues                                  | Visibility Timeout                            |
+|-----------------------|-----------------------------------------------|-----------------------------------------------|
+| When It Applies       | Immediately upon message insertion          | After a message is received by a consumer     |
+| Purpose               | Postpone message availability                 | Prevent duplicate processing during work      |
+| Default Value         | 0 seconds                                     | 30 seconds                                    |
+| Maximum Value         | 15 minutes                                    | Up to 12 hours                                |
+| Use Case              | Delaying processing intentionally             | Handling processing failures and retries      |
+
+5. Conclusion
+-------------
+- Delay Queues enable you to introduce intentional delays in message processing.
+- They differ fundamentally from Visibility Timeout, which is used to manage in-process message handling.
+- Understanding both concepts is critical for designing robust SQS-based architectures and for exam success.

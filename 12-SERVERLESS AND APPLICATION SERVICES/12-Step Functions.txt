@@ -1,0 +1,97 @@
+========================================
+12-Step Functions 
+========================================
+
+1. Introduction
+---------------
+- AWS Step Functions provide a way to coordinate multiple AWS services into serverless workflows.
+- They address limitations of Lambda by handling long-running, stateful processes that cannot be managed by chaining short-lived (max 15-minute) Lambda functions.
+- Step Functions enable the orchestration of tasks and decision points while maintaining state across executions.
+
+2. Overview of Step Functions
+-----------------------------
+- **State Machines:**  
+  - The core concept of Step Functions is the state machine, which defines a workflow with a start, multiple states, and an end.
+  - Workflows are defined using the Amazon States Language (ASL), a JSON-based format.
+
+- **Why They Exist:**  
+  - Lambda functions are meant to be small, focused, and stateless, with an execution duration limit.
+  - For processes like order processing or workflows requiring human intervention and long-running tasks, Step Functions provide an organized, maintainable solution.
+
+3. Workflow Types
+-----------------
+- **Standard Workflows:**  
+  - Designed for long-running processes with complex logic.
+  - Execution limit: Up to 1 year.
+  - Use cases: Order processing, multi-step approval processes.
+
+- **Express Workflows:**  
+  - Optimized for high-volume, event-driven, and transactional workloads.
+  - Execution limit: Up to 5 minutes.
+  - Use cases: IoT data processing, mobile backend transactions.
+
+| Workflow Type | Execution Limit | Use Case Characteristics                            |
+|---------------|-----------------|-----------------------------------------------------|
+| Standard      | Up to 1 year    | Long-running, complex, stateful workflows           |
+| Express       | Up to 5 minutes | High-volume, transactional, and fast processing     |
+
+4. Components of a State Machine
+----------------------------------
+- **States:**  
+  - The building blocks of a state machine, representing various operations and decision points.
+
+- **Key State Types:**
+  - **Succeed/Fail States:**  
+    - Terminal states indicating the successful completion or failure of the workflow.
+  - **Wait State:**  
+    - Pauses the workflow for a specified time duration or until a specific timestamp.
+  - **Choice State:**  
+    - Branches the workflow based on input values and conditions.
+  - **Parallel State:**  
+    - Allows concurrent execution of multiple branches.
+  - **Map State:**  
+    - Iterates over a collection, performing actions for each item.
+  - **Task State:**  
+    - Represents a unit of work that typically integrates with external AWS services (e.g., Lambda, Batch, DynamoDB).
+
+| State Type    | Description                                                                           |
+|---------------|---------------------------------------------------------------------------------------|
+| Succeed/Fail  | Terminal states indicating success or failure of the workflow                        |
+| Wait          | Pauses execution until a defined duration or specific time is reached                 |
+| Choice        | Evaluates input and directs execution down different paths based on conditions         |
+| Parallel      | Executes multiple branches concurrently                                               |
+| Map           | Iterates over an array to perform actions on each element                              |
+| Task          | Executes a specific action by invoking an external AWS service (e.g., Lambda)           |
+
+5. Example Use Case: Pet Cuddleatron
+-------------------------------------
+- **Scenario:**  
+  - Bob’s cat, Whiskers, needs regular cuddles. A Step Functions state machine is used to schedule reminders.
+  
+- **Workflow Overview:**
+  - **Input:**  
+    - Bob sets a reminder (via a web app hosted on S3 and invoked through API Gateway).
+  - **Wait State:**  
+    - The state machine pauses for the specified duration until the next cuddle.
+  - **Choice State:**  
+    - Determines the notification method:
+      - **Email Only:** Triggers a Lambda function to send an email reminder.
+      - **SMS Only:** Triggers a Lambda function to send an SMS.
+      - **Both:** Triggers both notification functions.
+  - **Task States:**  
+    - Invoke the necessary Lambda functions to send notifications.
+  
+- **Benefits:**  
+  - The state machine maintains the order and state of the process, coordinating long-running tasks that exceed Lambda’s limits.
+  - It allows for flexible workflows with decision points, parallel processing, and iterative tasks.
+
+6. Permissions & Execution
+---------------------------
+- Step Functions assume an IAM role to securely interact with other AWS services.
+- This role provides the necessary permissions for tasks (e.g., invoking Lambda functions, writing to databases) during workflow execution.
+
+7. Conclusion
+-------------
+- AWS Step Functions are ideal for building long-running, stateful workflows that require coordination across multiple services.
+- They overcome Lambda’s inherent limitations by managing state, enabling complex decision logic, and orchestrating tasks efficiently.
+- A deep understanding of the available state types and workflow models (Standard vs. Express) is crucial for designing robust serverless applications.

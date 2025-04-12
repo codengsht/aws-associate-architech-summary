@@ -1,0 +1,53 @@
+===============
+14-VPC Peering
+===============
+
+1. Overview
+-----------
+- VPC Peering creates a private, encrypted network link between two VPCs.
+- Each peering connection links exactly two VPCs—no more, no less.
+- Peering can be established between VPCs in the same region or across regions, and can span different AWS accounts.
+- Note: Peering connections are non-transitive (if VPC A is peered with VPC B, and VPC B with VPC C, A and C are not connected).
+
+2. Key Concepts
+---------------
+- **Non-Transitivity:**  
+  - Connectivity does not automatically extend beyond the two peered VPCs.  
+  - To connect multiple VPCs (e.g., A, B, and C), each pair must have its own peering connection.
+- **IP Address Management:**  
+  - VPC CIDR blocks must not overlap; overlapping ranges prevent peering.
+- **DNS Resolution:**  
+  - VPC peering can support private DNS so that public DNS names resolve to private IP addresses.
+- **Security Group Integration:**  
+  - Within the same region, you can reference security groups by ID for peered VPCs.
+  - Across regions, you must use IP addresses or CIDR blocks in security rules.
+
+3. Architecture & Configuration
+-------------------------------
+- **Peering Connection:**  
+  - Creates a logical gateway object in each VPC.
+- **Routing Setup:**  
+  - Update route tables in each VPC to direct traffic destined for the remote VPC’s CIDR block to the peering connection.
+  - All subnets requiring access must have appropriate route table entries.
+- **Security Configuration:**  
+  - Ensure that security groups and network ACLs permit traffic between the peered VPCs.
+- **Regional Considerations:**  
+  - Cross-region peering is supported but may have additional configuration or performance considerations.
+
+4. Use Cases & Considerations
+------------------------------
+- **Private Communication:**  
+  - Enables secure communication between VPCs without exposing traffic to the public Internet.
+- **Hybrid Architectures:**  
+  - Useful for connecting VPCs across different AWS accounts or regions in multi-VPC deployments.
+- **Limitations:**  
+  - Connections are non-transitive; full mesh connectivity requires direct peering between every pair of VPCs.
+  - Overlapping CIDR blocks in VPCs will block the establishment of a peering connection.
+
+5. Key Exam Points
+------------------
+- VPC peering connects two VPCs only.
+- Connectivity is non-transitive.
+- VPC CIDR blocks must not overlap.
+- Routing tables must be manually configured to direct traffic via the peering connection.
+- Security groups (or IP/CIDR rules for cross-region) must allow traffic between the peered VPCs.

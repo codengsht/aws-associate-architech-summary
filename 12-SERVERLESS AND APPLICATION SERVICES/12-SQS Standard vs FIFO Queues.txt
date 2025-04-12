@@ -1,0 +1,25 @@
+========================================
+12-SQS Standard vs FIFO Queues
+========================================
+
+1. Overview:
+   - **Standard Queues:** 
+     - Think of these as multilane highways.
+     - Designed for high throughput and decoupling application components.
+   - **FIFO Queues:** 
+     - Think of these as single-lane highways.
+     - Designed for preserving strict ordering and exactly-once processing.
+
+2. Performance:
+   - **Standard Queues:**
+     - Scale virtually without throughput limitations.
+     - Provide high transaction rates, handling a near-infinite number of messages.
+   - **FIFO Queues:**
+     - Limited throughput: approximately 300 messages per second without batching; up to 3000 messages per second with batching.
+     - (Note: High-throughput mode is available in preview for FIFO queues.)
+
+3. Message Ordering:
+   - **Standard Queues:**
+     - Best-effort ordering; messages may be delivered out of order.
+   - **FIFO Queues:**
+     - Guarantee strict first-in, first-out

@@ -1,0 +1,63 @@
+========================================
+14-VPC Endpoints (Interface)
+========================================
+
+1. Overview
+-----------
+- Interface endpoints provide private connectivity from your VPC to supported AWS services and third-party services.
+- They are implemented using AWS PrivateLink, which injects service network interfaces directly into your VPC.
+- Unlike gateway endpoints (which use route tables and prefix lists), interface endpoints use DNS resolution to direct traffic.
+
+2. Key Characteristics
+------------------------
+- **Deployment:**  
+  - Deployed as Elastic Network Interfaces (ENIs) within specific subnets in your VPC.
+  - Must be created in each Availability Zone (AZ) where you require access for high availability.
+  
+- **DNS & Connectivity:**  
+  - Each interface endpoint has:
+    - A regional DNS name (covers the entire region).
+    - Zonal (per-AZ) DNS names that resolve to the ENI in that AZ.
+  - Optionally, private DNS can be enabled to override the default AWS service DNS names, allowing unmodified applications to use the endpoint.
+  
+- **Protocols & Security:**  
+  - Supports IPv4 traffic using the TCP protocol.
+  - Can be associated with security groups for granular network access control.
+  - Supports endpoint policies to restrict which operations or resources can be accessed via the endpoint.
+
+3. Comparison to Gateway Endpoints
+------------------------------------
+- **Gateway Endpoints:**  
+  - Use route table entries with prefix lists.
+  - Are highly available by design and automatically apply to all subnets in the VPC.
+  - Traditionally used for S3 and DynamoDB.
+  
+- **Interface Endpoints:**  
+  - Use ENIs and DNS to provide connectivity.
+  - Must be deployed in each required AZ.
+  - Are used for a wider range of AWS services (and even S3 now) that are not covered by gateway endpoints.
+  - Provide additional control via security groups and endpoint policies.
+
+
+
+
+
+
+
+4. Use Cases
+------------
+- **Private Connectivity:**  
+  - Ideal when you need to access AWS services (e.g., SNS, SQS, or custom third-party services) from private subnets without traversing the public Internet.
+  
+- **Application Integration:**  
+  - With private DNS enabled, applications can use the same service DNS names to access endpoints privately without any code modifications.
+  
+- **Security & Compliance:**  
+  - Enhance security by keeping traffic within the VPC and applying strict security group controls on the endpoint interfaces.
+
+5. Summary Points for the Exam
+-------------------------------
+- Interface endpoints are deployed as ENIs in specific subnets, requiring one per AZ for high availability.
+- They rely on DNS resolution (regional and zonal names) and can override default service DNS via private DNS.
+- They offer private connectivity to AWS services using AWS PrivateLink and support security groups and endpoint policies.
+- Know the key differences from gateway endpoints: ENI-based vs. route table-based, and the broader range of services supported.

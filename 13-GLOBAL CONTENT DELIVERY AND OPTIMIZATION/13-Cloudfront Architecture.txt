@@ -1,0 +1,55 @@
+========================================
+13-Cloudfront Architecture
+========================================
+
+1. Overview
+-----------
+- CloudFront is a global Content Delivery Network (CDN) that improves content delivery by caching data at edge locations close to end users.
+- It reduces latency and minimizes repeated origin fetches, enhancing user experience worldwide.
+
+2. Key Components
+-----------------
+- **Origin:**  
+  - The source location where your content is stored (e.g., an Amazon S3 bucket or a custom origin such as a web server with a public IP).
+- **Distribution:**  
+  - The primary configuration unit in CloudFront that defines how content is delivered.  
+  - Each distribution is assigned a default domain name (ending in cloudfront.net) and can also support custom alternate domain names (CNAMEs).
+- **Edge Locations:**  
+  - Globally distributed nodes that cache content, delivering it quickly to end users.
+- **Regional Edge Caches:**  
+  - Larger, intermediate caching layers between edge locations and the origin; they help serve content that is accessed less frequently by multiple edge locations.
+
+3. How CloudFront Works
+------------------------
+- **Content Request Flow:**  
+  - A user requests content via the CloudFront domain name.
+  - The request is routed to the nearest edge location.
+    - **Cache Hit:** The edge location serves the content directly if it’s cached.
+    - **Cache Miss:** If not cached, the edge location checks the regional edge cache, and if still missing, it fetches the content from the origin, caches it, and then serves the request.
+- **Caching Benefits:**  
+  - Reduces load on the origin.
+  - Improves performance by delivering content from locations closer to the user.
+
+
+4. Distributions and Behaviors
+------------------------------
+- **Distributions:**  
+  - Serve as the container for your global CDN configuration.
+  - Global settings such as price class, SSL certificates (via ACM), logging, and custom domain names are defined here.
+- **Behaviors:**  
+  - Sub-configurations within a distribution that determine how CloudFront handles requests based on URL path patterns.
+  - Key settings in behaviors include:
+    - **Origin Selection:** Specifies which origin or origin group to use.
+    - **Viewer Protocol Policy:** Configures whether to allow HTTP, HTTPS, or redirect HTTP to HTTPS.
+    - **Caching Policies & TTL:** Define default, minimum, and maximum Time To Live (TTL) for cached objects.
+    - **Security Settings:** Such as restricting viewer access (using signed URLs or cookies).
+  - Multiple behaviors can exist within one distribution, allowing different handling for different types of content (e.g., public vs. restricted content).
+
+5. Additional Considerations
+----------------------------
+- **Read-Only Caching:**  
+  - CloudFront caches content (read operations) but does not handle uploads; uploads go directly to the origin.
+- **SSL Integration:**  
+  - CloudFront integrates with AWS Certificate Manager (ACM) for managing SSL/TLS certificates, ensuring secure connections.
+- **Global Performance:**  
+  - By leveraging numerous edge locations and regional edge caches, CloudFront minimizes latency and speeds up content delivery for a global audience.

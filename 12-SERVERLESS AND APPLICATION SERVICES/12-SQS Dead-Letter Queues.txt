@@ -1,0 +1,25 @@
+==========================
+12-SQS Dead-Letter Queues
+==========================
+
+1. Purpose:
+   - Dead Letter Queues (DLQs) help handle messages that repeatedly fail processing in an SQS queue.
+   - They prevent endless reprocessing of problematic messages by isolating them for further analysis.
+
+2. How It Works:
+   - Each time a message is received but not deleted, its "receive count" increases.
+   - A redrive policy is configured on the source queue specifying a "max receive count."
+   - When a message's receive count exceeds the max count, it is automatically moved to the DLQ.
+
+3. Benefits:
+   - **Diagnostics:** Allows you to set alarms and examine problematic messages separately.
+   - **Error Isolation:** Prevents a failing message from blocking the processing of other messages.
+   - **Custom Processing:** Offers the option to apply alternative processing or manual review to problematic messages.
+
+4. Important Considerations:
+   - **Retention Periods:**
+     - Messages in SQS have a retention period based on their original enqueue timestamp.
+     - When moved to a DLQ, the original timestamp is retained.
+     - Ensure DLQ retention is set longer than the source queue’s retention period to allow sufficient time for analysis.
+   - **Multiple Sources:**
+     - A single DLQ can be used for multiple source queues if configured appropriately.
