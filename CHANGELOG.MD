@@ -5,9 +5,9 @@
 - 13-GLOBAL CONTENT DELIVERY AND OPTIMIZATION lectures summarized 
 - 14-ADVANCED VPC Networking lectures summarized 
 - 7-Bootstrapping EC2 using User Data summary fixed
--  ------- 12-SERVERLESS AND APPLICATION SERVICES  -------
--  ------- 13-GLOBAL CONTENT DELIVERY AND OPTIMIZATION  -------
--  ------- 14-ADVANCED VPC Networking  -------
+-  ------- 12-SERVERLESS AND APPLICATION SERVICES printed -------
+-  ------- 13-GLOBAL CONTENT DELIVERY AND OPTIMIZATION printed  -------
+-  ------- 14-ADVANCED VPC Networking printed -------
 
 ## 0.0.6
 - RDS lectures added
