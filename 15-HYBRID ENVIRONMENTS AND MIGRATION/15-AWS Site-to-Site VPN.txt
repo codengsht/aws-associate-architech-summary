@@ -1,0 +1,82 @@
+========================================
+15-AWS Site-to-Site VPN
+========================================
+
+1. Introduction
+---------------
+• AWS Site-to-Site VPN creates a secure, encrypted connection between a VPC and an on-premises network.
+• It uses IPsec to encrypt data over the public Internet (with an exception for VPNs over Direct Connect).
+• Quick provisioning is a major benefit—VPNs can be set up in less than an hour compared to physical connections.
+
+2. Core Components
+------------------
+• **VPC (Virtual Private Cloud):** The AWS network hosting your resources.
+• **Virtual Private Gateway (VGW):** A logical gateway attached to the VPC; it provides multiple physical endpoints in different Availability Zones to ensure high availability.
+• **Customer Gateway (CGW):** Represents the on-premises device (or its logical configuration in AWS) and includes its public IP address.
+• **VPN Connection:** The AWS configuration that ties the VGW and CGW together and creates two encrypted VPN tunnels (one for each VGW endpoint).
+
+3. VPN Architecture and Implementation
+----------------------------------------
+• **Basic Steps:**
+  - Gather necessary information (VPC and on-premises IP ranges, on-premises router’s public IP).
+  - Attach a Virtual Private Gateway to the VPC.
+  - Create a Customer Gateway to represent the physical on-premises router.
+  - Establish a VPN Connection linking the VGW and CGW; this creates two VPN tunnels.
+• **Tunnel Characteristics:**
+  - Two VPN tunnels are set up between AWS (via endpoints in different Availability Zones) and the on-premises router.
+  - As long as at least one tunnel is active, connectivity between the networks is maintained.
+• **High Availability:**
+  - **Partial High Availability:** When only one on-premises router is used, it becomes a single point of failure, even though AWS maintains two tunnels.
+  - **Full High Availability:** Adding a second on-premises router (with a separate internet connection, ideally in a different facility) and establishing an additional VPN connection eliminates this single point of failure.
+
+4. Static vs. Dynamic VPNs
+--------------------------
+• **Static VPNs:**
+  - Use fixed, manually configured static routes.
+  - Simple to set up and work with a wide range of routers.
+  - Limited in terms of load balancing and dynamic failover capabilities.
+• **Dynamic VPNs:**
+  - Use BGP (Border Gateway Protocol) to exchange routing information automatically.
+  - Support dynamic route propagation and can adjust to link changes in real time.
+  - Require that the customer router supports BGP, which may not be common on all devices.
+
+Below is a comparison table summarizing the key differences:
+
+| VPN Type    | Routing Method         | Key Characteristics                                     | Pros                                                                    | Cons                              |
+|-------------|------------------------|---------------------------------------------------------|-------------------------------------------------------------------------|-----------------------------------|
+| Static VPN  | Static routing         | Manually configured, fixed routes                       | Simple, works with most routers                                         | Limited load balancing/failover   |
+| Dynamic VPN | Dynamic routing (BGP)  | Uses BGP for route exchange, can auto-propagate routes    | Supports dynamic route propagation and high availability features       | Requires BGP support, more complex|
+
+5. Performance and Cost Considerations
+----------------------------------------
+• **Throughput Limits:**  
+  - A single VPN connection (with two tunnels) has a maximum throughput of 1.25 Gbps on AWS.
+  - Customer hardware must handle encryption overhead effectively.
+• **Latency:**  
+  - Data traverses the public Internet, potentially increasing latency due to multiple hops.
+  - Latency-sensitive applications may require alternatives like Direct Connect.
+• **Cost Factors:**  
+  - VPNs incur hourly operational charges and data transfer fees.
+  - They may also increase usage on your on-premises Internet connection, which is relevant if there are data caps.
+• **Rapid Provisioning:**  
+  - VPNs can be quickly deployed, making them suitable both as a primary connection (in less-demanding scenarios) or as a backup to physical connections like Direct Connect.
+
+6. Exam Power Up Points
+------------------------
+• **Components Mastery:**  
+  - Know the roles of the VPC, VGW, CGW, and VPN Connection.
+• **Availability Design:**  
+  - Understand the difference between partial and full high availability, particularly the risk of a single on-premises router as a point of failure.
+• **Performance Metrics:**  
+  - Remember the 1.25 Gbps throughput cap and the implications of latency when using public Internet paths.
+• **VPN Types Differentiation:**  
+  - Distinguish between static and dynamic (BGP-based) VPNs—static for simplicity, dynamic for enhanced routing flexibility.
+• **Deployment Speed:**  
+  - Recognize that VPNs offer much faster setup times than physical connections, a key advantage in both real-world usage and exam scenarios.
+
+7. Conclusion
+-------------
+• AWS Site-to-Site VPN is a vital solution for securely connecting AWS VPCs with on-premises or other cloud environments.
+• Its architecture—relying on IPsec encryption and strategically placed gateway components—ensures secure data transit over the public Internet.
+• Choosing between static and dynamic VPN configurations depends on specific network requirements, with each offering distinct benefits.
+• A thorough understanding of these components, design choices, and performance implications is critical for both AWS solution design and exam success.

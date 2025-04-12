@@ -1,0 +1,75 @@
+========================================
+15-Storage Gateway - Volume
+========================================
+
+1. Introduction
+---------------
+• Storage Gateway acts as a bridge between on-premises storage (such as SAN or NAS) and AWS.
+• It is typically deployed as a virtual appliance (though hardware versions exist).
+• Key exam focus: Understand when to use each mode of Storage Gateway based on specific architecture needs.
+
+2. Storage Gateway Overview
+---------------------------
+• Presents storage to local servers using protocols like iSCSI (for block storage), NFS (for Linux), and SMB (for Windows).
+• Integrates with AWS services (EBS, S3, Glacier) for backup, migration, disaster recovery, or capacity expansion.
+• Knowing the right mode to use (Volume Stored vs. Volume Cached) is critical for designing solutions and succeeding on the exam.
+
+3. Volume Stored Mode
+---------------------
+• **Primary Data Location:**  
+  - All primary data is stored locally on-premises.
+• **Mechanism:**  
+  - The gateway presents volumes over iSCSI just like traditional SAN/NAS.
+  - Data written to these volumes is first stored locally and then asynchronously backed up to AWS (via an upload buffer to S3 in the form of EBS snapshots).
+• **Use Cases:**  
+  - Full disk backups, disaster recovery (DR), and migration.
+  - Provides consistently low latency since data resides on-premises.
+• **Limitation:**  
+  - Does not extend on-premises data center capacity because the complete data set is maintained locally.
+• **Capacity Constraints (Exam Note):**  
+  - Supports up to 32 volumes per gateway (e.g., 512 TB total capacity in volume stored mode).
+
+4. Volume Cached Mode
+---------------------
+• **Primary Data Location:**  
+  - The primary data is stored in AWS (in S3), while a local cache holds only the frequently accessed data.
+• **Mechanism:**  
+  - The gateway presents block storage over iSCSI similar to stored mode.
+  - It maintains a local cache (on-premises) for hot data, while the full data set resides in AWS.
+• **Use Cases:**  
+  - Data center extension and capacity expansion when on-premises storage is limited.
+  - Allows organizations to access vast storage resources in AWS without needing a large local footprint.
+• **Advantages:**  
+  - Can support hundreds of terabytes up to 1 PB per gateway.
+  - Efficiently utilizes local cache to deliver low-latency access for frequently used data.
+• **Consideration:**  
+  - Accessing data not present in the local cache may incur increased latency.
+
+5. Comparison Table: Volume Stored Mode vs. Volume Cached Mode
+---------------------------------------------------------------
+| Aspect                  | Volume Stored Mode                             | Volume Cached Mode                                   |
+|-------------------------|------------------------------------------------|------------------------------------------------------|
+| Primary Data Location   | On-premises local storage                      | AWS (S3) as the primary store, with local caching     |
+| Use Case                | Backup, disaster recovery, migration           | Data center extension, capacity expansion            |
+| Data Access Latency     | Consistently low (data remains local)          | Low latency for cached (hot) data; higher for cold data|
+| Storage Capacity Impact | Limited by on-premises storage capacity        | Leverages vast AWS storage (up to 1 PB per gateway)    |
+| Key Benefit             | Reliable, fast local access with robust DR     | Extends capacity while reducing on-premises footprint  |
+
+6. Exam Power Up Points
+-----------------------
+• **Decision Factors:**  
+  - Choose Volume Stored Mode for scenarios emphasizing full disk backups, fast recovery, and low latency (all data kept on-premises).
+  - Choose Volume Cached Mode when the goal is to overcome local storage limitations and extend data center capacity by leveraging AWS.
+• **Technical Specs Awareness:**  
+  - Recall that Volume Stored mode supports 32 volumes and up to 512 TB per gateway, while Volume Cached mode can scale much higher (up to 1 PB).
+• **Scenario Matching:**  
+  - Keywords like “backup” or “DR” typically indicate Volume Stored Mode.
+  - References to “extending capacity” or “data center extension” point to Volume Cached Mode.
+
+7. Conclusion
+-------------
+• Storage Gateway is essential for integrating on-premises storage with AWS.
+• The two volume gateway modes address different needs:  
+  - **Volume Stored Mode:** Prioritizes local storage and low latency for backup and DR.
+  - **Volume Cached Mode:** Focuses on capacity extension by storing primary data in AWS with local caching.
+• Understanding these differences is critical for selecting the appropriate solution in hybrid architectures and is a key concept for exam success.

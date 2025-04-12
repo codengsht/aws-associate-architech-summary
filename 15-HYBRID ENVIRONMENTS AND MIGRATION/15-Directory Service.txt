@@ -1,0 +1,69 @@
+========================================
+15-Directory Service
+========================================
+
+1. Introduction
+---------------
+• AWS Directory Service is a managed service that provides a centralized store for identities and related configuration.
+• It simplifies directory deployment and management, allowing AWS services and on-premises environments to authenticate and manage users and devices.
+• Key exam focus: Understand the different modes offered and when to use each.
+
+2. Directories: Purpose & Structure
+------------------------------------
+• Directories store identity-related objects such as users, groups, computer objects, and file shares.
+• They are organized in a hierarchical (inverted tree) structure, often referred to as a “domain.”
+• Multiple directory trees can be grouped into a “forest” for centralized management.
+• Traditional environments (e.g., Microsoft Active Directory) support features like single sign-on and centralized administration.
+
+3. AWS Directory Service: Managed Options
+-------------------------------------------
+AWS Directory Service offers several deployment modes to address different use cases:
+
+A. Simple AD Mode
+   • A lightweight, open-source directory based on Samba.
+   • Intended for isolated directories within AWS that do not require integration with on-premises systems.
+   • Supports up to 500 users in small mode or up to 5,000 users in large mode.
+   • Commonly used with AWS services such as Amazon WorkSpaces, Amazon Chime, Amazon RDS, and more.
+   • Exam Tip: If a question mentions "open source" or "Samba," or if integration with an on-premises directory is not needed, Simple AD is the preferred option.
+
+B. Managed Microsoft AD Mode
+   • A fully managed deployment of Microsoft Active Directory (2012 R2 Edition).
+   • Provides complete Microsoft AD features including support for schema extensions, trust relationships, and domain join capabilities.
+   • Suitable for applications requiring full Active Directory compatibility (e.g., SharePoint, Microsoft SQL Server).
+   • Ideal when you need to extend on-premises AD into AWS or require a standalone, cloud-hosted AD.
+   • Exam Tip: Use Managed Microsoft AD when the scenario requires a true Microsoft AD implementation or trusts with an on-premises AD.
+
+C. AD Connector
+   • A proxy service that connects AWS services to an existing on-premises Active Directory.
+   • Does not store any directory data in the cloud; simply routes authentication requests to your on-premises AD.
+   • Requires private connectivity (via VPN or Direct Connect) to the on-premises environment.
+   • Suitable when you want to leverage your current AD setup without replicating directory data in AWS.
+   • Exam Tip: Choose AD Connector when the use case indicates “proxy” integration with an existing on-premises AD, and when minimal cloud directory footprint is desired.
+
+4. Architectural Patterns & Use Cases
+---------------------------------------
+• **Isolated Directory:**  
+  - Deploy Simple AD within a VPC to support AWS-only environments without any external dependencies.
+• **Hybrid Integration:**  
+  - Use Managed Microsoft AD to create a cloud-based directory that can trust or extend your on-premises Active Directory.
+• **Proxy Integration:**  
+  - Use AD Connector when you already have an on-premises directory and need a seamless proxy for AWS services (e.g., Amazon WorkSpaces, Windows EC2 instances).
+
+5. Exam Power Up Points
+------------------------
+• Remember the keyword associations:
+  - “Simple,” “Samba,” or stand-alone directory → Simple AD.
+  - “Microsoft Active Directory,” “trust relationships,” or full AD functionality → Managed Microsoft AD.
+  - “Proxy,” “on-premises AD only,” or minimal cloud storage → AD Connector.
+• Know that Directory Service runs within a VPC, providing high availability by deploying across multiple subnets/availability zones.
+• Recognize that many AWS services (e.g., EC2, WorkSpaces, WorkMail) rely on a directory for centralized authentication and management.
+• Understand that AD Connector is not a standalone directory—it simply forwards authentication requests to your on-premises directory and requires reliable private connectivity.
+
+6. Conclusion
+-------------
+• AWS Directory Service offers managed solutions to reduce administrative overhead for identity management.
+• Selecting the correct directory mode depends on your organizational requirements:
+   - For AWS-only environments with simple needs, use Simple AD.
+   - For full-fledged AD features and hybrid integration, choose Managed Microsoft AD.
+   - For leveraging your existing on-premises AD without duplication, deploy AD Connector.
+• A clear grasp of these models and their use cases is critical for designing hybrid environments and for success on AWS certification exams.

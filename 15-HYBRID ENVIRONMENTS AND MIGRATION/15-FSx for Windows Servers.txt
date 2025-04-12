@@ -1,0 +1,69 @@
+===============================================
+15-FSx for Windows Servers
+===============================================
+
+1. Introduction
+---------------
+- This lecture covers AWS FSx for Windows File Server, an AWS managed service designed to provide native Windows file shares.
+- FSx is part of AWS’s suite of services for Windows environments, addressing past limitations in Windows support.
+- The focus is on understanding FSx’s architecture, features, and exam-relevant details, especially its differentiation from Linux-based file systems (like EFS).
+
+2. Overview of FSx for Windows File Server
+-------------------------------------------
+- **Purpose:** Provides fully managed, native Windows file servers (file shares) without the overhead of managing your own Windows servers.
+- **Key Features:**
+  - Fully native Windows file system – not an emulated version.
+  - Integrates with both managed and self-managed Active Directory (on-premises or in AWS).
+  - Supports industry-standard Windows protocols (SMB) for file access.
+  - Offers advanced Windows features such as deduplication, Distributed File System (DFS), and Volume Shadow Copies (VSS) for file-level restores.
+  - Provides robust backup options including both automated and on-demand backups with at‐rest encryption via KMS and enforced encryption in transit.
+
+3. Architectural Overview
+-------------------------
+- **Deployment Options:**
+  - Can be deployed in single Availability Zone (AZ) mode with in–AZ replication or in multi–AZ mode for full high availability.
+  - Supports connections via VPN, AWS Direct Connect, and VPC peering, allowing integration into complex corporate networks.
+- **Integration:**
+  - Uses Active Directory for its user store—either a managed AD service from AWS or an on-premises AD—to authenticate and manage access.
+  - Once deployed, file shares are accessed using standard Windows UNC paths (e.g., \\[FileSystemID].domain\ShareName).
+- **Performance Characteristics:**
+  - High performance with throughput ranging from megabytes per second up to two gigabytes per second.
+  - Delivers hundreds of thousands of IOPS with latency under 1 millisecond.
+
+4. Exam Power-Up Points
+-----------------------
+- **Identify Keywords:** When examining exam questions, look for terms like:
+  - **Native Windows file system:** Indicates FSx (as opposed to EFS, which is geared toward Linux).
+  - **SMB Protocol:** FSx uses SMB, while EFS uses NFS.
+  - **Active Directory Integration:** FSx can integrate with both managed and on-premises AD.
+  - **VSS and DFS:** Unique Windows features such as Volume Shadow Copies (for file restore) and DFS (for scalable file sharing).
+  - **Deployment Mode:** Recognition of single-AZ versus multi-AZ deployments and integration with corporate networks.
+- **Usage Differentiation:**
+  - **FSx:** Ideal for Windows environments needing advanced file services, native permission handling, and seamless AD integration.
+  - **EFS:** Suited for Linux-based workloads and shared file systems on Linux/UNIX instances.
+
+5. Comparison Table: FSx for Windows File Server vs. EFS
+----------------------------------------------------------
+| Feature              | FSX for Windows File Server                                          | EFS                                |
+|----------------------|-----------------------------------------------------------------------|------------------------------------|
+| Native OS Support    | Native Windows file system                                            | Designed for Linux/UNIX systems    |
+| Protocol             | SMB                                                                   | NFS                                |
+| Integration          | Active Directory (Managed or Self-managed, on-premises or in AWS)       | Standard Linux permission controls |
+| Primary Use Case     | Shared file storage in Windows environments                           | Shared storage for Linux/UNIX      |
+| Backup/Recovery      | Automated & on-demand backups with VSS for file-level restores          | Basic backup integration options   |
+| Deployment           | Single/Multi-AZ deployment; supports VPN, Direct Connect, VPC peering   | Deployed within VPC; AWS-centric    |
+
+   *Table Reconstruction Details:*
+   - **Columns Identified:** "Feature", "FSX for Windows File Server", "EFS".
+   - **Column Widths Determined:** 
+     - Feature: 17 characters;
+     - FSX for Windows File Server: 57 characters;
+     - EFS: 37 characters.
+   - **Alignment:** Each cell has been padded with spaces to match the maximum width as determined by the longest text in that column.
+
+6. Conclusion
+-------------
+- AWS FSx for Windows File Server offers a fully managed, native Windows file service ideal for enterprises with Windows-centric environments.
+- For exam preparation, focus on its native integration with Windows features such as SMB, Active Directory, VSS, and DFS.
+- Understand when to choose FSx over alternatives like EFS—particularly when the exam highlights Windows-specific requirements.
+- Overall, the service simplifies file share management while delivering high performance, scalability, and robust backup/recovery capabilities.

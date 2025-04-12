@@ -1,0 +1,88 @@
+========================================
+15-Storage Gateway - File
+========================================
+
+1. Introduction
+---------------
+• File Gateway is the Storage Gateway mode for bridging on-premises file storage with AWS S3.
+• It is distinct from Volume Gateway (raw block volumes) and Tape Gateway (VTL mode for tape backups).
+• Exam Tip:  
+  - "Volumes" → Use Volume Gateway  
+  - "Tapes" → Use Tape (VTL) mode  
+  - "Files" → Use File Gateway
+
+2. Core Functionality & Architecture
+--------------------------------------
+• **File Shares / Mount Points:**  
+  - You create file shares (or mount points) on the File Gateway.
+  - These are accessible using NFS (for Linux) or SMB (for Windows), with support for Active Directory integration in Windows.
+  
+• **S3 Integration:**  
+  - Each file share maps directly to a single S3 bucket in your AWS account.
+  - Files stored via the share appear as S3 objects, maintaining the file system's directory structure as part of the object key names.
+  
+• **Local Caching for Performance:**  
+  - The File Gateway appliance runs on premises with local cache.
+  - Frequently accessed data is cached locally to deliver near–LAN performance while the primary copy remains in S3.
+
+3. Use Cases & Benefits
+-----------------------
+• **Hybrid Storage Architectures:**  
+  - Enables extension of on-premises file systems into AWS.
+  - Ideal for scenarios where you want to leverage scalable, durable S3 storage while keeping local access fast.
+  
+• **Enhanced Integration with AWS Services:**  
+  - Because data is stored as S3 objects, you can integrate with S3 features such as lifecycle policies, replication, S3 events, Lambda, and Athena.
+  
+• **Multi-Site Access:**  
+  - Multiple on-premises locations can connect to the same S3-backed file share.
+  - Note: Synchronization depends on S3 listings, and you might use features like “Notify when Uploaded” (via CloudWatch events) to inform other sites of updates.
+  
+• **Cost Optimization via S3 Storage Classes:**  
+  - You can assign a default storage class (typically S3 Standard) and configure lifecycle policies to transition objects to S3 Standard-IA, Glacier, or Glacier Deep Archive for long-term archival, reducing overall costs.
+
+4. Key Considerations
+---------------------
+• **Data Consistency & Concurrency:**  
+  - File Gateway does not support object locking.
+  - Concurrent writes from different locations can result in conflicts (e.g., one update overwriting another).
+  - Mitigation: Designate one share as read/write or implement strict access controls.
+  
+• **Mapping File System to Object Storage:**  
+  - The file structure (folder paths and file names) is embedded within the object key names in S3.
+  - This allows seamless integration; for example, a file "photos/winky.jpg" in the on-premises share appears as an S3 object with the same key.
+  
+• **Capacity & Scalability:**  
+  - The primary data resides in S3, which is virtually unlimited.
+  - Local cache is only a performance booster, not the primary store.
+
+5. Comparison Table: File Gateway vs. Other Modes
+---------------------------------------------------
+
+| Feature/Aspect          | Volume Gateway                         | Tape (VTL) Mode                              | File Gateway                                 |
+|-------------------------|----------------------------------------|----------------------------------------------|----------------------------------------------|
+| Data Presentation       | Raw block storage via iSCSI            | Emulates physical tape library (tape drives, media changer) | Presents file shares (NFS/SMB)               |
+| Primary Data Storage    | On-premises local storage              | On-premises with backup to S3 as EBS snapshots  | AWS S3 (with local cache for performance)    |
+| Use Cases               | Backups, disaster recovery, migration  | Legacy tape backup integration, archival     | File storage extension; sharing files and integration with S3 services |
+| Integration Protocols   | iSCSI                                  | iSCSI (mimics tape protocols)                | NFS for Linux, SMB for Windows               |
+| Scalability             | Limited by on-premises capacity        | Limited by on-premises capacity; export required for offsite storage | Scales to virtually unlimited capacity via S3 |
+
+6. Exam Power Up Points
+------------------------
+• **Keyword Association:**  
+  - If a question involves "files," "NFS," or "SMB" with Storage Gateway, you’re dealing with File Gateway.
+  
+• **Architecture Matching:**  
+  - Understand that File Gateway maps file shares to S3 buckets, enabling a hybrid cloud file system.
+  
+• **Integration & Features:**  
+  - Remember that File Gateway allows leveraging S3 features (e.g., lifecycle policies, cross-region replication) for cost-effective archival and disaster recovery.
+  
+• **Local vs. Cloud Storage:**  
+  - Primary data is stored in S3, with local caching improving performance but not affecting capacity.
+
+7. Conclusion
+-------------
+• File Gateway is a powerful, feature-rich mode of Storage Gateway that extends on-premises file access to AWS S3.
+• It bridges local file systems (via NFS/SMB) and S3, enabling seamless integration, scalability, and cost-effective storage through S3’s rich features.
+• For exam scenarios related to file-based storage integration, File Gateway is the correct choice, distinguishing it from Volume and Tape modes.

@@ -1,0 +1,87 @@
+===============================================
+15-AWS Transfer Family 
+===============================================
+
+1. Introduction
+---------------
+- AWS Transfer Family is a fully managed file transfer service.
+- It enables the secure transfer of files to and from AWS storage services such as Amazon S3 and Amazon EFS.
+- This introductory video covers the core functionalities and networking options without going into exhaustive details.
+
+2. Service Overview
+-------------------
+- **Purpose:** To provide managed servers that support various legacy and secure file transfer protocols, making it easier to integrate with existing workflows.
+- **Key Benefit:** Eliminates the need to manage underlying server infrastructure for file transfer.
+
+3. Supported Protocols and Use Cases
+--------------------------------------
+- **FTP:**  
+  - Legacy, unencrypted protocol.  
+  - Use case: Internal transfers only (when encryption is not required).
+- **FTPS:**  
+  - FTP with TLS encryption.  
+  - Use case: Secure file transfers where encryption is necessary.
+- **SFTP:**  
+  - Runs over SSH providing a secure means of file transfer.  
+  - Use case: Commonly used in public endpoints.
+- **AS2:**  
+  - A protocol used for transferring structured business-to-business data.  
+  - Use case: Niche scenarios in industries with compliance and strict data protection requirements (e.g., supply chain, payment processing).
+
+4. Identity Management and Workflow Integration
+-------------------------------------------------
+- **Identity Providers:**
+  - Built-in identities.
+  - Integration with AWS Directory Service.
+  - Custom identity providers via API Gateway.
+- **Managed File Transfer Workflow (MFTW):**
+  - Allows the definition of workflows (e.g., notifications or tagging) that trigger automatically upon file upload.
+  - Useful for integrating file transfers into broader business processes.
+
+5. Architecture and Network Endpoints
+---------------------------------------
+- The service acts as a front end to back-end storage (S3/EFS) and supports connections via multiple networking configurations.
+- **Endpoint Options:**
+  - **Public Endpoint:**  
+    - Accessible from the Internet.
+    - Supports only SFTP.
+    - Uses a dynamic IP address (recommend using DNS).
+    - Lacks granular network controls such as security groups or network ACLs.
+  - **VPC Endpoint (Internet):**  
+    - Deployed within your VPC with an Elastic IP.
+    - Supports SFTP, FTPS, and AS2.
+    - Provides static IPs and network controls.
+  - **VPC Endpoint (Internal Only):**  
+    - Accessible solely from within your VPC or via connected networks (VPN/Direct Connect).
+    - Supports SFTP, FTPS, FTP, and AS2.
+    - Designed for protocols (like FTP) that are unsuitable for exposure over the public Internet.
+
+6. Comparison of Endpoint Types
+--------------------------------
+| Endpoint Type         | Supported Protocols      | Key Characteristics                                                     |
+|-----------------------|--------------------------|-------------------------------------------------------------------------|
+| Public Endpoint       | SFTP                     | Accessible from public internet, dynamic IP, no network ACL/security control |
+| VPC (Internet)        | SFTP, FTPS, AS2          | Runs inside VPC with Elastic IP, static IP, secured by NACLs & security groups |
+| VPC (Internal Only)   | SFTP, FTPS, FTP, AS2     | Accessible only within VPC, static IPs, supports unencrypted FTP internally |
+
+   *Table Details:*
+   - **Endpoint Type:** Describes where the server is hosted (Public vs. VPC).
+   - **Supported Protocols:** Lists the transfer protocols available for each endpoint type.
+   - **Key Characteristics:** Highlights critical networking and security aspects for each option.
+
+7. Exam Power-Up Points
+------------------------
+- Understand the service’s role in allowing legacy (FTP) and secure (FTPS, SFTP) file transfers between AWS storage and external systems.
+- Identify scenarios when to choose AWS Transfer Family:
+  - When existing applications cannot use native S3 or EFS APIs.
+  - When file transfers must adhere to specific protocols due to compliance (e.g., AS2 for B2B).
+- Recognize the differences among endpoint types:
+  - **Public endpoints** support only SFTP and offer ease-of-use with limited security control.
+  - **VPC endpoints** (Internet and Internal Only) offer static IPs and robust security (via ACLs and security groups) while supporting additional protocols like FTPS, FTP, and AS2.
+- Note that pricing is based on provisioned server hours and data transferred, with multi-AZ support available for high availability.
+
+8. Conclusion
+-------------
+- AWS Transfer Family simplifies the integration of file transfer processes with existing AWS storage systems.
+- It offers flexibility in terms of protocols, identity management, and networking configurations.
+- For the exam, focus on understanding the key protocol differences, the network endpoint options, and how these features enable secure and manageable file transfers without server management overhead.

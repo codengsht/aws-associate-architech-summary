@@ -1,0 +1,66 @@
+========================================
+15-Snowball / Edge / Snowmobile [NEW VERSION COMING SOON]
+========================================
+
+1. Introduction
+---------------
+• The AWS Snow family (Snowball, Snowball Edge, and Snowmobile) is designed to move large volumes of data between on-premises environments and AWS.
+• These physical devices are used when network transfer over the Internet or Direct Connect is impractical due to data volume or speed requirements.
+• Key Exam Focus: Understand when to use each product based on data volume, compute needs, and deployment scenarios.
+
+2. Product Overviews
+--------------------
+
+A. Snowball
+   • A physical storage device available in two capacities: 50 TB or 80 TB.
+   • Provides data transfer for amounts typically within the 10 TB to 10 PB range.
+   • Connects via 1 Gbps or 10 Gbps networking—ensure proper cabling and network readiness.
+   • Designed purely for storage without compute capability.
+   • Multiple devices can be ordered for deployment across different on-premises locations.
+
+B. Snowball Edge
+   • An advanced version that combines both storage and compute functions.
+   • Offers higher capacity than the standard Snowball and supports faster networking.
+   • Comes in various variants:
+     - **Storage Optimized:** Typically includes a high storage capacity with options for EC2 capability (adds local SSD for instance hosting).
+     - **Compute Optimized:** Provides low-latency NVMe storage along with significant compute power.
+     - **Compute Optimized with GPU:** Includes GPU resources for high-intensity parallel processing, suitable for scientific or modeling workloads.
+   • Ideal for remote sites where data processing on-site is required as data is ingested.
+
+C. Snowmobile
+   • A truck-sized, portable data center housed in a shipping container.
+   • Designed for mega-scale data migrations, handling up to 100 PB per Snowmobile.
+   • Suitable for single-site migrations where vast amounts of data (typically above 10 PB) are consolidated.
+   • Not practical for multi-site deployments due to its massive, single-device nature.
+
+3. Comparative Overview
+------------------------
+Below is a table summarizing the key differences and use-case scenarios for each product:
+
+| Product         | Capacity & Scale                        | Compute Capability    | Primary Use Case                                                 | Deployment Considerations                    |
+|-----------------|-----------------------------------------|-----------------------|------------------------------------------------------------------|----------------------------------------------|
+| Snowball        | 50 TB or 80 TB; economical for 10 TB - 10 PB | Storage only          | Data migration/ingress/egress for moderate to large data sets      | Multiple devices can be deployed across sites |
+| Snowball Edge   | Higher capacity than Snowball           | Storage + Compute     | Remote sites needing on-device data processing and faster transfers | Choose variant based on storage vs. compute needs; supports faster networking  |
+| Snowmobile      | Up to 100 PB per device                 | N/A (storage only)    | Ultra-large migrations (≥10 PB) from a single, consolidated location | Single truck delivery; ideal for centralized, massive data migration |
+
+4. Exam Power Up Points
+------------------------
+• **When to Use Each Product:**  
+  - **Snowball:** For data volumes between 10 TB and 10 PB where a storage-only, physical device meets migration needs.
+  - **Snowball Edge:** Use when additional compute capacity is needed for local data processing or when faster networking performance is required.
+  - **Snowmobile:** Reserved for extremely large data migrations (10+ PB) from a single site; not suitable for distributed, multi-site migrations.
+• **Physical Process Reminder:**  
+  - All products require ordering from AWS, physical shipment to/from your data center, and secure handling (data is encrypted using KMS).
+• **Deployment Scenario Focus:**  
+  - Understand that multiple devices (Snowball or Snowball Edge) can be used in parallel for multi-site deployments, whereas a Snowmobile is a one-stop solution for singular, large-scale migrations.
+• **Key Architectural Consideration:**  
+  - The choice of product is driven by scale, required transfer speed, compute needs, and the physical logistics of your data center(s).
+
+5. Conclusion
+-------------
+• The AWS Snow family provides cost-effective, scalable solutions for large-scale data transfers.
+• For the exam, remember the key distinctions in use case:
+  - **Snowball**: Best for moderate to large data transfers (storage only).
+  - **Snowball Edge**: Ideal when additional compute and faster networking are required.
+  - **Snowmobile**: Appropriate for ultra-large, single-site data migrations.
+• These products bridge the gap when network-based transfers are not feasible, ensuring that AWS can efficiently absorb massive amounts of data.

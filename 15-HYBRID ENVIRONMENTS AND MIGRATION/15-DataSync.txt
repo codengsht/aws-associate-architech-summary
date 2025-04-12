@@ -1,0 +1,88 @@
+===============================================
+15-DataSync
+===============================================
+
+1. Introduction
+---------------
+- The lecture introduces AWS DataSync—a key AWS service used by solutions architects.
+- Emphasis is placed on its increasing relevance in AWS certification exams.
+- The service is designed to efficiently move data into and out of AWS in real-world scenarios.
+
+2. Overview of AWS DataSync
+---------------------------
+- **Purpose:** Automates data transfer tasks that were traditionally done manually or via physical transfer devices (e.g., Snowball).
+- **Use Cases:** 
+  - Data migrations into AWS
+  - Processing data in AWS and transferring it back out
+  - Archiving data in cost-effective storage
+  - Disaster recovery and business continuity planning
+
+3. Key Features of AWS DataSync
+-------------------------------
+- **Scalability and Performance:**
+  - Each agent supports up to **10 Gbps** of data transfer (~100 TB per day).
+  - Each job can handle the transfer of up to **50 million files**.
+  
+- **Data Integrity:**
+  - Transfers metadata (permissions, timestamps) essential for complex data migrations.
+  - Built-in data validation ensures the integrity of data (e.g., in scenarios involving sensitive data like medical records).
+
+- **Integration and Flexibility:**
+  - Communicates with on-premises storage systems (SAN/NAS) using **NFS or SMB protocols**.
+  - Integrates with various AWS services such as **Amazon S3**, **Amazon EFS**, and **Amazon FSx for Windows**.
+  - Supports both one-way and bidirectional transfers including service-to-service transfers (e.g., EFS-to-EFS, even cross-region).
+
+- **Automation Capabilities:**
+  - Supports incremental transfers, scheduled transfers, and bandwidth throttling.
+  - Provides features like compression, encryption, and automatic recovery from transit errors.
+  - Operates on a **pay-as-you-go** pricing model (per gigabyte cost).
+
+4. AWS DataSync Architecture
+-----------------------------
+- **On-Premises Environment:**
+  - Data is stored on a SAN or NAS.
+  - The AWS DataSync Agent is installed on the corporate on-premises platform (often on VMware).
+  - The agent reads data via standard protocols (NFS/SMB) from local storage.
+
+- **AWS Environment:**
+  - The agent communicates with a DataSync endpoint in AWS.
+  - Data can be stored in different AWS storage services (S3, EFS, FSx for Windows).
+  - Transfer configuration includes scheduling and bandwidth limits to manage network impacts.
+
+- **Core Components:**
+  - **Task (Job):** Defines what data is synced, transfer schedules, and any bandwidth throttling.
+  - **Agent:** Software component installed on-premises to interface with local storage.
+  - **Location:** Represents the source (on-premises) and destination (AWS storage service) endpoints.
+
+5. Exam Relevance and Power-Up Points
+---------------------------------------
+- **Exam Focus:**
+  - Understand the high-level architecture rather than the granular implementation details.
+  - Be prepared to identify AWS DataSync when exam questions involve transferring large volumes of data with features like:
+    - Incremental and scheduled transfers
+    - Bandwidth throttling
+    - Error recovery and built-in data validation
+    - Integration with multiple AWS storage services
+
+- **When to Choose AWS DataSync:**
+  - In scenarios where electronic, reliable, and scalable data transfer is required.
+  - When traditional methods (manual uploads/downloads or physical devices such as Snowball) are inadequate.
+  - For environments that require efficient handling of file metadata and data integrity during migration.
+
+6. Comparison Table: AWS DataSync vs. Traditional Methods
+----------------------------------------------------------
+| Feature                   | AWS DataSync                                                     | Traditional Methods (e.g., Snowball/Manual)               |
+|---------------------------|------------------------------------------------------------------|------------------------------------------------------------|
+| Transfer Scale            | Up to 10 Gbps per agent (~100 TB/day, 50 million files/job)        | Limited scale; constrained by manual or physical device limits |
+| Protocols                 | Uses NFS and SMB protocols for on-premises integration             | May not support standardized protocols consistently      |
+| Automation & Scheduling   | Supports incremental/scheduled transfers with bandwidth throttling  | Typically manual; lacks advanced scheduling/automation     |
+| Data Validation           | Built-in validation and error recovery to ensure data integrity      | Requires manual checks or minimal error recovery mechanisms  |
+| Integration               | Direct integration with AWS services (S3, EFS, FSx)                 | Limited integration; often requires additional steps       |
+| Pricing Model             | Pay-as-you-go per GB transferred                                    | Often involves upfront costs or fixed device charges       |
+
+7. Conclusion
+-------------
+- AWS DataSync is a robust, scalable, and automated service ideal for modern data transfer needs.
+- For exam preparation, focus on understanding the high-level architecture and key features (scalability, data validation, integration, and automation).
+- Recognize the exam power-up points: its efficiency in transferring large volumes of data, handling metadata, and supporting flexible transfer configurations.
+- Overall, AWS DataSync is the preferred choice for scenarios requiring reliable, secure, and cost-effective data migration to and from AWS.

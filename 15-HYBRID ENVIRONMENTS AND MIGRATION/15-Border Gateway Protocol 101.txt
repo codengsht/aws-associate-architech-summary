@@ -1,0 +1,74 @@
+========================================
+15-Border Gateway Protocol 101
+========================================
+
+1. Introduction to BGP
+----------------------
+• BGP (Border Gateway Protocol) is a routing protocol used to determine the path that data takes across networks from source to destination.
+• It is especially important in large-scale networks and in AWS services (such as Direct Connect and dynamic VPNs) to manage routing between different networks.
+• The lecture presents a high-level overview, focusing on essential BGP concepts needed for certification exams.
+
+2. Autonomous Systems and AS Numbers
+-------------------------------------
+• Networks are divided into autonomous systems (AS), which are self-managed groups of routers or entire networks controlled by a single entity.
+• Each AS is represented as a “black box” for BGP; internal routing details are abstracted away.
+• Autonomous System Numbers (ASNs) are used to uniquely identify these networks.
+  - ASNs are typically 16 bits long (ranging from 0 to 65,535).
+  - Most of the range consists of public ASNs; however, numbers 64,512 to 65,534 are reserved for private use.
+• Exam Power Up: Understanding ASNs and their ranges is essential for network configuration and exam scenarios.
+
+3. BGP Sessions and Peering Relationships
+-------------------------------------------
+• BGP runs over TCP on Port 179, ensuring reliable transmission through error correction and flow control.
+• BGP sessions (peering relationships) between autonomous systems are manually configured.
+• Once established, these relationships allow routers to exchange routing and network topology information.
+• Exam Power Up: Recognize the manual nature of BGP peering setups and the significance of TCP Port 179.
+
+4. BGP as a Path-Vector Protocol
+---------------------------------
+• BGP is categorized as a path vector protocol – it exchanges only the best (shortest) paths rather than every possible path.
+• The protocol uses the Autonomous System (AS) path to determine the best route.
+  - The AS path is a list of ASNs that the route advertisement has traversed.
+  - BGP prefers routes with shorter AS paths.
+• Exam Power Up: Remember that BGP selects routes based solely on AS path length rather than metrics like bandwidth or latency.
+
+5. Example Topology: A Three-Site Network in Australia
+--------------------------------------------------------
+• The lecture uses an example network comprising three cities:
+  - **Brisbane (East)**: Assigned an ASN (200), with a local network (e.g., 10.0.16) and a local router IP.
+  - **Adelaide (South Coast)**: Assigned an ASN (201), managing its own network segment (e.g., 10.17.16).
+  - **Alice Springs (Central)**: Assigned an ASN (202), serving as an intermediate site with its network (e.g., 10.18.xx).
+• Connections between the sites:
+  - Fiber links (1 Gbps) connect Brisbane–Adelaide and Adelaide–Alice Springs.
+  - A satellite link (5 Mbps) connects Brisbane and Alice Springs directly.
+• BGP route tables are built at each site, showing:
+  - Destination network,
+  - Next hop IP,
+  - AS path (which indicates the route and determines path preference).
+
+6. AS Path Prepending and Route Preference
+--------------------------------------------
+• By default, BGP prefers the shortest AS path, which would favor the direct (but slower) satellite link between Brisbane and Alice Springs.
+• Network administrators can use **AS Path Prepending** to artificially lengthen a route’s AS path:
+  - This makes a less desirable physical link (the satellite connection) appear longer.
+  - Consequently, the router will choose the fiber path (via Adelaide) as the preferred route, due to its shorter “apparent” AS path.
+• Exam Power Up: Understand AS Path Prepending as a method to manipulate BGP’s route selection when link speed or latency considerations are not inherently factored into BGP decisions.
+
+7. BGP in AWS and Exam Relevance
+---------------------------------
+• BGP underpins dynamic routing in many AWS networking services.
+• It is vital for configuring hybrid architectures and understanding how AWS integrates with enterprise networks.
+• Key exam concepts include:
+  - The role of BGP in exchanging network topology information.
+  - How BGP maintains a dynamic, highly available network by offering multiple paths.
+  - The practical use of AS Path Prepending to enforce routing preferences.
+• Conclusion: BGP provides a robust method for routing in heterogeneous networks by simplifying complex topologies into manageable autonomous systems.
+
+8. Comparison of Routing Methods (Example)
+--------------------------------------------
+Below is a table comparing two routing strategies for connecting Brisbane to Alice Springs in the example topology:
+
+| Connection Type            | Link Speed  | Latency    | AS Path Characteristics        | Preferred (After Prepending)  |
+|----------------------------|-------------|------------|--------------------------------|-------------------------------|
+| Direct Satellite Connection| 5 Mbps      | High       | Initially shorter (1 hop)      | Not Preferred                 |
+| Indirect Fiber Connection  | 1 Gbps      | Lower      | Longer (2 hops) by default; becomes preferred after AS path prepending on the satellite route | Preferred  |

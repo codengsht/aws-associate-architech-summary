@@ -1,0 +1,59 @@
+========================================
+15-Transit Gateway
+========================================
+
+1. Introduction
+---------------
+• AWS Transit Gateway (TGW) acts as a central network transit hub that connects multiple VPCs, on-premises networks (via site-to-site VPNs), and Direct Connect connections.
+• It was introduced to address the complexities and scaling challenges of hybrid network architectures on AWS.
+• TGW simplifies interconnectivity and reduces the administrative overhead associated with full mesh network designs.
+
+2. Key Features and Capabilities
+-------------------------------
+• **Centralized Routing:**  
+  - TGW enables transitive routing between attachments, meaning that once connected to the TGW, VPCs and on-premises networks can communicate without requiring direct peering.
+  
+• **Multiple Attachment Types:**  
+  - **VPC Attachments:** Directly attach VPCs to the TGW to facilitate inter-VPC communication.
+  - **Site-to-Site VPN Attachments:** Connect on-premises networks via VPN tunnels.
+  - **Direct Connect Gateway Attachments:** Integrate with physical Direct Connect circuits for dedicated connectivity.
+  
+• **High Availability and Scalability:**  
+  - TGW is designed to be highly available and scalable, with a built-in route table system to manage and control traffic flow among all connected networks.
+  - It can even be used to establish global networks by peering TGWs across regions and accounts.
+
+3. Simplifying Complex Network Architectures
+---------------------------------------------
+• **Traditional Architecture Challenges:**  
+  - Connecting multiple VPCs and on-premises networks in a full mesh requires many individual VPN tunnels or VPC peering connections, which increases complexity and management overhead.
+  - Example: With 4 VPCs and one corporate office, a full mesh would require multiple peering and VPN connections (potentially 6 peering links plus up to 16 VPN tunnels for high availability).
+  
+• **TGW-Enabled Architecture:**  
+  - Replaces the full mesh with a single central hub.
+  - Each network (VPC or on-premises) attaches to the TGW; the TGW then handles transitive routing between all attachments.
+  - This drastically reduces the number of connections required, making the network easier to scale and manage.
+
+4. Comparative Overview
+-----------------------
+
+| Aspect                      | Traditional Full Mesh                          | Transit Gateway (TGW)                         |
+|-----------------------------|------------------------------------------------|-----------------------------------------------|
+| Complexity                  | High – requires multiple individual connections (full mesh) | Low – centralized hub simplifies connectivity |
+| Scalability                 | Poor – additional networks exponentially increase connections | Efficient – new attachments add minimal overhead|
+| Management Overhead         | High – numerous configurations and tunnels to manage | Simplified – single route table per TGW handles traffic |
+| Transitive Routing Support  | Not natively supported; workarounds needed     | Native transitive routing between all attachments|
+| Global Connectivity         | Difficult – complex peering across regions/accounts | Facilitated – can peer TGWs across regions/accounts |
+
+5. Exam Power Up Points
+------------------------
+• **TGW Attachments:** Know the different types of attachments (VPC, VPN, Direct Connect) and their roles.
+• **Transitive Routing:** Understand that TGW’s ability to support transitive routing removes the need for a full mesh and greatly simplifies design.
+• **Route Table Management:** Be familiar with how TGW route tables work and how multiple tables can be used to manage complex routing policies.
+• **Global Connectivity and Sharing:** Recognize that TGWs can be shared across multiple AWS accounts via AWS Resource Access Manager (RAM) and can be peered cross-region.
+• **Design Simplification:** Remember that TGW drastically reduces network complexity, which is a common exam topic when comparing hybrid network architectures.
+
+6. Conclusion
+-------------
+• AWS Transit Gateway is a game changer for complex AWS network architectures, offering centralized, scalable, and highly available routing.
+• By aggregating diverse connectivity methods into one central hub, TGW minimizes the need for a full mesh of direct connections and makes inter-VPC and on-premises connectivity much simpler.
+• This reduction in complexity, coupled with native support for transitive routing and global connectivity, makes TGW an essential component in modern AWS hybrid network designs and a key topic for AWS exams.
