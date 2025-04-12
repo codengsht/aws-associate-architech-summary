@@ -1,0 +1,87 @@
+===================
+15-FSx For Lustre
+===================
+
+1. Introduction and Context
+---------------------------
+- Focus on FSx for Lustre, a high-performance file system designed for Linux-based workloads.
+- Important for distinguishing between FSx for Windows (Windows native using SMB) and FSx for Lustre (optimized for HPC).
+- Primarily used in scenarios such as machine learning, big data, and financial modeling requiring low-latency, high-throughput access.
+
+2. Comparison: FSx for Windows vs. FSx for Lustre
+--------------------------------------------------
+| Feature            | FSx for Windows                           | FSx for Lustre                                         |
+|--------------------|-------------------------------------------|--------------------------------------------------------|
+| Primary Use        | Windows-native file system                | High-performance file system for Linux environments    |
+| Access Protocol    | SMB (Server Message Block)                | Native Lustre access (POSIX-compliant)                 |
+| Intended Environment| Windows-based applications               | HPC workloads (machine learning, big data, financial modeling) |
+| Key Characteristics| Seamless integration with Windows services| Sub-millisecond latency and high throughput            |
+
+3. FSx for Lustre – Use Cases and Key Features
+------------------------------------------------
+- **High Performance:** Capable of scaling to hundreds of gigabytes per second with sub-millisecond latency.
+- **HPC Workloads:** Ideal for applications requiring rapid processing of large datasets (e.g., ML, big data analytics, financial simulations).
+- **POSIX Permissions:** Supports Unix-style file system permissions and access controls.
+- **S3 Integration:** 
+  - Can be associated with an S3 repository.
+  - Objects from S3 appear in the file system but are “lazy loaded” (loaded on first access, not stored permanently in Lustre).
+  - Changes in the file system must be synchronized back to S3 manually via commands.
+
+4. Deployment Types: Scratch vs. Persistent
+----------------------------------------------
+| Attribute           | Scratch Deployment                         | Persistent Deployment                             |
+|---------------------|--------------------------------------------|---------------------------------------------------|
+| Purpose             | Temporary, short-term high-performance use | Long-term storage with built-in resilience         |
+| Performance         | Optimized for maximum performance          | Offers multiple baseline options (50/100/200 MB/s per TiB) with burst up to 1,300 MB/s per TiB |
+| Availability        | No built-in high availability              | High availability and self-healing within one AZ  |
+| Data Resiliency     | Data loss possible on hardware failure     | Auto-healing & replication within the same AZ      |
+| Notes               | Ideal for ephemeral HPC tasks              | Best for persistent, critical workloads             |
+
+5. Architecture Overview
+-------------------------
+- **Core Components:**
+  - **File System:** Where data is stored and processed.
+  - **Metadata Targets (MSTs):** Store file metadata (e.g., file names, timestamps, permissions).
+  - **Object Storage Targets (OSTs):** Store actual file data; data is striped across multiple OSTs (each ~1.17 TiB) to achieve high throughput.
+- **Integration with S3:**
+  - An optional S3 repository can be linked at file system creation.
+  - Data from S3 is lazy loaded into the file system upon first access.
+  - File system and S3 remain separate unless manually synchronized.
+- **Networking:**
+  - Access provided through a single Elastic Network Interface (ENI) within a VPC.
+  - Clients (typically Linux EC2 instances with Lustre client software) connect via private networking.
+- **Performance Mechanism:**
+  - Baseline performance scales with storage size (minimum 1.2 TiB; increases in 2.4 TiB increments).
+  - Utilizes a credit system similar to EBS volumes for burst performance.
+  - In-memory caching enhances performance for frequently accessed data.
+  
+6. Connectivity, Integration, and Performance
+-----------------------------------------------
+- **Connectivity:** 
+  - Available within a VPC and can be accessed from on-premises via VPN or Direct Connect.
+- **Integration:**
+  - Designed to be integrated into client-managed environments.
+  - Works seamlessly with AWS networking services to deliver high throughput and low latency.
+- **Performance:**
+  - Scratch deployments deliver maximum performance at the expense of data resiliency.
+  - Persistent deployments offer self-healing and replication (within a single Availability Zone), sacrificing some performance for resilience.
+
+7. Exam Power-Up Points
+-----------------------
+- **Distinguishing Factors:** 
+  - FSx for Windows is used for Windows-native file sharing over SMB; FSx for Lustre is the go-to for HPC on Linux.
+- **Deployment Type Selection:** 
+  - Use "scratch" for temporary, ultra-high-performance needs; choose "persistent" for critical workloads requiring high availability (though limited to one AZ).
+- **S3 Repository Integration:** 
+  - Understand the lazy loading mechanism and manual synchronization process.
+- **Architecture Essentials:**
+  - Grasp the role of metadata targets and object storage targets in delivering high throughput.
+  - Remember that performance scales with allocated storage and the number of OSTs.
+- **Networking:** 
+  - A single ENI services the file system, making it crucial to understand VPC connectivity and potential bandwidth requirements.
+
+8. Conclusion
+-------------
+- FSx for Lustre is tailored for high-performance, data-intensive applications.
+- It provides flexible deployment options (scratch vs. persistent) to balance performance and resiliency.
+- For the exam, focus on distinguishing its key features from FSx for Windows and understanding how deployment choices impact performance and availability.
