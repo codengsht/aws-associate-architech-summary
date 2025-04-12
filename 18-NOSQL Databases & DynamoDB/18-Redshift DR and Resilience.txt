@@ -1,0 +1,62 @@
+===============================
+18-Redshift DR and Resilience
+===============================
+
+1. Overview
+-----------
+- Redshift operates within a single Availability Zone (AZ) by design, which exposes it to risks if that AZ fails.
+- As a solutions architect, it is critical to design systems that mitigate these risks through effective backup and disaster recovery strategies.
+
+2. Backup Options
+-----------------
+Redshift provides two primary backup types that store snapshots in Amazon S3, benefiting from S3's high availability (data is replicated across three or more AZs):
+
+- **Automatic Backups:**
+  - **Trigger:** Occur automatically every 8 hours or after every 5 GB of data change.
+  - **Retention:** Default retention is 1 day, configurable up to 35 days.
+  - **Cost/Storage:** Provided free up to the total capacity of the cluster; backups are incremental, storing only changed data.
+
+- **Manual Snapshots:**
+  - **Trigger:** Initiated manually via the AWS console, scripts, or management applications.
+  - **Retention:** Remain until explicitly deleted.
+  - **Cost/Storage:** Also incremental and stored in S3.
+
+Below is a comparison table summarizing these backup types:
+
+| Backup Type        | Trigger Mechanism               | Retention Period         | Storage   | Incremental Backup |
+|--------------------|---------------------------------|--------------------------|-----------|--------------------|
+| Automatic Backups  | Scheduled (every 8 hrs/5 GB)    | 1 day (up to 35 days)    | Amazon S3 | Yes                |
+| Manual Snapshots   | User-initiated                  | Indefinite until deleted | Amazon S3 | Yes                |
+
+3. Resilience and Disaster Recovery
+-------------------------------------
+- **Snapshot Storage in S3:**
+  - All snapshots (automatic and manual) are stored in Amazon S3, which replicates data across multiple AZs. This provides resilience against single AZ failures.
+  
+- **Cluster Restoration:**
+  - Restoring from a snapshot creates a brand new Redshift cluster.
+  - When restoring, you can choose a different Availability Zone, thereby mitigating the risk of AZ-specific failures.
+  
+- **Cross-Region Snapshot Copying:**
+  - Snapshots can be configured to be copied to another AWS region.
+  - This provides protection against regional failures and enables quick recovery by provisioning a new cluster in an alternate region.
+  - Copied snapshots have their own retention settings, offering flexibility to manage costs and recovery objectives.
+
+4. Exam Power-Up Points
+-------------------------
+- **High Availability & Resilience:**
+  - Understand that Redshift’s single AZ deployment necessitates robust backup strategies to prevent data loss.
+  - Recognize the importance of S3-based snapshot storage and its multi-AZ replication.
+
+- **Backup Types & Retention:**
+  - Differentiate between automatic backups (scheduled, incremental, configurable retention up to 35 days) and manual snapshots (user-initiated, retained until deletion).
+  
+- **Disaster Recovery Options:**
+  - Be familiar with the option to restore a new cluster from snapshots in a different AZ.
+  - Know that cross-region snapshot copying provides additional protection against regional failures.
+
+Conclusion
+----------
+- Effective use of Redshift backups (both automatic and manual) is essential to ensure data resilience in the face of AZ or regional failures.
+- Leveraging S3's inherent durability and replication, along with restoration and cross-region copying, allows for robust disaster recovery and continuity planning.
+- These features are key focus areas for the exam, emphasizing the need for architects to design systems that mitigate single AZ risks.

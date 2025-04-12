@@ -1,0 +1,76 @@
+=============================
+18-DynamoDB - Global Tables
+=============================
+
+1. Overview
+-----------
+- **Purpose:** Introduce DynamoDB Global Tables as a solution for global database deployments.
+- **Focus:** 
+  - Multi-master replication across regions.
+  - Architectural design for high availability and low latency.
+  - Key exam considerations including conflict resolution and consistency.
+
+2. Global Table Architecture
+----------------------------
+- **Multi-Master Replication:** 
+  - All regional tables are peers—no single master.
+  - Enables both read and write operations in any AWS region.
+- **Implementation Process:**
+  - **Step 1:** Create DynamoDB tables in each desired AWS region.
+  - **Step 2:** On one of the tables (choice does not matter), configure links to the others.
+  - **Outcome:** All tables become replicas as part of a global table with replication occurring typically within a second.
+
+3. Conflict Resolution
+-----------------------
+- **Approach:** Last Writer Wins.
+- **Explanation:**
+  - When the same record is updated concurrently in different regions, the most recent write is replicated to all tables.
+  - Ensures a simple, predictable outcome for conflicts.
+
+4. Consistency Considerations
+-----------------------------
+- **Intra-Region Reads:** 
+  - Can be strongly consistent, meaning the read returns the latest data.
+- **Inter-Region Reads:** 
+  - Only eventually consistent due to replication lag.
+- **Key Point:** Applications using global tables must tolerate eventual consistency when accessing data across regions.
+
+5. Use Cases and Benefits
+--------------------------
+- **Global Availability:** 
+  - Provides high availability by enabling local read and write operations.
+- **Performance:** 
+  - Reduces latency for users distributed worldwide.
+- **Disaster Recovery:** 
+  - Offers robust business continuity by replicating data across multiple regions.
+- **Cost-Effective:** 
+  - Simplifies global deployments without the need for complex, self-managed replication processes.
+
+6. Summary Table: Global Tables Key Aspects
+--------------------------------------------
+| Aspect             | Description                                                                          | Notes/Use Cases                                             |
+|--------------------|--------------------------------------------------------------------------------------|-------------------------------------------------------------|
+| Multi-Master       | All tables are equal; no designated master.                                          | Supports local reads/writes in any region.                  |
+| Replication        | Data is replicated across regions, typically within one second.                      | Ensures near real-time data synchronization globally.       |
+| Conflict Resolution| Uses "last writer wins" to resolve concurrent updates.                               | Offers predictable conflict resolution.                     |
+| Consistency        | Strongly consistent within the same region; eventually consistent for cross-region.  | Applications must handle potential read lag across regions.  |
+| Deployment         | Create tables in selected regions and link them as part of a single global table.       | Ideal for high availability, low latency, and disaster recovery. |
+
+7. Exam Power-Up Points
+-----------------------
+- **Architectural Insight:** Global tables are based on multi-master replication with a simple, predictable setup.
+- **Conflict Management:** Understand that conflicts are resolved using the last writer wins approach.
+- **Consistency Models:** 
+  - Local operations can be strongly consistent.
+  - Global operations are eventually consistent—applications must be designed accordingly.
+- **Deployment Strategy:** Know that global tables are set up by linking individual regional tables.
+
+8. Conclusion
+-------------
+- **Key Takeaway:** 
+  - DynamoDB Global Tables enable a globally distributed, highly available database solution with multi-master replication.
+- **Benefits:**
+  - Lower latency and improved performance for global applications.
+  - Simplified architecture for disaster recovery and business continuity.
+- **Exam Tip:** 
+  - Focus on the architectural principles: multi-master replication, eventual consistency, and conflict resolution via "last writer wins."

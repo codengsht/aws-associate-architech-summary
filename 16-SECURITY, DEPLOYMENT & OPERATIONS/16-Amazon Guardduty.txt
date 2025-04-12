@@ -1,0 +1,64 @@
+========================
+16-Amazon Guardduty
+========================
+
+1. Introduction
+---------------
+- **Purpose:** The lecture provides an overview of Amazon GuardDuty.
+- **Audience:** Content is primarily aimed at the security specialty training stream.
+- **Objective:** To explain the workings, integration, and event-driven features of GuardDuty as well as highlight key points for exam preparation.
+
+2. Overview of Amazon GuardDuty
+-------------------------------
+- **Continuous Security Monitoring:** Once enabled, GuardDuty constantly monitors your AWS account and resources.
+- **Intelligent Analysis:** Leverages artificial intelligence, machine learning, and threat intelligence feeds.
+- **Self-Learning:** Automatically learns normal activity patterns and identifies anomalies without requiring manual definition of “normal” behavior.
+
+3. Key Features and Functionality
+-----------------------------------
+- **Integration with Data Sources:** GuardDuty is designed to integrate with multiple log and event sources.
+- **Event-Driven Response:** When unusual activity (a "finding") is detected, GuardDuty can:
+  - Notify team members or external security management systems.
+  - Initiate event-driven remediation workflows (e.g., invoking Lambda functions).
+- **Multi-Account Support:** Uses a master–member account architecture, allowing centralized management across multiple AWS accounts.
+
+4. Supported Data Sources
+---------------------------
+The following table summarizes the data sources integrated with Amazon GuardDuty:
+
+| Data Source              | Description                                                          |
+|--------------------------|----------------------------------------------------------------------|
+| DNS Logs (Route 53)      | Logs DNS requests to detect potential malicious domain lookups.      |
+| VPC Flow Logs            | Provides traffic metadata for network traffic in VPCs.               |
+| CloudTrail Event Logs    | Tracks API calls within the account.                                 |
+| Cloud Management Events  | Covers control plane events for management activities.               |
+| CloudTrail Data Events   | Monitors interactions with S3 objects.                               |
+
+5. Event-Driven Remediation Mechanism
+---------------------------------------
+- **Findings Generation:** GuardDuty continuously reviews ingested data combined with threat intelligence to generate findings on anomalous activities.
+- **Notification & Remediation:** 
+  - Findings can trigger Amazon EventBridge (formerly CloudWatch Events).
+  - Options include sending alerts via SNS or invoking Lambda functions for automated remediation (e.g., updating network ACLs to block intrusions).
+
+6. Multi-Account Architecture
+-----------------------------
+- **Master–Member Setup:** 
+  - The account where GuardDuty is enabled acts as the master account.
+  - Additional AWS accounts can be invited as member accounts, consolidating security management in one location.
+
+7. Exam Power-Up Points
+-------------------------
+- **Continuous Monitoring:** Understand the importance of continuous monitoring in GuardDuty.
+- **Data Integration:** Memorize the supported data sources and their roles:
+  - DNS Logs, VPC Flow Logs, CloudTrail Event and Data Events, and Cloud Management Events.
+- **Intelligent Analysis:** Focus on GuardDuty’s use of AI/ML and threat intelligence to autonomously identify unusual behavior.
+- **Event-Driven Response:** Recognize how findings trigger notifications and automated remediation workflows.
+- **Multi-Account Management:** Grasp how the master–member account architecture is utilized to streamline security across multiple accounts.
+
+8. Conclusion
+-------------
+- **Essence of GuardDuty:** Amazon GuardDuty is a powerful tool for continuous security monitoring that uses intelligent analysis and automated responses to protect AWS environments.
+- **Practical Use:** The service integrates with various data sources and supports multi-account management, making it essential for both exam success and real-world security operations.
+
+Make sure to review these key points and understand the mechanisms behind GuardDuty for effective exam preparation and practical application.

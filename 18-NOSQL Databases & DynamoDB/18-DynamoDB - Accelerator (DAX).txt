@@ -1,0 +1,76 @@
+=================================
+18-DynamoDB - Accelerator (DAX)
+=================================
+
+1. Overview
+-----------
+- **Purpose:** Introduce DAX as an in-memory cache designed to accelerate DynamoDB performance.
+- **Key Benefit:** Provides low-latency (microsecond) read responses and cost savings by reducing repeated database calls.
+- **Integration Advantage:** Unlike generic caches, DAX is tightly integrated with DynamoDB using a unified SDK, minimizing administrative overhead.
+
+2. Traditional In-Memory Cache vs. DAX
+---------------------------------------
+- **Generic Cache Flow:**
+  - The application queries a separate cache.
+  - On a cache miss, it must query DynamoDB, fetch the data, and subsequently update the cache.
+  - Requires managing separate API calls for cache and database.
+- **DAX Flow:**
+  - The DAX SDK intercepts data requests through a single set of API calls.
+  - On a cache hit, data is returned immediately from DAX (in microseconds).
+  - On a cache miss, DAX retrieves data from DynamoDB, caches it, and returns it to the application.
+  - This unified approach abstracts the caching layer, reducing integration complexity.
+
+3. DAX Architecture & Operation
+---------------------------------
+- **Deployment:** 
+  - DAX clusters are deployed within a VPC across multiple Availability Zones for high availability.
+  - A cluster consists of a primary node (handling reads and writes) and multiple replica nodes (serving read requests).
+- **Caching Mechanisms:**
+  - **Item Cache:** 
+    - Caches individual items (via GetItem or BatchGetItem operations) identified by partition (and sort) keys.
+  - **Query Cache:** 
+    - Caches the results of query and scan operations along with their parameters, allowing entire query responses to be served from cache.
+- **Read-Through and Write-Through Behavior:**
+  - **Read-Through:** If data is present in the cache (cache hit), DAX returns results rapidly; if not, it fetches from DynamoDB and populates the cache.
+  - **Write-Through:** When data is written via the DAX SDK, the write is committed to DynamoDB and simultaneously updated in the DAX cache.
+- **Performance:**
+  - Cache hits can provide responses in microseconds (e.g., around 400µs).
+  - Cache misses incur single-digit millisecond latency due to the fallback to DynamoDB.
+
+4. Scaling & Deployment Considerations
+----------------------------------------
+- **Scalability Options:**
+  - **Scale Up:** Use larger DAX instances.
+  - **Scale Out:** Add more nodes to the cluster.
+- **High Availability:** 
+  - The multi-node, multi-AZ architecture ensures automatic failover if the primary node fails (a replica is promoted).
+- **VPC Dependency:** 
+  - Since DAX operates within a VPC, any application using DAX must also be deployed within the same VPC.
+
+5. Exam Power-Up Points
+-----------------------
+- **When to Use DAX:**
+  - Ideal for read-heavy workloads with repeated access to the same data.
+  - Beneficial during high-traffic periods (e.g., sales) where low response times and cost reduction on RCUs are critical.
+- **Key Trade-Offs:**
+  - **Consistency:** DAX supports eventual consistency; applications requiring strongly consistent reads should not use DAX.
+  - **Write-Heavy Workloads:** If the workload is primarily write-driven, the benefits of caching may be less significant.
+- **Default Exam Assumption:** 
+  - In exam scenarios mentioning caching for DynamoDB, the default choice should be DAX unless there is clear evidence to opt for a non-integrated cache solution.
+
+6. Comparison Table: Traditional Cache vs. DAX
+-----------------------------------------------
+| Aspect           | Traditional In-Memory Cache                                  | DAX (DynamoDB Accelerator)                                  |
+|------------------|--------------------------------------------------------------|-------------------------------------------------------------|
+| Integration      | Separate cache layer with distinct API calls                 | Tightly integrated; uses a single SDK for cache and DB      |
+| Cache Access     | Application checks cache first; on miss, reads from DB       | Unified call; DAX handles cache hit/miss transparently      |
+| Write Behavior   | Write to DB then update cache separately                     | Write-through caching: writes go to both DAX and DynamoDB   |
+| Read Latency     | Fast on hit, slower on miss due to separate DB call           | Cache hits return in microseconds; misses incur DB latency  |
+| Scalability      | Needs separate scaling, both up and out                      | Scales with cluster nodes deployed across multiple AZs      |
+| Consistency      | Handled separately; may require complex logic                  | Supports eventual consistency; not for strongly consistent use|
+
+7. Conclusion
+-------------
+- **Summary:** DAX simplifies caching by integrating seamlessly with DynamoDB, reducing response times dramatically and lowering operational costs for repetitive read operations.
+- **When to Choose DAX:** Ideal for applications with high read frequency and where cost/performance efficiency is crucial, but avoid DAX if strong consistency is required or the workload is write-heavy.
+- **Final Takeaway:** DAX is a powerful tool in the solutions architect’s toolkit for optimizing DynamoDB performance with minimal administrative overhead.

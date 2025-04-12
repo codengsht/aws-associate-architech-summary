@@ -1,0 +1,84 @@
+===============================================
+16-Web Application Firewall (WAF), WEBACLs, Rule Groups and Rules
+===============================================
+
+1. Introduction
+---------------
+- AWS WAF is AWS's implementation of a Layer 7 (application layer) firewall.
+- It protects web resources (e.g., CloudFront distributions, Application Load Balancers, API Gateways, AppSync) by understanding and filtering HTTP/HTTPS traffic.
+- The unit of configuration is the Web Access Control List (Web ACL).
+
+2. WAF Architecture Overview
+----------------------------
+- **Scope of Protection:**
+  - Global resources (CloudFront) vs. regional resources (ALB, API Gateway, AppSync).
+  - Web ACLs for global services are created without a region, while regional ones must be defined in a specific region.
+- **Event-Driven Security Response:**
+  - WAF logs can be sent to Amazon S3, CloudWatch Logs, or Kinesis Data Firehose.
+  - These logs can integrate with AWS services (e.g., EventBridge, Lambda, Athena) to automate security responses, creating a feedback loop that updates Web ACLs based on actionable intelligence.
+
+3. Web Access Control Lists (Web ACLs)
+----------------------------------------
+- **Definition:**  
+  - A Web ACL is the core configuration unit that determines whether incoming web traffic is allowed or blocked.
+- **Components:**
+  - **Default Action:** Sets the baseline (allow or block) for traffic not explicitly matched by any rule.
+  - **Rules and Rule Groups:** Define conditions to allow, block, count, or capture specific traffic.
+- **Associations:**
+  - A single resource can have only one associated Web ACL.
+  - However, a Web ACL can protect multiple resources.
+  - Note: CloudFront Web ACLs (global) cannot be mixed with regional ones and are not supported on AWS Outposts.
+- **Capacity Considerations:**
+  - Web ACLs have a compute budget measured in WAF Capacity Units (WCUs), with a default max of 1,500 WCUs (adjustable via support ticket).
+
+4. Rule Groups and Rules
+-------------------------
+- **Rule Groups:**
+  - Collections of rules that simplify administration.
+  - Can be AWS Managed, marketplace-provided, or customer-managed.
+  - Do not have default actions by themselves; they are referenced within a Web ACL.
+- **Rules:**
+  - Each rule comprises three elements:
+    - **Type:** Defines the nature of the rule—either regular or rate-based.
+    - **Statement:** The criteria for matching traffic (e.g., IP addresses, HTTP headers, cookies, query parameters, URI path, HTTP method). Note that for HTTP bodies only the first 8,192 bytes are inspected.
+    - **Action:** Determines the outcome when a match occurs (Allow, Block, Count, or Capture).
+
+   **Regular vs. Rate-Based Rules:**
+
+   | Rule Type       | Attributes                                                                                                                                       |
+   |-----------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
+   | Regular Rule    | Matches on set conditions (e.g., specific HTTP header, TCP port, etc.). Actions: Allow, Block, Count, Capture.                                     |
+   | Rate-Based Rule | Triggers on threshold rate (e.g., requests exceeding a threshold in 5 minutes). Actions: Block, Count, Capture (Allow is not available).        |
+
+- **Additional Features:**
+  - **Custom Responses:**  
+    - For Block actions, custom responses (or headers for other actions) can be defined so that backend applications can react accordingly.
+  - **Labels:**  
+    - Internal markers within WAF that enable multi-stage processing. Labels can be added by one rule and then referenced by subsequent rules in the same Web ACL.
+    - Note: When an Allow or Block action is executed, processing stops; with Count or Capture, processing continues.
+
+5. Pricing Overview
+--------------------
+- **Web ACL Charges:**
+  - Monthly fee per Web ACL (e.g., ~$5/month; subject to change).
+  - Additional monthly fees per rule ($1 per rule, approximately) and for each rule group (including marketplace or managed rule groups).
+- **Request-Based Pricing:**
+  - A per-request fee is applied for every request processed by a Web ACL (e.g., ~$0.60 per million requests).
+- **Optional Security Features:**
+  - Intelligent threat mitigation capabilities (bot control, fraud control, account takeover protection, etc.) incur extra fees on both a monthly and per-request basis.
+
+6. Exam Power-Up Points
+------------------------
+- **Key Concepts to Remember:**
+  - **Web ACL:** The central configuration construct that controls traffic based on default actions and a set of rules/rule groups.
+  - **Association:** Understand that a Web ACL can protect multiple resources, but resources are limited to a single associated ACL.
+  - **Rule Types:** Know the difference between regular rules (simple match conditions) and rate-based rules (trigger on high request volume).
+  - **Inspection Limits:** Remember that WAF inspects only the first 8,192 bytes of the request body.
+  - **Pricing Structure:** Be aware of the per-Web ACL, per-rule, and per-request charges, as well as additional costs for premium security features.
+  - **Event-Driven Automation:** Recognize that WAF logs can be used to trigger automated security responses using AWS services.
+
+7. Conclusion
+-------------
+- AWS WAF provides application-level protection by filtering HTTP/HTTPS traffic using Web ACLs, rules, and rule groups.
+- It integrates with multiple AWS services and supports both static and dynamic (event-driven) security responses.
+- For exam preparation, focus on understanding the configuration, rule types, and how Web ACLs are associated with different AWS resources, as well as the cost implications and automation options.

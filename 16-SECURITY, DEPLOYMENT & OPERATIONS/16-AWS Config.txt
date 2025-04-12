@@ -1,0 +1,79 @@
+==============
+16-AWS Config 
+==============
+
+1. Introduction
+---------------
+- AWS Config is a service that continuously monitors and records the configurations of AWS resources.
+- It is essential for audit and compliance purposes, especially in exam scenarios where making rapid architectural decisions is required.
+- AWS Config does not prevent configuration changes; instead, it tracks “what” changed, “when” it changed, and “who” made the change.
+
+2. Core Functions of AWS Config
+-------------------------------
+- **Configuration Recording:**
+  - Once enabled, AWS Config records every configuration change as a configuration item.
+  - A configuration item captures:
+    - The resource’s configuration details at a specific point in time.
+    - Its relationships to other resources.
+    - Information about who initiated the change.
+  - Example: If a rule is added to a security group attached to an EC2 instance, both pre- and post-change states are logged.
+
+- **Compliance Auditing:**
+  - AWS Config compares resource configurations against defined internal standards or regulatory requirements.
+  - It marks resources as either compliant or noncompliant without blocking changes.
+  - This helps organizations detect deviation from policies, such as security groups exposing disallowed ports.
+
+3. AWS Config Architecture & Data Flow
+----------------------------------------
+- **Regional Service:**
+  - AWS Config operates on a per-region basis, monitoring resources within each region.
+  - It supports cross-region and cross-account aggregation, allowing centralized visibility.
+- **Data Storage:**
+  - All configuration history and snapshots are stored in a designated S3 Config bucket.
+  - Data can be accessed via the AWS Config console, APIs, or directly from the S3 bucket.
+- **Event Notifications & Integration:**
+  - AWS Config can send notifications using SNS.
+  - It can generate events through EventBridge (or CloudWatch Events) to trigger automated remediation.
+  - Integration with Systems Manager allows automated fixes for noncompliant resources.
+
+4. Optional Components: Config Rules
+--------------------------------------
+- **Config Rules:**
+  - These are policies that evaluate whether resource configurations comply with desired settings.
+  - They come in two forms:
+    - **AWS Managed Rules:** Predefined and maintained by AWS.
+    - **Custom Rules:** Defined by the user, often using Lambda functions to implement specific logic.
+  - Based on rule evaluations, resources are tagged as “compliant” or “noncompliant.”
+  - Config Rules can trigger notifications or automated remediation actions (via EventBridge or Systems Manager).
+
+5. Comparison Table: AWS Config Standard vs. Config Rules (Optional)
+---------------------------------------------------------------------
+| Component                  | Standard AWS Config                                  | Config Rules (Optional)                                          |
+|----------------------------|------------------------------------------------------|------------------------------------------------------------------|
+| Primary Function           | Records configuration changes over time            | Evaluates resource compliance against defined policies           |
+| Data Captured              | Resource configurations, relationships, change maker | Compliance status (compliant/noncompliant) based on custom criteria |
+| Change Prevention          | Does not prevent changes                             | Does not prevent changes, but can trigger remediation actions      |
+| Storage                    | Configuration items stored in an S3 Config bucket    | Results stored as part of the configuration evaluation             |
+| Notification & Automation  | Generates events (SNS, EventBridge)                  | Can trigger notifications and automate remediation via Lambda/SSM   |
+
+   *Table Construction Details:*
+   - **Columns Identified:** "Component", "Standard AWS Config", "Config Rules (Optional)".
+   - **Column Widths:** Adjusted to ensure clear presentation of information.
+   - **Alignment:** Each cell is padded with spaces for consistent width.
+
+6. Exam & Real-World Considerations
+------------------------------------
+- **Key Exam Points:**
+  - AWS Config is used primarily for auditing and historical tracking of resource configurations.
+  - It does not enforce policies or stop changes; it only reports them.
+  - If exam questions refer to compliance evaluation, automated remediation, or a history of configuration changes, AWS Config (and optionally, Config Rules) is the appropriate service.
+- **Real-World Use Cases:**
+  - Auditing resource changes over time.
+  - Enabling compliance checks to ensure organizational policies are followed.
+  - Triggering automated responses to configuration drifts via integration with SNS, EventBridge, Lambda, or Systems Manager.
+
+7. Conclusion
+-------------
+- AWS Config provides detailed visibility into the configuration state of your resources, capturing changes, relationships, and user actions.
+- It serves as a foundational tool for compliance auditing and can be extended with Config Rules for active evaluation and remediation.
+- Understanding its capabilities is crucial for making informed architectural decisions and excelling in exam scenarios.

@@ -1,0 +1,78 @@
+============================
+18-DynamoDB - Architecture
+============================
+
+1. Overview
+-----------
+- **Product Type:** Amazon DynamoDB is a fully managed, NoSQL, wide-column key/value database as a service.
+- **Target Use Cases:** Primarily used for web-scale applications and services that require high performance, scalability, and low administrative overhead.
+- **Access:** Publicly accessible via endpoints (console, CLI, or API) without requiring SQL.
+
+2. Core Architecture & Service Model
+--------------------------------------
+- **Managed Service:** Delivered as a "table as a service" product with no need for self-managed infrastructure.
+- **NoSQL Characteristics:** Handles both simple key/value pairs and document-like data structures, but primarily uses a wide-column model.
+- **Infrastructure Benefits:** Automatic data replication across multiple availability zones for high resilience; optional global table configurations for worldwide disaster recovery.
+
+3. Tables, Items, and Primary Keys
+------------------------------------
+- **Table as Base Entity:** Data is stored within tables. Each table groups items (similar to rows) that share a primary key.
+- **Primary Key Types:** A table’s primary key can be configured as:
+  
+  | Primary Key Type   | Description                                                                                        |
+  |--------------------|----------------------------------------------------------------------------------------------------|
+  | Simple Key         | Consists of a single partition key (PK); each item must have a unique PK.                           |
+  | Composite Key      | Combines a partition key (PK) and a sort key (SK); each (PK, SK) pair must be unique.                |
+
+- **Items and Attributes:** Apart from the primary key attributes, items can store various other attributes with no predefined schema.
+- **Size Limit:** Each item, including its keys and attribute names/values, must not exceed 400 KB.
+
+4. Scaling Options & Billing
+------------------------------
+- **Capacity Modes:**
+  
+  | Capacity Mode         | Description                                                                                                           |
+  |-----------------------|-----------------------------------------------------------------------------------------------------------------------|
+  | Provisioned Capacity  | You manually set the throughput limits using Read Capacity Units (RCU) and Write Capacity Units (WCU).                  |
+  | On-Demand Capacity    | A pay-per-request model where you pay per operation without manually setting capacity, ideal for unpredictable workloads.|
+
+- **Capacity Units Defined:**
+  - **WCU (Write Capacity Unit):** 1 WCU allows writing up to 1 KB of data per second.
+  - **RCU (Read Capacity Unit):** 1 RCU permits reading up to 4 KB of data per second.
+- **Billing Model:** Costs are based on the throughput capacity (RCUs and WCUs), storage usage, and additional features (like backups). There is also the option for reserved capacity to reduce costs with long-term commitments.
+
+5. Data Resilience and Performance
+------------------------------------
+- **High Performance:** Backed by SSDs to deliver single-digit millisecond response times.
+- **Resilience:** Data is automatically replicated across multiple storage nodes within an availability zone and can span multiple zones; global tables are available as an optional configuration.
+- **Security:** Data is encrypted at rest and supports automated backup processes.
+
+6. Backups and Recovery
+-----------------------
+- **On-Demand Backups:** Manual backups (similar to snapshots) that you manage; can be restored in the same region or cross-region with configurable encryption.
+- **Point-in-Time Recovery (PITR):** Provides a continuous backup stream over a 35-day window, allowing table restoration to any second within that window.
+  
+  | Backup Type              | Description                                                                                                                 |
+  |--------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+  | On-Demand Backup         | Manual backup snapshots retained until explicitly deleted; useful for migration and configuration restore.                  |
+  | Point-in-Time Recovery   | Continuously captures changes for each table; enables restoration with one-second granularity over a 35-day period once enabled.|
+
+7. Event-Driven Integration
+---------------------------
+- **Change Streams:** DynamoDB supports event-driven integrations that can trigger actions (like invoking Lambda functions) when data in a table changes.
+- **Use Cases:** This facilitates automated workflows for notifications, remediation, or integrating with other AWS services.
+
+8. Exam Power-Up Points (Key Considerations)
+---------------------------------------------
+- **NoSQL Default:** For exam questions mentioning NoSQL, key/value, or wide-column data stores, DynamoDB is typically the correct choice.
+- **Relational Data:** DynamoDB is not designed for relational database use; if relational queries, SQL, or ACID transactions (in the traditional RDBMS sense) are mentioned, consider other options.
+- **Capacity & Billing:** Understand the differences between provisioned and on-demand capacity modes (RCU/WCU), and how these affect performance and cost.
+- **Access Methods:** Remember that you interact with DynamoDB through the console, CLI, or API – it does not use SQL.
+- **Scalability & Performance:** Emphasize the benefits of a fully managed service with high resilience, automatic scaling, and low latency.
+- **Backup Options:** Be aware of both on-demand backups and PITR, including their differences and use cases.
+
+9. Conclusion
+-------------
+- **Summary:** DynamoDB is a high-performance, scalable NoSQL database service designed for modern applications with flexible data models, minimal administrative overhead, and robust integration with AWS services.
+- **Practical Impact:** Its architectural features—such as automated scaling, data replication, event-driven integrations, and versatile capacity modes—make it a strong candidate for many serverless and web-scale applications.
+- **Exam Tip:** When encountering exam questions on NoSQL or key/value data stores, default to DynamoDB unless the scenario explicitly requires relational or SQL-based processing.

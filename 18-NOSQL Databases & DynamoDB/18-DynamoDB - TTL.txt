@@ -1,0 +1,62 @@
+===================
+18-DynamoDB - TTL
+===================
+
+1. Overview
+-----------
+- **DynamoDB TTL (Time to Live)** is a feature that automates deletion of expired items.
+- It relies on a per-item timestamp (in seconds since January 1, 1970) that defines when an item should be considered expired.
+- Understanding TTL is crucial for both real-world applications and exam success.
+
+2. Table Structure and Partitioning
+-------------------------------------
+- **Table Example:** The lecture used an example table (with potentially millions of items) that illustrates:
+  - A **Partition Key** (shown in blue) and a **Sort Key** (shown in green).
+  - Additional attributes (illustrated in yellow, red, and pink).
+- **Data Organization:** Items are distributed across multiple partitions based on the partition key, ensuring efficient operations.
+
+3. TTL Configuration and Operation
+-------------------------------------
+- **Configuration Steps:**
+  - **Enable TTL:** Activate TTL on the table and select a specific attribute for TTL processing.
+  - **Timestamp Value:** The chosen TTL attribute must hold a numeric value—seconds since the epoch (January 1, 1970).
+  - **Item Expiry:** Set the TTL value for each item to define when it becomes obsolete (e.g., one week from now).
+  
+- **Operational Workflow:**
+  - A periodic process scans each partition, comparing the TTL attribute with the current epoch time.
+  - Items with a TTL value less than the current time are flagged as expired.
+  - A separate deletion process then removes these expired items from the table and any associated indexes.
+  - TTL deletions are handled as system events, meaning they occur in the background without performance or cost penalties.
+
+4. Automated TTL Processes
+----------------------------
+The TTL functionality involves two distinct automated processes. The table below compares their roles:
+
+| TTL Process           | Description                                                                                      | Outcome                                                                                                                       |
+|-----------------------|--------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| Expiration Marking    | Scans each partition, compares the TTL attribute with the current epoch time, and marks items as expired.  | Items that have passed their TTL are flagged as expired (they remain queryable until deletion occurs).                         |
+| Deletion Process      | Periodically scans for items marked as expired and removes them from the table and its indexes.       | Expired items are fully removed from the table and indexes; deletion events are recorded (and available in a 24-hour stream if configured). |
+
+5. DynamoDB Streams and Deletion Events
+-----------------------------------------
+- **Stream Integration:** You can configure a dedicated stream for TTL deletion events.
+- **24-Hour Window:** This stream provides a 24-hour rolling window of deletion events.
+- **Use Cases:** It supports housekeeping tasks, such as auditing TTL events or implementing an "undelete" function if needed.
+
+6. Exam Power-Up Points
+------------------------
+- **Importance:** TTL is a key feature you must understand for DynamoDB-related exam questions.
+- **Key Configurations:**
+  - Enabling TTL and selecting the proper TTL attribute.
+  - Using the epoch time (in seconds) correctly for timestamp values.
+- **Automated Processes:** Familiarize yourself with the two-step process:
+  - **Expiration Marking:** Identifying expired items.
+  - **Deletion Process:** Removing expired items from the table and indexes.
+- **Streams:** Know the benefits of associating TTL with DynamoDB Streams to capture deletion events.
+- **Practical Applications:** Recognize TTL’s use in scenarios like removing outdated user or sensor data and meeting regulatory data retention requirements.
+
+Conclusion
+----------
+- **Efficient Data Management:** DynamoDB TTL automates the removal of irrelevant or outdated data.
+- **Performance Benefits:** The process occurs seamlessly in the background without impacting performance or incurring extra charges.
+- **Exam Readiness:** Understanding TTL's configuration, execution, and use cases is critical for exam success and practical system design.

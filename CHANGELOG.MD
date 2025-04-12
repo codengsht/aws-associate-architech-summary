@@ -1,6 +1,18 @@
 # Changelog 
 
 ## 0.0.7
+- 15-HYBRID ENVIRONMENTS AND MIGRATION
+- 16-SECURITY, DEPLOYMENT & OPERATIONS
+- 18-NOSQL Databases & DynamoDB
+- 19-Machine Learning 101
+
+  ____   ___   _   _  _____  
+ |  _ \ / _ \ | \ | || ____| 
+ | | | | | | ||  \| ||  _|   
+ | |_| | |_| || |\  || |___  
+ |____/ \___/ |_| \_||_____| 
+
+## 0.0.7
 - 12-SERVERLESS AND APPLICATION SERVICES lectures summarized 
 - 13-GLOBAL CONTENT DELIVERY AND OPTIMIZATION lectures summarized 
 - 14-ADVANCED VPC Networking lectures summarized 

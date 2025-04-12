@@ -1,0 +1,68 @@
+=====================
+16-Amazon Inspector
+=====================
+
+1. Introduction
+---------------
+- Amazon Inspector is a security assessment service designed to evaluate vulnerabilities and deviations from best practices.
+- It primarily targets EC2 instances (and their operating systems) as well as container workloads.
+- Although it features only modestly on most AWS exams, a foundational understanding is important.
+
+2. Core Functions & Assessment Process
+----------------------------------------
+- **Security Assessments:**
+  - Inspector runs assessments over various durations (e.g., 15 minutes, 1 hour, up to 1 day) to evaluate system configurations.
+  - It identifies unusual traffic patterns, configuration issues, and potential vulnerabilities.
+- **Output of Assessments:**
+  - At the end of an assessment, Inspector produces a report of findings ranked by severity.
+  - The findings report is a key exam indicator; if you see a question referring to a security report with vulnerability details, think Inspector.
+
+3. Types of Assessments
+-----------------------
+- **Network Assessments:**
+  - Can be executed without an Inspector agent.
+  - Focuses on assessing network exposure and reachability (e.g., checking if well-known ports are exposed).
+  - Without an agent, the findings are less detailed since Inspector cannot confirm if applications are actively listening on those ports.
+- **Host Assessments:**
+  - Require the installation of an Inspector agent on the target instance.
+  - Provide detailed information on operating system vulnerabilities, application configurations, and container security.
+  - Generally offer richer, more actionable data compared to network-only assessments.
+
+4. Rules Packages
+-----------------
+- Inspector relies on pre-defined rules packages to determine what to check during an assessment. Key rules packages include:
+
+   a. **Network Reachability Rules Package:**
+      - Assesses how an instance or group of instances is exposed to public networks.
+      - Checks include:
+        - Recognized ports (whether a listener is present).
+        - Cases where a port is exposed with no listener (or missing agent confirmation).
+        - Identification of unrecognized ports with listeners.
+
+   b. **Common Vulnerabilities and Exposures (CVE) Package:**
+      - Uses a database of known cybersecurity vulnerabilities (each with a CVE identifier) to check for issues.
+      - If exam questions mention CVE numbers, it’s likely referring to Inspector findings.
+
+   c. **CIS Benchmarks Package:**
+      - Evaluates configurations against industry best practices defined by the Center for Internet Security.
+      - Identifies deviations that may compromise security based on widely accepted benchmarks.
+
+   d. **Security Best Practices Package:**
+      - Assesses adherence to recommended security practices (e.g., disabling route logging over SSH, enforcing password complexity, ensuring proper file permissions).
+
+5. Key Exam Power-Up Points
+---------------------------
+- **Identification:**  
+  - When exam questions refer to generating security reports, identifying CVE IDs, or checking against CIS benchmarks, this points toward Inspector.
+- **Assessment Types:**  
+  - Understand the distinction between network assessments (agent optional) and host assessments (agent required) for more detailed results.
+- **Rules Packages:**  
+  - Remember that Inspector’s findings are driven by specific rules packages for network reachability, CVEs, CIS benchmarks, and best practices.
+- **Scope:**  
+  - Inspector covers the operating system layer as well as container and network configurations—essential for diagnosing vulnerabilities holistically.
+
+6. Conclusion
+-------------
+- Amazon Inspector is a straightforward yet detailed service that automates security assessments on EC2 instances and container workloads.
+- It helps organizations and exam candidates identify vulnerabilities, check compliance against industry best practices, and generate prioritized security reports.
+- While its usage might be considered basic in the context of the exam, understanding its assessment types, rules packages, and key outputs is vital for both exam success and real-world application.

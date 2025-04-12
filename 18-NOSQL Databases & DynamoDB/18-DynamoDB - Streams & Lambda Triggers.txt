@@ -1,0 +1,83 @@
+=========================================
+18-DynamoDB - Streams & Lambda Triggers
+=========================================
+
+1. Overview
+-----------
+- **Topics Covered:** 
+  - DynamoDB Streams: How they capture changes.
+  - Stream view types: Options for capturing item data.
+  - Triggers: Using streams with AWS Lambda for event-driven architectures.
+- **Objective:** 
+  - Understand the mechanics and configurations of DynamoDB Streams.
+  - Learn how to implement triggers to execute actions based on data changes.
+  - Recognize the architectural benefits and cost-effective scenarios for using these features.
+
+2. DynamoDB Streams
+--------------------
+- **Definition:** 
+  - A DynamoDB Stream is a time-ordered list of changes (inserts, updates, deletions) to items in a DynamoDB table.
+- **Retention:** 
+  - Streams maintain a rolling 24-hour window of data.
+- **Underlying Technology:** 
+  - Uses capabilities similar to Kinesis Streams (covered earlier in the course).
+- **Activation:** 
+  - Must be enabled on a per-table basis.
+  
+3. Stream View Types
+---------------------
+- **Purpose:** 
+  - Determine what data is recorded for each change.
+- **Available Configurations:**
+  
+  |    View Type         | Description                                                                                              |
+  |----------------------|----------------------------------------------------------------------------------------------------------|
+  | Keys Only            | Records only the partition key (and sort key, if applicable); additional changes must be determined via a separate read.  |
+  | New Image            | Captures the entire item after the change; useful for workflows that act on the updated data.            |
+  | Old Image            | Captures the entire item before the change; can be compared with current data to determine what changed.  |
+  | New and Old Images   | Captures both pre-change and post-change images of the item, providing complete visibility of modifications.|
+
+- **Notes on Insertions/Deletions:**
+  - **Insertion:** The old image will be blank.
+  - **Deletion:** The new image will be blank.
+
+4. DynamoDB Triggers
+---------------------
+- **Concept:**
+  - Leverage DynamoDB Streams to implement an event-driven trigger mechanism.
+- **How It Works:**
+  - When an item change occurs (insert, update, or delete), it is recorded in the stream.
+  - The stream event is used to invoke an AWS Lambda function.
+  - The Lambda function (the trigger) processes the event data to perform automated actions.
+  
+- **Use Cases:**
+  - **Reporting & Analytics:** Generate real-time reports based on data changes.
+  - **Data Aggregation:** Aggregate or tally item changes (e.g., stock levels, vote counts).
+  - **Messaging & Notifications:** Trigger push notifications, such as alerts in group chat applications.
+  - **Automation:** Replace constant polling with reactive event processing for cost efficiency.
+
+5. Architecture Integration & Exam Power-Up Points
+-----------------------------------------------------
+- **Architecture Flow:**
+  - **Item Change:** An item in a DynamoDB table is inserted, updated, or deleted.
+  - **Stream Capture:** The change is recorded in the DynamoDB Stream with the configured view type.
+  - **Trigger Activation:** The stream event triggers a Lambda function.
+  - **Action Execution:** The Lambda function processes the event (using new/old images as needed) to perform tasks such as data aggregation, notifications, or further processing.
+  
+- **Exam Power-Up Points:**
+  - Always enable DynamoDB Streams on tables when implementing event-driven architectures.
+  - Understand the four view types and their use cases:
+    - *Keys Only* for minimal data footprint.
+    - *New Image* for processing updated data.
+    - *Old Image* for determining what changed.
+    - *New and Old Images* for full change visibility.
+  - Recognize that combining streams with Lambda functions is the foundation of triggers in DynamoDB.
+  - Remember that this configuration helps reduce the need for polling, thereby lowering resource consumption and costs.
+
+6. Conclusion
+-------------
+- **Summary:** 
+  - DynamoDB Streams capture time-ordered data changes, enabling you to implement robust, event-driven architectures.
+  - Triggers, built by integrating streams with Lambda, allow for automated, real-time reactions to data changes.
+- **Key Takeaway:** 
+  - Mastery of stream view types and trigger setups is essential for designing cost-effective and responsive applications on AWS. This is a critical concept for both practical use cases and exam questions.

@@ -1,0 +1,101 @@
+===============================================
+18-DynamoDB Local and Global Secondary Indexes
+===============================================
+
+1. Overview
+-----------
+- **Topics Covered:** This lesson covers DynamoDB operations, the two capacity modes, consistency models, and performance considerations.
+- **Focus Areas:** 
+  - Capacity modes (On-Demand vs. Provisioned)
+  - Read/Write Capacity Units (RCU/WCU) and burst pools
+  - Differences between Query and Scan operations
+  - Consistency models: eventually consistent vs. strongly consistent reads
+  - Example calculations for capacity planning
+
+2. Capacity Modes & Cost Trade-Offs
+-----------------------------------
+- **On-Demand Capacity Mode:**
+  - Ideal for unpredictable or spiky workloads.
+  - No need to manually set capacity; you pay per million read and write requests.
+  - Higher cost—up to five times more expensive than provisioned mode.
+- **Provisioned Capacity Mode:**
+  - You specify RCU (Read Capacity Units) and WCU (Write Capacity Units) for each table.
+  - Requires planning and calculation based on expected throughput.
+  - Offers predictable pricing and the ability to reserve capacity.
+
+3. Read/Write Capacity Units (RCU/WCU) and Burst Pools
+--------------------------------------------------------
+- **RCU:**
+  - 1 RCU supports one read per second for items up to 4 KB using strongly consistent reads.
+  - With eventually consistent reads, you get double the throughput (i.e., half the cost per read).
+- **WCU:**
+  - 1 WCU supports one write per second for items up to 1 KB.
+- **Burst Pool:**
+  - Each table has a burst capacity equal to 300 seconds of the provisioned RCU/WCU.
+  - Over-reliance on the burst pool may lead to throttling and "provisioned throughput exceeded" errors.
+
+4. DynamoDB Operations: Query vs. Scan
+-----------------------------------------
+- **Query Operation:**
+  - **Usage:** Retrieve items by specifying a partition key value.
+  - **Flexibility:** Can narrow results using sort key (or range) conditions.
+  - **Efficiency:** More efficient; can retrieve multiple items in one operation to save capacity.
+  - **Cost Implication:** Consumes one RCU per operation if the total size of returned items is within 4 KB.
+- **Scan Operation:**
+  - **Usage:** Searches the entire table to retrieve items matching a filter expression.
+  - **Flexibility:** Can filter on any attribute; useful for ad-hoc queries.
+  - **Efficiency:** Less efficient; reads all items regardless of filters and consumes capacity for each item scanned.
+  - **Cost Implication:** May result in high capacity consumption even if only a subset of data is returned.
+
+Below is a table comparing Query and Scan operations:
+
+| Operation | Description                                                        | Capacity Consumption                              | Best Use Case                                                 |
+|-----------|--------------------------------------------------------------------|---------------------------------------------------|---------------------------------------------------------------|
+| Query     | Retrieves items using a specific partition key (and optional sort key) | Consumes RCUs based on the total size (min 1 RCU per op) | Efficient retrieval when you can specify a partition key       |
+| Scan      | Reads through every item in the table to filter based on conditions | Consumes capacity for the entire table scan, regardless of filters | Flexible, ad-hoc queries where partition key is unknown       |
+
+*Table Reconstruction Note:* Each cell is padded to match the widest content, ensuring alignment for clear readability.
+
+5. Consistency Models in DynamoDB
+----------------------------------
+- **Strongly Consistent Reads:**
+  - Always return the most recent version of an item.
+  - Always routed to the leader node, ensuring up-to-date data.
+  - Use full RCUs (1 RCU per up to 4 KB read).
+- **Eventually Consistent Reads:**
+  - May return stale data if the latest write hasn’t fully propagated.
+  - Can be served by any replica, offering better scalability and cost efficiency (50% lower cost than strong reads).
+  - Suitable for applications that can tolerate slight delays in data consistency.
+- **Replication Mechanics:**
+  - Data is replicated across multiple storage nodes across different Availability Zones.
+  - A leader node (responsible for writes and strongly consistent reads) ensures immediate consistency, while follower nodes can lag behind momentarily.
+
+6. Capacity Calculation Examples
+----------------------------------
+- **Write Capacity Calculation:**
+  - *Example:* For an item size of 2.5 KB.
+    - Calculation: 2.5 KB / 1 KB per WCU = 2.5, rounded up to 3 WCUs per write.
+    - For 10 writes per second: 10 x 3 = 30 WCUs needed.
+- **Read Capacity Calculation:**
+  - *Example:* For an item size of 2.5 KB (fits within 4 KB per RCU).
+    - Strongly consistent read: 1 RCU per read; 10 reads per second require 10 RCUs.
+    - Eventually consistent read: Uses half the RCUs; 10 reads per second require 5 RCUs.
+    
+7. Exam Power-Up Points
+-----------------------
+- **Key Considerations:**
+  - Understand the difference between On-Demand and Provisioned capacity modes, including their cost implications.
+  - Every operation (read or write) consumes at least one RCU/WCU, regardless of data size (rounding up applies).
+  - Efficiency tip: Prefer Query over Scan when possible to minimize capacity consumption.
+  - Consistency trade-offs: Use eventually consistent reads for cost savings when slightly outdated data is acceptable; otherwise, use strongly consistent reads.
+  - Be comfortable with capacity calculations—item size, rounding rules, and operations per second are critical for exam questions.
+- **Remember:** The burst pool provides a buffer but should not be over-utilized to avoid throttling.
+
+8. Conclusion
+-------------
+- **Summary:** 
+  - DynamoDB operations involve choosing the appropriate capacity mode, planning for capacity consumption, and understanding the trade-offs between query types and consistency models.
+  - The efficiency of operations hinges on proper capacity calculations and usage patterns.
+- **Exam Strategy:** 
+  - Focus on the key differences and cost implications of RCUs and WCUs, and understand when to use strongly consistent versus eventually consistent reads.
+  - Always consider the trade-offs between administrative overhead and cost, especially when dealing with unpredictable workloads.

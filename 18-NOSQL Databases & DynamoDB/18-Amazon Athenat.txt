@@ -1,0 +1,77 @@
+====================
+18-Amazon Athena
+====================
+
+1. Overview
+-----------
+- Amazon Athena is a serverless interactive querying service that allows you to perform ad hoc SQL-like queries directly on data stored in Amazon S3.
+- You pay only for the data processed by your queries, with no fixed costs for infrastructure or compute time.
+- Athena is highly valuable if you understand its features, making it a hidden gem in AWS.
+
+2. Athena Architecture and Functionality
+------------------------------------------
+- **Schema on Read:**  
+  - Athena applies a schema to your data at the time of the query, meaning the original data stored in S3 remains unmodified.
+  - You define a schema (i.e., table definition) that serves as a "recipe" to transform raw data into a queryable table format during query execution.
+- **Supported Data Formats:**  
+  - Works with structured, semi-structured, and unstructured data.
+  - Compatible formats include XML, JSON, CSV/TSV, Avro, Parquet, ORC, and various custom log formats (e.g., Apache logs, CloudTrail, VPC flow logs).
+
+3. Data Storage and Query Process
+-----------------------------------
+- **Immutable Source Data:**  
+  - Data stored in S3 is preserved in its original, read-only state.
+- **On-the-Fly Schema Application:**  
+  - The defined schema is applied to the data during query time, converting it to a relational format dynamically.
+- **Query Output Options:**  
+  - Query results can be displayed on the console, saved for later review, or integrated with other AWS services.
+
+4. Cost Efficiency and Operational Advantages
+-----------------------------------------------
+- **Cost Model:**  
+  - There is no base charge; you pay only for the amount of data scanned during each query.
+- **Elimination of Infrastructure Overhead:**  
+  - No need to provision or manage database servers.
+  - Eliminates the requirement for ETL processes to load or transform data before querying.
+- **Ad Hoc and Occasional Use Cases:**  
+  - Ideal for scenarios where you have raw data in S3 and need to run occasional or exploratory queries without pre-processing.
+
+5. Amazon Athena Federated Query
+---------------------------------
+- **Extended Data Access:**  
+  - Athena Federated Query allows you to query data from sources other than S3.
+- **Data Source Connectors:**  
+  - Uses connectors (prebuilt or custom) to query external data sources such as:
+    - CloudWatch Logs
+    - DynamoDB
+    - DocumentDB
+    - Amazon RDS
+    - Other JDBC-compliant relational databases (e.g., MySQL, PostgreSQL)
+- **Enhanced Utility:**  
+  - This feature broadens Athena’s capabilities, making it useful for integrating and analyzing data from diverse sources.
+
+6. Exam Power-Up Points
+------------------------
+- **Key Concepts for the Exam:**
+  - **Serverless and Cost-Effective:** Understand that Athena is serverless with a pay-per-query pricing model.
+  - **Schema on Read:** Remember that Athena applies a schema at query time without modifying the original S3 data.
+  - **Data Format Support:** Be aware of the wide variety of data formats Athena can handle, especially AWS-specific logs (CloudTrail, VPC Flow Logs, etc.).
+  - **No Data Loading Required:** Unlike traditional databases, Athena does not require pre-loading or transformation of data.
+  - **Federated Query Feature:** Know that Athena can now query non-S3 data sources via data source connectors.
+- **Exam Tip:**  
+  - For questions involving ad hoc querying or cost-effective analysis on already-stored S3 data, Athena is often the correct choice.
+
+7. Comparison: Traditional Database vs. Amazon Athena
+--------------------------------------------------------
+| Feature               | Traditional Database                                  | Amazon Athena                                       |
+|-----------------------|-------------------------------------------------------|-----------------------------------------------------|
+| Data Loading          | Requires ETL to load data into tables                 | No data loading needed; schema is applied on read   |
+| Schema Application    | Schema enforced at data insertion                     | Schema on read; applied dynamically during queries  |
+| Infrastructure Setup  | Requires pre-provisioned infrastructure               | Serverless; no infrastructure management required   |
+| Cost Model            | Fixed costs plus resource consumption                 | Pay-per-query; only pay for data scanned             |
+| Data Modification     | Data is stored and can be modified                    | Original data remains unchanged in S3                |
+| Use Cases             | Transactional systems, structured data storage        | Ad hoc analysis, AWS log queries, on-demand processing|
+
+Conclusion
+----------
+Amazon Athena is a powerful, cost-effective service for querying data stored on S3. It eliminates the need for traditional ETL processes and infrastructure management by applying a schema on read. With its support for various data formats and extended capability via federated queries, Athena is particularly well-suited for ad hoc analyses and AWS log analysis, making it a key service for both practical use and exam success.
