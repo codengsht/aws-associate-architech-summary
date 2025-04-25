@@ -1,5 +1,7 @@
-Introduction to DynamoDB Indexes
---------------------------------
+===============================================
+18-DynamoDB Local and Global Secondary Indexes
+===============================================
+
 DynamoDB supports two types of indexes to improve query efficiency by providing alternative “views” on table data:
 - Local Secondary Indexes (LSIs)
 - Global Secondary Indexes (GSIs)
